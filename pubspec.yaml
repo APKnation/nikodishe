@@ -42,6 +42,9 @@ dependencies:
   # Navigation
   go_router: ^14.8.1
 
+  # Image Picking from Device (Gallery & Camera)
+  image_picker: ^1.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

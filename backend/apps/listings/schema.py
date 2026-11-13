@@ -6,14 +6,21 @@ from .models import Listing, ListingImage
 from apps.accounts.schema import UserType
 
 class ListingImageType(DjangoObjectType):
+    url = graphene.String()
+
     class Meta:
         model = ListingImage
-        fields = ('id', 'image', 'is_primary', 'created_at')
+        fields = ('id', 'image', 'image_url', 'is_primary', 'created_at')
+
+    def resolve_url(self, info):
+        if self.image:
+            return info.context.build_absolute_uri(self.image.url)
+        return self.image_url or ''
 
     def resolve_image(self, info):
         if self.image:
             return info.context.build_absolute_uri(self.image.url)
-        return None
+        return self.image_url or ''
 
 class ListingNode(DjangoObjectType):
     images = graphene.List(ListingImageType)
@@ -110,6 +117,7 @@ class CreateListing(graphene.Mutation):
         latitude = graphene.Float(required=False)
         longitude = graphene.Float(required=False)
         features = graphene.List(graphene.String, required=False)
+        images = graphene.List(graphene.String, required=False)
 
     listing = graphene.Field(ListingNode)
     success = graphene.Boolean()
@@ -133,7 +141,68 @@ class CreateListing(graphene.Mutation):
             longitude=kwargs.get('longitude'),
             features=kwargs.get('features', [])
         )
-        return CreateListing(listing=listing, success=True, message="Tangazo limewekwa kikamilifu.")
+
+        # Hifadhi picha zote zilizotumwa
+        images = kwargs.get('images', [])
+        if images:
+            for i, img_url in enumerate(images):
+                if img_url and img_url.strip():
+                    ListingImage.objects.create(
+                        listing=listing,
+                        image_url=img_url.strip(),
+                        is_primary=(i == 0)
+                    )
+
+        return CreateListing(listing=listing, success=True, message="Tangazo na picha zimewekwa kikamilifu.")
+
+class AddListingImage(graphene.Mutation):
+    class Arguments:
+        listing_id = graphene.ID(required=True)
+        image_url = graphene.String(required=True)
+        is_primary = graphene.Boolean(default_value=False)
+
+    image = graphene.Field(ListingImageType)
+    success = graphene.Boolean()
+    message = graphene.String()
+
+    def mutate(self, info, listing_id, image_url, is_primary=False):
+        user = info.context.user
+        if user.is_anonymous:
+            raise GraphQLError("Lazima uwe umeingia kwenye akaunti.")
+
+        try:
+            listing = Listing.objects.get(pk=listing_id, owner=user)
+        except Listing.DoesNotExist:
+            raise GraphQLError("Tangazo halikupatikana au huna mamlaka nalo.")
+
+        if is_primary:
+            listing.images.update(is_primary=False)
+
+        img = ListingImage.objects.create(
+            listing=listing,
+            image_url=image_url.strip(),
+            is_primary=is_primary
+        )
+        return AddListingImage(image=img, success=True, message="Picha imeongezwa kikamilifu.")
+
+class DeleteListingImage(graphene.Mutation):
+    class Arguments:
+        id = graphene.ID(required=True)
+
+    success = graphene.Boolean()
+    message = graphene.String()
+
+    def mutate(self, info, id):
+        user = info.context.user
+        if user.is_anonymous:
+            raise GraphQLError("Lazima uwe umeingia kwenye akaunti.")
+
+        try:
+            img = ListingImage.objects.select_related('listing').get(pk=id, listing__owner=user)
+            img.delete()
+            return DeleteListingImage(success=True, message="Picha imefutwa kikamilifu.")
+        except ListingImage.DoesNotExist:
+            raise GraphQLError("Picha haikupatikana.")
 
 class UpdateListing(graphene.Mutation):
     class Arguments:
@@ -194,4 +263,5 @@ class Mutation(graphene.ObjectType):
     create_listing = CreateListing.Field()
     update_listing = UpdateListing.Field()
     delete_listing = DeleteListing.Field()
-
+    add_listing_image = AddListingImage.Field()
+    delete_listing_image = DeleteListingImage.Field()

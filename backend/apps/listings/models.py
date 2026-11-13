@@ -56,11 +56,18 @@ class ListingImage(models.Model):
         related_name='images',
         verbose_name='Tangazo'
     )
-    image = models.ImageField(upload_to='listings/', verbose_name='Picha')
+    image = models.ImageField(upload_to='listings/', blank=True, null=True, verbose_name='Faili la Picha')
+    image_url = models.CharField(max_length=500, blank=True, null=True, verbose_name='Link ya Picha (URL)')
     is_primary = models.BooleanField(default=False, verbose_name='Picha Kuu')
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = 'Picha ya Tangazo'
         verbose_name_plural = 'Picha za Matangazo'
+
+    @property
+    def url(self):
+        if self.image:
+            return self.image.url
+        return self.image_url or ''
 
