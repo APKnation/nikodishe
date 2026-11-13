@@ -1,5 +1,10 @@
 import graphene
-import graphql_jwt
+
+try:
+    import graphql_jwt
+    HAS_GRAPHQL_JWT = True
+except ImportError:
+    HAS_GRAPHQL_JWT = False
 
 import apps.accounts.schema
 import apps.listings.schema
@@ -28,10 +33,11 @@ class RootMutation(
     apps.notifications.schema.Mutation,
     graphene.ObjectType,
 ):
-    # JWT authentication mutations
-    token_auth = graphql_jwt.ObtainJSONWebToken.Field()
-    verify_token = graphql_jwt.Verify.Field()
-    refresh_token = graphql_jwt.Refresh.Field()
+    pass
+
+if HAS_GRAPHQL_JWT:
+    RootMutation.token_auth = graphql_jwt.ObtainJSONWebToken.Field()
+    RootMutation.verify_token = graphql_jwt.Verify.Field()
+    RootMutation.refresh_token = graphql_jwt.Refresh.Field()
 
 schema = graphene.Schema(query=RootQuery, mutation=RootMutation)
-

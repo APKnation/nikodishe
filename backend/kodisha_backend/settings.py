@@ -40,6 +40,7 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'kodisha_backend.middleware.KodishaFallbackTokenMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -89,18 +90,26 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+try:
+    import graphql_jwt
+    HAS_GRAPHQL_JWT = True
+except ImportError:
+    HAS_GRAPHQL_JWT = False
+
 AUTHENTICATION_BACKENDS = [
-    'graphql_jwt.backends.JSONWebTokenBackend',
     'django.contrib.auth.backends.ModelBackend',
 ]
+if HAS_GRAPHQL_JWT:
+    AUTHENTICATION_BACKENDS.insert(0, 'graphql_jwt.backends.JSONWebTokenBackend')
 
 # Graphene GraphQL Configuration
 GRAPHENE = {
     'SCHEMA': 'kodisha_backend.schema.schema',
-    'MIDDLEWARE': [
-        'graphql_jwt.middleware.JSONWebTokenMiddleware',
-    ],
 }
+if HAS_GRAPHQL_JWT:
+    GRAPHENE['MIDDLEWARE'] = [
+        'graphql_jwt.middleware.JSONWebTokenMiddleware',
+    ]
 
 from datetime import timedelta
 GRAPHQL_JWT = {

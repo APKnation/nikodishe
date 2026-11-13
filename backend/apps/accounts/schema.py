@@ -1,8 +1,15 @@
 import graphene
+import base64
 from graphene_django import DjangoObjectType
-from graphql_jwt.shortcuts import get_token
 from graphql import GraphQLError
 from .models import CustomUser, OTPVerification
+
+try:
+    from graphql_jwt.shortcuts import get_token
+except ImportError:
+    def get_token(user):
+        payload = f"{user.id}:{user.phone}:{user.role}"
+        return base64.b64encode(payload.encode('utf-8')).decode('utf-8')
 
 class UserType(DjangoObjectType):
     class Meta:

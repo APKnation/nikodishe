@@ -38,13 +38,19 @@ python manage.py makemigrations accounts listings bookings payments reviews noti
 python manage.py migrate
 ```
 
-### 4. Tengeneza Akaunti ya Admin (Superuser):
+### 4. Pakia Data za Majaribio (Seed Sample Data):
+```bash
+python manage.py seed_data
+```
+*(Hii itaweka mara moja listings za Sherehe, Ujenzi, na Kumbi zenye picha za ubora wa juu na watumiaji wa majaribio)*
+
+### 5. Tengeneza Akaunti ya Admin (Superuser):
 ```bash
 python manage.py createsuperuser
 ```
 *(Weka namba ya simu mfano `0712345678`, jina, na nenosiri)*
 
-### 5. Washa Server ya Maendeleo:
+### 6. Washa Server ya Maendeleo:
 ```bash
 python manage.py runserver 0.0.0.0:8000
 ```

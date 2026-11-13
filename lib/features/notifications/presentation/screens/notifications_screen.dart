@@ -20,6 +20,8 @@ class NotificationsScreen extends ConsumerWidget {
         return Icons.account_balance_wallet_outlined;
       case NotificationType.bookingReminder:
         return Icons.alarm;
+      case NotificationType.system:
+        return Icons.notifications_outlined;
     }
   }
 
@@ -35,6 +37,8 @@ class NotificationsScreen extends ConsumerWidget {
         return AppColors.primary;
       case NotificationType.bookingReminder:
         return AppColors.warning;
+      case NotificationType.system:
+        return AppColors.primary;
     }
   }
 

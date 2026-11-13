@@ -576,8 +576,8 @@ class ApiService {
     return PaymentModel(
       id: p['id'].toString(),
       bookingId: bookingId,
-      payerId: '',
-      recipientId: '',
+      renterId: '',
+      ownerId: '',
       amount: (p['amount'] as num).toDouble(),
       method: method,
       type: type,

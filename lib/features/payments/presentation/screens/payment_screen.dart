@@ -56,6 +56,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         return const Color(0xFFFF0000); // Airtel Red
       case PaymentMethod.tigoPesa:
         return const Color(0xFF003366); // Tigo Blue
+      case PaymentMethod.haloPesa:
+        return const Color(0xFFFF6600); // Halotel Orange
     }
   }
 
