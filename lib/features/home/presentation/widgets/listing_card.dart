@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/app_network_image.dart';
 import '../../../../data/models/listing_model.dart';
 
 class ListingCard extends StatelessWidget {
@@ -56,20 +57,30 @@ class ListingCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top Image / Placeholder
+            // Top Image with Lazy Loading & Caching (NFR3)
             Stack(
               children: [
-                Container(
+                SizedBox(
                   height: 125,
                   width: double.infinity,
-                  color: catColor.withOpacity(0.15),
-                  child: Center(
-                    child: Icon(
-                      _getCategoryIcon(listing.category),
-                      size: 48,
-                      color: catColor,
-                    ),
-                  ),
+                  child: listing.images.isNotEmpty && listing.images.first.startsWith('http')
+                      ? AppNetworkImage(
+                          imageUrl: listing.images.first,
+                          height: 125,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          placeholderIcon: _getCategoryIcon(listing.category),
+                        )
+                      : Container(
+                          color: catColor.withOpacity(0.15),
+                          child: Center(
+                            child: Icon(
+                              _getCategoryIcon(listing.category),
+                              size: 48,
+                              color: catColor,
+                            ),
+                          ),
+                        ),
                 ),
                 Positioned(
                   top: 8,

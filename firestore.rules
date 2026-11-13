@@ -1,0 +1,109 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // ---------------------------------------------------------------------------
+    // USERS COLLECTION (NFR10 & NFR11: Only user can see/edit their own data)
+    // ---------------------------------------------------------------------------
+    match /users/{userId} {
+      // User can read and write only their own user document
+      allow read, write: if isOwner(userId);
+    }
+
+    // ---------------------------------------------------------------------------
+    // LISTINGS COLLECTION
+    // ---------------------------------------------------------------------------
+    match /listings/{listingId} {
+      // Anyone (even guest) can read active listings to explore items
+      allow read: if true;
+
+      // Only authenticated equipment owner can create a listing
+      allow create: if isAuthenticated() 
+                    && request.resource.data.ownerId == request.auth.uid;
+
+      // Only the owner of the listing can edit or delete it
+      allow update, delete: if isAuthenticated() 
+                            && resource.data.ownerId == request.auth.uid;
+    }
+
+    // ---------------------------------------------------------------------------
+    // BOOKINGS COLLECTION (Strict Privacy: Only renter and owner can access)
+    // ---------------------------------------------------------------------------
+    match /bookings/{bookingId} {
+      // Only the renter who booked OR the owner who owns the item can read the booking
+      allow read: if isAuthenticated() && (
+        resource.data.renterId == request.auth.uid || 
+        resource.data.ownerId == request.auth.uid
+      );
+
+      // Only authenticated renter can create a booking for themselves
+      allow create: if isAuthenticated() 
+                    && request.resource.data.renterId == request.auth.uid;
+
+      // Only the owner or renter can update status (confirm, cancel, complete)
+      allow update: if isAuthenticated() && (
+        resource.data.renterId == request.auth.uid || 
+        resource.data.ownerId == request.auth.uid
+      );
+
+      // Bookings cannot be deleted directly (records must be preserved for history)
+      allow delete: if false;
+    }
+
+    // ---------------------------------------------------------------------------
+    // PAYMENTS COLLECTION (High Security: Confidential financial records)
+    // ---------------------------------------------------------------------------
+    match /payments/{paymentId} {
+      // Only the payer (renter) or recipient (owner) can view transaction details
+      allow read: if isAuthenticated() && (
+        resource.data.renterId == request.auth.uid || 
+        resource.data.ownerId == request.auth.uid
+      );
+
+      // Payer can create payment record matching their UID
+      allow create: if isAuthenticated() 
+                    && request.resource.data.renterId == request.auth.uid;
+
+      // Financial transaction records cannot be modified or deleted
+      allow update, delete: if false;
+    }
+
+    // ---------------------------------------------------------------------------
+    // REVIEWS COLLECTION
+    // ---------------------------------------------------------------------------
+    match /reviews/{reviewId} {
+      // Anyone can read ratings & reviews to help choose items
+      allow read: if true;
+
+      // Only authenticated renter can post a review
+      allow create: if isAuthenticated() 
+                    && request.resource.data.renterId == request.auth.uid;
+
+      // Reviews cannot be modified once published (prevents rating tampering)
+      allow update, delete: if false;
+    }
+
+    // ---------------------------------------------------------------------------
+    // NOTIFICATIONS COLLECTION
+    // ---------------------------------------------------------------------------
+    match /notifications/{notifId} {
+      // Only the recipient can read and mark as read their notifications
+      allow read, update: if isAuthenticated() 
+                          && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated();
+      allow delete: if isAuthenticated() 
+                    && resource.data.userId == request.auth.uid;
+    }
+  }
+}
+

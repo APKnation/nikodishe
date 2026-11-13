@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/services/offline_storage_service.dart';
 import '../../../data/models/booking_model.dart';
 import '../../../data/mock/mock_data.dart';
 import '../../auth/providers/auth_provider.dart';
@@ -13,6 +14,8 @@ class BookingsNotifier extends Notifier<List<BookingModel>> {
 
   void createBooking(BookingModel booking) {
     state = [...state, booking];
+    // NFR14: Guarantee persistence even if app closes immediately
+    OfflineStorageService.instance.saveBookings(state);
   }
 
   void updateStatus(String bookingId, BookingStatus status) {
@@ -20,6 +23,7 @@ class BookingsNotifier extends Notifier<List<BookingModel>> {
       for (final b in state)
         if (b.id == bookingId) b.copyWith(status: status) else b,
     ];
+    OfflineStorageService.instance.saveBookings(state);
   }
 }
 

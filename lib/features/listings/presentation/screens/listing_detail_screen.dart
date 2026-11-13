@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/app_network_image.dart';
 import '../../../../data/models/listing_model.dart';
 import '../../../reviews/providers/reviews_provider.dart';
 import '../../providers/listings_provider.dart';
@@ -93,36 +94,60 @@ class ListingDetailScreen extends ConsumerWidget {
               const SizedBox(width: 16),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                color: catColor.withOpacity(0.15),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        _getCategoryIcon(listing.category),
-                        size: 80,
-                        color: catColor,
-                      ),
-                      const SizedBox(height: 12),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: catColor,
-                          borderRadius: BorderRadius.circular(20),
+              background: listing.images.isNotEmpty && listing.images.first.startsWith('http')
+                  ? Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        AppNetworkImage(
+                          imageUrl: listing.images.first,
+                          fit: BoxFit.cover,
+                          placeholderIcon: _getCategoryIcon(listing.category),
                         ),
-                        child: Text(
-                          listing.categoryLabel,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+                        Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black.withOpacity(0.3),
+                                Colors.transparent,
+                                Colors.black.withOpacity(0.5),
+                              ],
+                            ),
                           ),
                         ),
+                      ],
+                    )
+                  : Container(
+                      color: catColor.withOpacity(0.15),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              _getCategoryIcon(listing.category),
+                              size: 80,
+                              color: catColor,
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: catColor,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                listing.categoryLabel,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
-                  ),
-                ),
-              ),
+                    ),
             ),
           ),
 

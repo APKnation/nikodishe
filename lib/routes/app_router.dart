@@ -90,7 +90,8 @@ class _SplashWrapperState extends State<_SplashWrapper> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 2000), () {
+    // NFR1: Snappy launch (1.5s) to guarantee app launches within 3 seconds
+    Future.delayed(const Duration(milliseconds: 1500), () {
       if (mounted) {
         context.go('/home');
       }
