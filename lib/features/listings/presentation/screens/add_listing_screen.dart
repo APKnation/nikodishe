@@ -62,7 +62,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
     setState(() => _isSubmitting = false);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Kifaa chako kimeongezwa kwa mafanikio!'),
+        content: Text('Kifaa chako kimeongezwa kwa mafanikio! 🎉'),
         backgroundColor: AppColors.success,
       ),
     );
@@ -76,23 +76,23 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
+      backgroundColor: AppColors.background, // 70% Neutral Base
       appBar: AppBar(
         title: const Text('Weka Kifaa Kipya'),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         child: Form(
           key: _formKey,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Photo upload placeholder
+              // Photo Upload Box (70% Surface + 10% Accent touch)
               GestureDetector(
                 onTap: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Uchaguzi wa picha utafunguliwa.')),
+                    const SnackBar(content: Text('Chagua picha kutoka kwenye simu yako.')),
                   );
                 },
                 child: Container(
@@ -101,49 +101,59 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.grey.shade300, style: BorderStyle.solid),
+                    border: Border.all(color: AppColors.border, width: 1.5),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.add_a_photo_outlined, size: 40, color: AppColors.primary),
-                      const SizedBox(height: 8),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: const BoxDecoration(
+                          color: AppColors.primaryLight,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.add_a_photo_outlined, size: 28, color: AppColors.primary),
+                      ),
+                      const SizedBox(height: 10),
                       const Text(
                         'Bofya kuongeza picha ya kifaa',
-                        style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.textPrimary,
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      const Text(
+                        'Picha ya mbele, ya wazi na yenye mwanga mzuri',
+                        style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
                       ),
                     ],
                   ),
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
 
               // Title
-              const Text('Jina la Kifaa *', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 6),
+              _buildSectionLabel('Jina la Kifaa *'),
               TextFormField(
                 controller: _titleController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Mfano: Scaffolding za Ujenzi, Viti 50 vya Plastiki',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  prefixIcon: Icon(Icons.handyman_outlined, color: AppColors.primary),
                 ),
-                validator: (val) => val == null || val.isEmpty ? 'Tafadhali ingiza jina la kifaa' : null,
+                validator: (val) => val == null || val.trim().isEmpty ? 'Tafadhali ingiza jina la kifaa' : null,
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
 
               // Category selector
-              const Text('Category ya Kifaa *', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 6),
+              _buildSectionLabel('Category ya Kifaa *'),
               DropdownButtonFormField<ListingCategory>(
                 value: _selectedCategory,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.category_outlined, color: AppColors.primary),
                 ),
                 items: const [
                   DropdownMenuItem(value: ListingCategory.sherehe, child: Text('🎉 Vifaa vya Sherehe')),
@@ -155,17 +165,14 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                 },
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
 
               // Type (Kukodisha / Kuuza)
-              const Text('Aina ya Ofa *', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 6),
+              _buildSectionLabel('Aina ya Ofa *'),
               DropdownButtonFormField<ListingType>(
                 value: _selectedType,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                decoration: const InputDecoration(
+                  prefixIcon: Icon(Icons.sell_outlined, color: AppColors.primary),
                 ),
                 items: const [
                   DropdownMenuItem(value: ListingType.kukodisha, child: Text('Kukodisha tu')),
@@ -177,74 +184,66 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                 },
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
 
               // Price
-              const Text('Bei (TZS kwa siku) *', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 6),
+              _buildSectionLabel('Bei ya Kukodisha (TZS kwa siku) *'),
               TextFormField(
                 controller: _priceController,
                 keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  hintText: 'Mfano: 25000',
+                decoration: const InputDecoration(
+                  hintText: 'Mfano: 25,000',
                   prefixText: 'TZS ',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  prefixStyle: TextStyle(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                  prefixIcon: Icon(Icons.payments_outlined, color: AppColors.primary),
                 ),
-                validator: (val) => val == null || val.isEmpty ? 'Tafadhali ingiza bei' : null,
+                validator: (val) => val == null || val.trim().isEmpty ? 'Tafadhali ingiza bei' : null,
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
 
               // Location
-              const Text('Eneo / Location *', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 6),
+              _buildSectionLabel('Eneo / Location ya Kifaa *'),
               TextFormField(
                 controller: _locationController,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   hintText: 'Mfano: Mwenge, Dar es Salaam',
-                  prefixIcon: const Icon(Icons.location_on_outlined, color: AppColors.primary),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                  prefixIcon: Icon(Icons.location_on_outlined, color: AppColors.primary),
                 ),
-                validator: (val) => val == null || val.isEmpty ? 'Tafadhali ingiza eneo' : null,
+                validator: (val) => val == null || val.trim().isEmpty ? 'Tafadhali ingiza eneo' : null,
               ),
 
-              const SizedBox(height: 16),
+              const SizedBox(height: 18),
 
               // Description
-              const Text('Maelezo ya Kifaa *', style: TextStyle(fontWeight: FontWeight.bold)),
-              const SizedBox(height: 6),
+              _buildSectionLabel('Maelezo Kamili ya Kifaa *'),
               TextFormField(
                 controller: _descriptionController,
                 maxLines: 4,
-                decoration: InputDecoration(
-                  hintText: 'Eleza ubora, hali yake, idadi, masharti, n.k.',
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                decoration: const InputDecoration(
+                  hintText: 'Eleza ubora, hali yake (mpya/imetumika), idadi, na masharti yoyote...',
                 ),
-                validator: (val) => val == null || val.isEmpty ? 'Tafadhali andika maelezo' : null,
+                validator: (val) => val == null || val.trim().isEmpty ? 'Tafadhali andika maelezo ya kifaa' : null,
               ),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 32),
 
-              // Submit button
+              // Submit Button (10% Accent CTA)
               SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: 52,
                 child: ElevatedButton(
                   onPressed: _isSubmitting ? null : _submitListing,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
                   child: _isSubmitting
-                      ? const CircularProgressIndicator(color: Colors.white)
-                      : const Text('Weka Kifaa Kwenye Mfumo', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                        )
+                      : const Text(
+                          'Weka Kifaa Kwenye Mfumo',
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        ),
                 ),
               ),
               const SizedBox(height: 40),
@@ -254,5 +253,18 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
       ),
     );
   }
-}
 
+  Widget _buildSectionLabel(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w700,
+          color: AppColors.textPrimary, // 20% Typography
+        ),
+      ),
+    );
+  }
+}

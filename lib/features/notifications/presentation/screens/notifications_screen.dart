@@ -111,10 +111,10 @@ class NotificationsScreen extends ConsumerWidget {
                       margin: const EdgeInsets.only(bottom: 10),
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: notif.isRead ? Colors.white : Colors.teal.shade50.withOpacity(0.6),
+                        color: notif.isRead ? Colors.white : AppColors.primaryLight.withOpacity(0.4),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: notif.isRead ? Colors.grey.shade200 : AppColors.primary.withOpacity(0.3),
+                          color: notif.isRead ? AppColors.border : AppColors.primary.withOpacity(0.4),
                         ),
                         boxShadow: [
                           BoxShadow(
