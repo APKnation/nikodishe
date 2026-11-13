@@ -256,7 +256,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
                             ),
                           )
                         : const Text(
-                            'Endelea',
+                            'Ingia Kwenye Akaunti',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w700,
@@ -265,6 +265,38 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
                           ),
                   ),
                 ),
+                const SizedBox(height: 20),
+
+                // Register Link
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey.shade300),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Huna akaunti bado? ',
+                        style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                      ),
+                      GestureDetector(
+                        onTap: () => context.push('/auth/register'),
+                        child: const Text(
+                          'Jisajili Hapa',
+                          style: TextStyle(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
                 const SizedBox(height: 24),
                 Text(
                   'Kwa kuendelea, unakubali masharti yetu ya matumizi na sera ya faragha.',

@@ -91,6 +91,42 @@ class AuthNotifier extends Notifier<AuthState> {
     state = const AuthState();
   }
 
+  /// Register a new user as Customer (Renter) or Equipment Owner.
+  Future<void> registerUser({
+    required String name,
+    required String phone,
+    required UserRole role,
+    required String location,
+    String? whatsapp,
+    String? instagram,
+  }) async {
+    state = state.copyWith(isLoading: true, clearError: true);
+    await Future.delayed(const Duration(seconds: 1));
+
+    final newUser = UserModel(
+      id: 'user_${DateTime.now().millisecondsSinceEpoch}',
+      name: name,
+      phone: phone,
+      role: role,
+      location: location,
+      whatsapp: whatsapp ?? phone,
+      instagram: instagram,
+      createdAt: DateTime.now(),
+    );
+
+    // Save into in-memory list
+    mockUsers.add(newUser);
+    state = state.copyWith(isLoading: false, user: newUser, isOtpSent: true);
+  }
+
+  /// Switch user role between Renter and Owner
+  Future<void> switchRole(UserRole newRole) async {
+    final current = state.user;
+    if (current == null) return;
+    final updated = current.copyWith(role: newRole);
+    state = state.copyWith(user: updated);
+  }
+
   /// Update the current user's display name and optional location.
   Future<void> updateProfile(String name, String? location) async {
     final current = state.user;

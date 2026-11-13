@@ -271,11 +271,7 @@ class ListingDetailScreen extends ConsumerWidget {
                         ),
                         OutlinedButton.icon(
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('Mawasiliano ya ${listing.ownerName} yatafunguliwa.'),
-                              ),
-                            );
+                            context.push('/listings/${listing.id}/contact');
                           },
                           icon: const Icon(Icons.phone, size: 16),
                           label: const Text('Wasiliana'),

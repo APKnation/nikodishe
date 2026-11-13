@@ -3,11 +3,13 @@ import 'package:go_router/go_router.dart';
 import '../data/models/user_model.dart';
 import '../features/auth/presentation/screens/otp_screen.dart';
 import '../features/auth/presentation/screens/phone_screen.dart';
+import '../features/auth/presentation/screens/register_screen.dart';
 import '../features/auth/presentation/screens/splash_screen.dart';
 import '../features/bookings/presentation/screens/booking_history_screen.dart';
 import '../features/bookings/presentation/screens/booking_screen.dart';
 import '../features/home/presentation/screens/home_screen.dart';
 import '../features/listings/presentation/screens/listing_detail_screen.dart';
+import '../features/listings/presentation/screens/owner_contact_screen.dart';
 import '../features/notifications/presentation/screens/notifications_screen.dart';
 import '../features/payments/presentation/screens/payment_history_screen.dart';
 import '../features/payments/presentation/screens/payment_screen.dart';
@@ -24,6 +26,13 @@ class AppRouter {
       GoRoute(
         path: '/auth/phone',
         builder: (context, state) => const PhoneScreen(),
+      ),
+      GoRoute(
+        path: '/auth/register',
+        builder: (context, state) {
+          final extraRole = state.extra as UserRole? ?? UserRole.renter;
+          return RegisterScreen(initialRole: extraRole);
+        },
       ),
       GoRoute(
         path: '/auth/otp',
@@ -50,6 +59,13 @@ class AppRouter {
         builder: (context, state) {
           final id = state.pathParameters['id'] ?? '';
           return BookingScreen(listingId: id);
+        },
+      ),
+      GoRoute(
+        path: '/listings/:id/contact',
+        builder: (context, state) {
+          final id = state.pathParameters['id'] ?? '';
+          return OwnerContactScreen(listingId: id);
         },
       ),
       GoRoute(

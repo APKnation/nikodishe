@@ -197,15 +197,55 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  OutlinedButton.icon(
-                    onPressed: () => _showEditProfileDialog(context, user),
-                    icon: const Icon(Icons.edit, size: 16),
-                    label: Text(AppStrings.get(lang, 'edit_profile')),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: AppColors.primary,
-                      side: const BorderSide(color: AppColors.primary),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: () => _showEditProfileDialog(context, user),
+                        icon: const Icon(Icons.edit, size: 16),
+                        label: Text(AppStrings.get(lang, 'edit_profile')),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.primary,
+                          side: const BorderSide(color: AppColors.primary),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      TextButton.icon(
+                        onPressed: () {
+                          final newRole = user?.role == UserRole.owner
+                              ? UserRole.renter
+                              : UserRole.owner;
+                          ref.read(authProvider.notifier).switchRole(newRole);
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                newRole == UserRole.owner
+                                    ? 'Akaunti yako sasa ni ya Mwenye Vifaa (Owner) 🏢'
+                                    : 'Akaunti yako sasa ni ya Mteja (Customer) 🛒',
+                              ),
+                            ),
+                          );
+                        },
+                        icon: Icon(
+                          user?.role == UserRole.owner
+                              ? Icons.shopping_bag_outlined
+                              : Icons.storefront_outlined,
+                          size: 16,
+                          color: AppColors.primary,
+                        ),
+                        label: Text(
+                          user?.role == UserRole.owner
+                              ? 'Hali ya Mteja'
+                              : 'Kuwa Mwenye Vifaa',
+                          style: const TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

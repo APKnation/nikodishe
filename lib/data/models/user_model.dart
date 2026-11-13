@@ -7,6 +7,10 @@ class UserModel {
   final UserRole role;
   final String? location;
   final String? photoUrl;
+  final String? whatsapp;
+  final String? instagram;
+  final String? facebook;
+  final String? tiktok;
   final DateTime createdAt;
 
   const UserModel({
@@ -16,6 +20,10 @@ class UserModel {
     required this.role,
     this.location,
     this.photoUrl,
+    this.whatsapp,
+    this.instagram,
+    this.facebook,
+    this.tiktok,
     required this.createdAt,
   });
 
@@ -26,6 +34,10 @@ class UserModel {
     UserRole? role,
     String? location,
     String? photoUrl,
+    String? whatsapp,
+    String? instagram,
+    String? facebook,
+    String? tiktok,
     DateTime? createdAt,
   }) {
     return UserModel(
@@ -35,6 +47,10 @@ class UserModel {
       role: role ?? this.role,
       location: location ?? this.location,
       photoUrl: photoUrl ?? this.photoUrl,
+      whatsapp: whatsapp ?? this.whatsapp,
+      instagram: instagram ?? this.instagram,
+      facebook: facebook ?? this.facebook,
+      tiktok: tiktok ?? this.tiktok,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -47,6 +63,10 @@ class UserModel {
       'role': role.name,
       'location': location,
       'photoUrl': photoUrl,
+      'whatsapp': whatsapp,
+      'instagram': instagram,
+      'facebook': facebook,
+      'tiktok': tiktok,
       'createdAt': createdAt.toIso8601String(),
     };
   }
@@ -59,6 +79,10 @@ class UserModel {
       role: UserRole.values.firstWhere((e) => e.name == map['role']),
       location: map['location'] as String?,
       photoUrl: map['photoUrl'] as String?,
+      whatsapp: map['whatsapp'] as String?,
+      instagram: map['instagram'] as String?,
+      facebook: map['facebook'] as String?,
+      tiktok: map['tiktok'] as String?,
       createdAt: DateTime.parse(map['createdAt'] as String),
     );
   }
