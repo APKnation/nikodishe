@@ -127,15 +127,19 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(user: updated);
   }
 
-  /// Update the current user's display name and optional location.
-  Future<void> updateProfile(String name, String? location) async {
+  /// Update the current user's display name, location, or photo.
+  Future<void> updateProfile({String? name, String? location, String? photoUrl}) async {
     final current = state.user;
     if (current == null) return;
 
     state = state.copyWith(isLoading: true);
-    await Future.delayed(const Duration(seconds: 1));
+    await Future.delayed(const Duration(milliseconds: 600));
 
-    final updated = current.copyWith(name: name, location: location);
+    final updated = current.copyWith(
+      name: name ?? current.name,
+      location: location ?? current.location,
+      photoUrl: photoUrl ?? current.photoUrl,
+    );
     state = state.copyWith(isLoading: false, user: updated);
   }
 }

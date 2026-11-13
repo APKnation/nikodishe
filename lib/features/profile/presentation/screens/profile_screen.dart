@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_picker/image_picker.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/localization/locale_provider.dart';
+import '../../../../core/widgets/app_network_image.dart';
 import '../../../../data/models/user_model.dart';
 import '../../../auth/providers/auth_provider.dart';
 
@@ -14,6 +16,30 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  Future<void> _pickProfilePhoto() async {
+    try {
+      final picker = ImagePicker();
+      final photo = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+      if (photo != null) {
+        ref.read(authProvider.notifier).updateProfile(photoUrl: photo.path);
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Picha ya wasifu imebadilishwa kikamilifu!'),
+              backgroundColor: AppColors.success,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Imeshindwa kufungua picha: $e')),
+        );
+      }
+    }
+  }
+
   void _showEditProfileDialog(BuildContext context, UserModel? user) {
     final lang = ref.read(localeProvider);
     final nameController = TextEditingController(text: user?.name ?? '');
@@ -56,8 +82,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             ),
             onPressed: () {
               ref.read(authProvider.notifier).updateProfile(
-                    nameController.text.trim(),
-                    locationController.text.trim(),
+                    name: nameController.text.trim(),
+                    location: locationController.text.trim(),
                   );
               Navigator.of(ctx).pop();
               ScaffoldMessenger.of(context).showSnackBar(
@@ -157,10 +183,40 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 40,
-                    backgroundColor: AppColors.primary.withOpacity(0.15),
-                    child: const Icon(Icons.person, size: 50, color: AppColors.primary),
+                  Stack(
+                    children: [
+                      ClipOval(
+                        child: Container(
+                          width: 84,
+                          height: 84,
+                          color: AppColors.primaryLight,
+                          child: (user?.photoUrl != null && user!.photoUrl!.isNotEmpty)
+                              ? AppNetworkImage(
+                                  imageUrl: user.photoUrl!,
+                                  width: 84,
+                                  height: 84,
+                                  fit: BoxFit.cover,
+                                  placeholderIcon: Icons.person,
+                                )
+                              : const Icon(Icons.person, size: 50, color: AppColors.primary),
+                        ),
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: GestureDetector(
+                          onTap: _pickProfilePhoto,
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: const BoxDecoration(
+                              color: AppColors.primary,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.camera_alt, size: 16, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 12),
                   Text(
