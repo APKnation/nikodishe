@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/app_network_image.dart';
+import '../../../../core/widgets/fullscreen_image_viewer.dart';
 import '../../../../data/models/listing_model.dart';
 import '../../../reviews/providers/reviews_provider.dart';
 import '../../providers/listings_provider.dart';
@@ -94,60 +95,97 @@ class ListingDetailScreen extends ConsumerWidget {
               const SizedBox(width: 16),
             ],
             flexibleSpace: FlexibleSpaceBar(
-              background: listing.images.isNotEmpty && listing.images.first.startsWith('http')
-                  ? Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        AppNetworkImage(
-                          imageUrl: listing.images.first,
-                          fit: BoxFit.cover,
-                          placeholderIcon: _getCategoryIcon(listing.category),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.black.withOpacity(0.3),
-                                Colors.transparent,
-                                Colors.black.withOpacity(0.5),
-                              ],
+              background: GestureDetector(
+                onTap: () {
+                  FullscreenImageViewer.show(
+                    context,
+                    images: listing.images,
+                    title: listing.title,
+                    subtitle: listing.location,
+                  );
+                },
+                child: listing.images.isNotEmpty && listing.images.first.startsWith('http')
+                    ? Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          AppNetworkImage(
+                            imageUrl: listing.images.first,
+                            fit: BoxFit.cover,
+                            placeholderIcon: _getCategoryIcon(listing.category),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black.withOpacity(0.3),
+                                  Colors.transparent,
+                                  Colors.black.withOpacity(0.55),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    )
-                  : Container(
-                      color: catColor.withOpacity(0.15),
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              _getCategoryIcon(listing.category),
-                              size: 80,
-                              color: catColor,
-                            ),
-                            const SizedBox(height: 12),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          Positioned(
+                            bottom: 16,
+                            right: 16,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                               decoration: BoxDecoration(
-                                color: catColor,
-                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.black.withOpacity(0.65),
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.white24),
                               ),
-                              child: Text(
-                                listing.categoryLabel,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                              child: const Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.zoom_in, color: Colors.white, size: 16),
+                                  SizedBox(width: 4),
+                                  Text(
+                                    'Bonyeza Kukuza Picha',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      )
+                    : Container(
+                        color: catColor.withOpacity(0.15),
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                _getCategoryIcon(listing.category),
+                                size: 80,
+                                color: catColor,
+                              ),
+                              const SizedBox(height: 12),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                decoration: BoxDecoration(
+                                  color: catColor,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  listing.categoryLabel,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
+              ),
             ),
           ),
 

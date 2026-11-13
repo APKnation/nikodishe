@@ -233,9 +233,9 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                     padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
                     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      mainAxisSpacing: 16,
-                      crossAxisSpacing: 16,
-                      childAspectRatio: 0.72,
+                      mainAxisSpacing: 14,
+                      crossAxisSpacing: 14,
+                      childAspectRatio: 0.68,
                     ),
                     itemCount: listings.length,
                     itemBuilder: (context, index) {
