@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/models/listing_model.dart';
 import '../../../data/mock/mock_data.dart';
+import '../../../data/services/api_service.dart';
 
 // ---------------------------------------------------------------------------
 // SearchState
@@ -39,7 +40,7 @@ class SearchState {
 }
 
 // ---------------------------------------------------------------------------
-// SearchNotifier  (StateNotifier so the provider spec uses StateNotifierProvider)
+// SearchNotifier
 // ---------------------------------------------------------------------------
 class SearchNotifier extends StateNotifier<SearchState> {
   SearchNotifier() : super(const SearchState());
@@ -59,18 +60,54 @@ class SearchNotifier extends StateNotifier<SearchState> {
         clearLocation: location == null,
       );
 
-  void clearAll() => state = const SearchState();
+  void reset() => state = const SearchState();
 }
 
 // ---------------------------------------------------------------------------
-// ListingsNotifier
+// ListingsNotifier (Connected with GraphQL API)
 // ---------------------------------------------------------------------------
 class ListingsNotifier extends Notifier<List<ListingModel>> {
-  @override
-  List<ListingModel> build() => List<ListingModel>.from(mockListings);
+  final ApiService _apiService = ApiService();
 
-  void addListing(ListingModel listing) {
-    state = [...state, listing];
+  @override
+  List<ListingModel> build() {
+    // 1. Initial fast local state (instant startup)
+    final initialList = List<ListingModel>.from(mockListings);
+
+    // 2. Fetch live listings asynchronously from GraphQL backend
+    Future.microtask(() => loadFromApi());
+
+    return initialList;
+  }
+
+  /// Load listings from Django GraphQL API
+  Future<void> loadFromApi() async {
+    try {
+      final remoteListings = await _apiService.fetchListings();
+      if (remoteListings.isNotEmpty) {
+        // Merge or replace
+        state = remoteListings;
+      }
+    } catch (_) {
+      // Server offline / fallback to existing listings
+    }
+  }
+
+  /// Add new listing and push to backend
+  Future<void> addListing(ListingModel listing) async {
+    // Local optimistic update
+    state = [listing, ...state];
+
+    try {
+      final created = await _apiService.createListing(listing);
+      // Update with server created model (having server generated ID)
+      state = [
+        created,
+        ...state.where((l) => l.id != listing.id),
+      ];
+    } catch (_) {
+      // Stays in local state if backend is currently unreachable
+    }
   }
 
   void updateListing(ListingModel updated) {
@@ -128,7 +165,9 @@ final filteredListingsProvider = Provider<List<ListingModel>>((ref) {
     if (search.selectedLocation != null &&
         search.selectedLocation!.isNotEmpty) {
       final loc = search.selectedLocation!.toLowerCase();
-      if (!listing.location.toLowerCase().contains(loc)) return false;
+      if (!listing.location.toLowerCase().contains(loc)) {
+        return false;
+      }
     }
 
     return true;

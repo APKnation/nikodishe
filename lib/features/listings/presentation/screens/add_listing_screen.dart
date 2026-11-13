@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/app_network_image.dart';
 import '../../../../data/models/listing_model.dart';
+import '../../../../data/services/api_service.dart';
 import '../../../auth/providers/auth_provider.dart';
 import '../../providers/listings_provider.dart';
 
@@ -426,15 +428,37 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
     }
   }
 
-  void _submitListing() {
+  Future<void> _submitListing() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() => _isSubmitting = true);
     final user = ref.read(currentUserProvider);
 
+    // Upload local device images to backend if available
+    final List<String> uploadedImages = [];
+    final apiService = ApiService();
+
+    for (final path in _selectedImages) {
+      if (path.startsWith('/') || path.startsWith('file://')) {
+        try {
+          final file = File(path.replaceFirst('file://', ''));
+          if (file.existsSync()) {
+            final remoteUrl = await apiService.uploadImageFile(file);
+            if (remoteUrl.isNotEmpty) {
+              uploadedImages.add(remoteUrl);
+              continue;
+            }
+          }
+        } catch (_) {
+          // Keep local path if upload fails
+        }
+      }
+      uploadedImages.add(path);
+    }
+
     // Kama mtumiaji hajaweka picha yoyote, chukua sampuli nzuri ya kwanza ya category husika
-    final finalImages = _selectedImages.isNotEmpty
-        ? List<String>.from(_selectedImages)
+    final finalImages = uploadedImages.isNotEmpty
+        ? uploadedImages
         : [
             _sampleTemplates[_selectedCategory]?.first['url'] ??
                 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800'
@@ -459,7 +483,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
       createdAt: DateTime.now(),
     );
 
-    ref.read(listingsProvider.notifier).addListing(newListing);
+    await ref.read(listingsProvider.notifier).addListing(newListing);
 
     setState(() {
       _isSubmitting = false;

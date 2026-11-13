@@ -71,10 +71,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       renterName: user?.name ?? booking.renterName,
       ownerId: booking.ownerId,
       amount: amountToPay,
-      paymentMethod: _selectedMethod,
-      paymentType: _selectedType,
+      method: _selectedMethod,
+      type: _selectedType,
       status: PaymentStatus.pending,
-      referenceCode: 'TZ${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}',
+      transactionRef: 'TZ${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}',
       phoneNumber: _phoneController.text.trim(),
       createdAt: DateTime.now(),
     );

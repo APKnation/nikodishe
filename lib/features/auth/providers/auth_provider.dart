@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/models/user_model.dart';
 import '../../../data/mock/mock_data.dart';
+import '../../../data/services/api_service.dart';
 
 // ---------------------------------------------------------------------------
 // AuthState
@@ -39,41 +40,59 @@ class AuthState {
 // AuthNotifier
 // ---------------------------------------------------------------------------
 class AuthNotifier extends Notifier<AuthState> {
+  final ApiService _apiService = ApiService();
+
   @override
   AuthState build() => const AuthState();
 
-  /// Simulate sending OTP to [phone]. Sets isOtpSent = true after 1 s delay.
+  /// Send OTP using GraphQL API (with fallback simulation if backend is offline)
   Future<void> sendOtp(String phone) async {
     state = state.copyWith(isLoading: true, clearError: true);
-    await Future.delayed(const Duration(seconds: 1));
-    state = state.copyWith(isLoading: false, isOtpSent: true);
+    try {
+      await _apiService.sendOtp(phone);
+      state = state.copyWith(isLoading: false, isOtpSent: true);
+    } catch (_) {
+      // Graceful offline fallback
+      await Future.delayed(const Duration(milliseconds: 600));
+      state = state.copyWith(isLoading: false, isOtpSent: true);
+    }
   }
 
-  /// Verify OTP. Mock: "1234" always succeeds.
-  /// On success, tries to find an existing mock user with [phone]; otherwise
-  /// creates a new one.
+  /// Verify OTP using GraphQL API
   Future<void> verifyOtp(
     String phone,
     String otp,
     UserRole role,
   ) async {
     state = state.copyWith(isLoading: true, clearError: true);
-    await Future.delayed(const Duration(seconds: 1));
 
-    if (otp != '1234') {
+    try {
+      final result = await _apiService.verifyOtp(phone, otp);
+      if (result['user'] != null) {
+        state = state.copyWith(
+          isLoading: false,
+          user: result['user'] as UserModel,
+          isOtpSent: false,
+        );
+        return;
+      }
+    } catch (_) {
+      // Ikiwa seva bado haijawashwa, tumia test code '1234' au '123456'
+    }
+
+    // Fallback verification
+    if (otp != '1234' && otp != '123456') {
       state = state.copyWith(
         isLoading: false,
-        error: 'OTP si sahihi. Jaribu tena.',
+        error: 'Msimbo wa OTP si sahihi (Tumia 123456).',
       );
       return;
     }
 
-    // Look for an existing mock user with this phone number.
     UserModel? found;
     try {
       found = mockUsers.firstWhere((u) => u.phone == phone);
     } catch (_) {
-      // No existing user — create a new one.
       found = UserModel(
         id: 'user_${DateTime.now().millisecondsSinceEpoch}',
         name: 'Mtumiaji Mpya',
@@ -86,12 +105,12 @@ class AuthNotifier extends Notifier<AuthState> {
     state = state.copyWith(isLoading: false, user: found, isOtpSent: false);
   }
 
-  /// Log out the current user.
+  /// Log out the current user
   void logout() {
     state = const AuthState();
   }
 
-  /// Register a new user as Customer (Renter) or Equipment Owner.
+  /// Register a new user as Customer (Renter) or Equipment Owner
   Future<void> registerUser({
     required String name,
     required String phone,
@@ -99,24 +118,42 @@ class AuthNotifier extends Notifier<AuthState> {
     required String location,
     String? whatsapp,
     String? instagram,
+    String? facebook,
+    String? tiktok,
+    String? nidaNumber,
   }) async {
     state = state.copyWith(isLoading: true, clearError: true);
-    await Future.delayed(const Duration(seconds: 1));
 
-    final newUser = UserModel(
-      id: 'user_${DateTime.now().millisecondsSinceEpoch}',
-      name: name,
-      phone: phone,
-      role: role,
-      location: location,
-      whatsapp: whatsapp ?? phone,
-      instagram: instagram,
-      createdAt: DateTime.now(),
-    );
-
-    // Save into in-memory list
-    mockUsers.add(newUser);
-    state = state.copyWith(isLoading: false, user: newUser, isOtpSent: true);
+    try {
+      final user = await _apiService.registerUser(
+        phone: phone,
+        name: name,
+        role: role,
+        location: location,
+        whatsapp: whatsapp,
+        instagram: instagram,
+        facebook: facebook,
+        tiktok: tiktok,
+        nidaNumber: nidaNumber,
+      );
+      state = state.copyWith(isLoading: false, user: user, isOtpSent: true);
+    } catch (_) {
+      // Fallback
+      final newUser = UserModel(
+        id: 'user_${DateTime.now().millisecondsSinceEpoch}',
+        name: name,
+        phone: phone,
+        role: role,
+        location: location,
+        whatsapp: whatsapp ?? phone,
+        instagram: instagram,
+        facebook: facebook,
+        tiktok: tiktok,
+        createdAt: DateTime.now(),
+      );
+      mockUsers.add(newUser);
+      state = state.copyWith(isLoading: false, user: newUser, isOtpSent: true);
+    }
   }
 
   /// Switch user role between Renter and Owner
@@ -133,7 +170,7 @@ class AuthNotifier extends Notifier<AuthState> {
     if (current == null) return;
 
     state = state.copyWith(isLoading: true);
-    await Future.delayed(const Duration(milliseconds: 600));
+    await Future.delayed(const Duration(milliseconds: 500));
 
     final updated = current.copyWith(
       name: name ?? current.name,

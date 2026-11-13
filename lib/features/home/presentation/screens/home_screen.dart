@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/localization/locale_provider.dart';
+import '../../../../core/widgets/backend_status_banner.dart';
 import '../../../../providers/app_providers.dart';
 import '../../../bookings/presentation/screens/my_bookings_screen.dart';
 import '../../../listings/presentation/screens/add_listing_screen.dart';
@@ -24,9 +25,16 @@ class HomeScreen extends ConsumerWidget {
     ];
 
     return Scaffold(
-      body: IndexedStack(
-        index: selectedIndex,
-        children: screens,
+      body: Column(
+        children: [
+          const BackendStatusBanner(),
+          Expanded(
+            child: IndexedStack(
+              index: selectedIndex,
+              children: screens,
+            ),
+          ),
+        ],
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(

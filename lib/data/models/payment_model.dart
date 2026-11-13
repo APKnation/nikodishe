@@ -1,6 +1,6 @@
-enum PaymentMethod { mpesa, airtelMoney, tigoPesa }
+enum PaymentMethod { mpesa, airtelMoney, tigoPesa, haloPesa }
 
-enum PaymentType { deposit, full }
+enum PaymentType { deposit, full, remainder }
 
 enum PaymentStatus { pending, completed, failed }
 
@@ -12,37 +12,44 @@ class PaymentModel {
   final String renterName;
   final String ownerId;
   final double amount;
-  final PaymentMethod paymentMethod;
-  final PaymentType paymentType;
+  final PaymentMethod method;
+  final PaymentType type;
   final PaymentStatus status;
-  final String referenceCode;
+  final String transactionRef;
   final String phoneNumber;
   final DateTime createdAt;
 
   const PaymentModel({
     required this.id,
     required this.bookingId,
-    required this.listingTitle,
-    required this.renterId,
-    required this.renterName,
-    required this.ownerId,
+    this.listingTitle = '',
+    this.renterId = '',
+    this.renterName = '',
+    this.ownerId = '',
     required this.amount,
-    required this.paymentMethod,
-    required this.paymentType,
+    required this.method,
+    required this.type,
     required this.status,
-    required this.referenceCode,
+    required this.transactionRef,
     required this.phoneNumber,
     required this.createdAt,
   });
 
+  // Keep old names as shims for backward compat
+  PaymentMethod get paymentMethod => method;
+  PaymentType get paymentType => type;
+  String get referenceCode => transactionRef;
+
   String get methodLabel {
-    switch (paymentMethod) {
+    switch (method) {
       case PaymentMethod.mpesa:
         return 'M-Pesa (Vodacom)';
       case PaymentMethod.airtelMoney:
         return 'Airtel Money';
       case PaymentMethod.tigoPesa:
         return 'Tigo Pesa / Mixx';
+      case PaymentMethod.haloPesa:
+        return 'HaloPesa';
     }
   }
 
@@ -58,11 +65,13 @@ class PaymentModel {
   }
 
   String get typeLabel {
-    switch (paymentType) {
+    switch (type) {
       case PaymentType.deposit:
-        return 'Amana (Deposit)';
+        return 'Amana (Deposit 40%)';
       case PaymentType.full:
         return 'Malipo Kamili (Full)';
+      case PaymentType.remainder:
+        return 'Kumalizia Salio (60%)';
     }
   }
 
@@ -74,10 +83,10 @@ class PaymentModel {
     String? renterName,
     String? ownerId,
     double? amount,
-    PaymentMethod? paymentMethod,
-    PaymentType? paymentType,
+    PaymentMethod? method,
+    PaymentType? type,
     PaymentStatus? status,
-    String? referenceCode,
+    String? transactionRef,
     String? phoneNumber,
     DateTime? createdAt,
   }) {
@@ -89,13 +98,12 @@ class PaymentModel {
       renterName: renterName ?? this.renterName,
       ownerId: ownerId ?? this.ownerId,
       amount: amount ?? this.amount,
-      paymentMethod: paymentMethod ?? this.paymentMethod,
-      paymentType: paymentType ?? this.paymentType,
+      method: method ?? this.method,
+      type: type ?? this.type,
       status: status ?? this.status,
-      referenceCode: referenceCode ?? this.referenceCode,
+      transactionRef: transactionRef ?? this.transactionRef,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       createdAt: createdAt ?? this.createdAt,
     );
   }
 }
-

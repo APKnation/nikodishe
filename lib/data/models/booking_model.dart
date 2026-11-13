@@ -10,6 +10,8 @@ class BookingModel {
   final String renterId;
   final String renterName;
   final String ownerId;
+  final String ownerName;
+  final String ownerPhone;
   final DateTime startDate;
   final DateTime endDate;
   final double totalPrice;
@@ -19,11 +21,13 @@ class BookingModel {
   const BookingModel({
     required this.id,
     required this.listingId,
-    required this.listingTitle,
-    required this.listingImage,
-    required this.renterId,
-    required this.renterName,
+    this.listingTitle = '',
+    this.listingImage = '',
+    this.renterId = '',
+    this.renterName = '',
     required this.ownerId,
+    this.ownerName = '',
+    this.ownerPhone = '',
     required this.startDate,
     required this.endDate,
     required this.totalPrice,
@@ -69,6 +73,8 @@ class BookingModel {
     String? renterId,
     String? renterName,
     String? ownerId,
+    String? ownerName,
+    String? ownerPhone,
     DateTime? startDate,
     DateTime? endDate,
     double? totalPrice,
@@ -83,6 +89,8 @@ class BookingModel {
       renterId: renterId ?? this.renterId,
       renterName: renterName ?? this.renterName,
       ownerId: ownerId ?? this.ownerId,
+      ownerName: ownerName ?? this.ownerName,
+      ownerPhone: ownerPhone ?? this.ownerPhone,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       totalPrice: totalPrice ?? this.totalPrice,
@@ -100,6 +108,8 @@ class BookingModel {
       'renterId': renterId,
       'renterName': renterName,
       'ownerId': ownerId,
+      'ownerName': ownerName,
+      'ownerPhone': ownerPhone,
       'startDate': startDate.toIso8601String(),
       'endDate': endDate.toIso8601String(),
       'totalPrice': totalPrice,
@@ -112,11 +122,13 @@ class BookingModel {
     return BookingModel(
       id: map['id'] as String,
       listingId: map['listingId'] as String,
-      listingTitle: map['listingTitle'] as String,
-      listingImage: map['listingImage'] as String,
-      renterId: map['renterId'] as String,
-      renterName: map['renterName'] as String,
-      ownerId: map['ownerId'] as String,
+      listingTitle: (map['listingTitle'] as String?) ?? '',
+      listingImage: (map['listingImage'] as String?) ?? '',
+      renterId: (map['renterId'] as String?) ?? '',
+      renterName: (map['renterName'] as String?) ?? '',
+      ownerId: (map['ownerId'] as String?) ?? '',
+      ownerName: (map['ownerName'] as String?) ?? '',
+      ownerPhone: (map['ownerPhone'] as String?) ?? '',
       startDate: DateTime.parse(map['startDate'] as String),
       endDate: DateTime.parse(map['endDate'] as String),
       totalPrice: (map['totalPrice'] as num).toDouble(),

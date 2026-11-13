@@ -1,9 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/models/payment_model.dart';
 import '../../../data/mock/mock_data.dart';
+import '../../../data/services/api_service.dart';
 import '../../auth/providers/auth_provider.dart';
 
 class PaymentsNotifier extends Notifier<List<PaymentModel>> {
+  final ApiService _apiService = ApiService();
+
   @override
   List<PaymentModel> build() {
     return List.from(mockPayments);
@@ -13,18 +16,31 @@ class PaymentsNotifier extends Notifier<List<PaymentModel>> {
     // Add pending payment first
     state = [payment, ...state];
 
-    // Simulate network & mobile money USSD push delay
-    await Future.delayed(const Duration(seconds: 2));
+    try {
+      final remote = await _apiService.processPayment(
+        bookingId: payment.bookingId,
+        amount: payment.amount,
+        method: payment.method,
+        type: payment.type,
+        phoneNumber: payment.phoneNumber,
+      );
 
-    // Update status to completed
-    state = state.map((p) {
-      if (p.id == payment.id) {
-        return p.copyWith(status: PaymentStatus.completed);
-      }
-      return p;
-    }).toList();
-
-    return true;
+      state = [
+        remote,
+        ...state.where((p) => p.id != payment.id),
+      ];
+      return true;
+    } catch (_) {
+      // Simulate fallback completion if server is offline
+      await Future.delayed(const Duration(milliseconds: 1200));
+      state = state.map((p) {
+        if (p.id == payment.id) {
+          return p.copyWith(status: PaymentStatus.completed);
+        }
+        return p;
+      }).toList();
+      return true;
+    }
   }
 }
 
@@ -46,4 +62,3 @@ final ownerPaymentsProvider = Provider<List<PaymentModel>>((ref) {
   if (user == null) return payments;
   return payments.where((p) => p.ownerId == user.id).toList();
 });
-

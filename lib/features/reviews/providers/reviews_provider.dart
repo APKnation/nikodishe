@@ -1,6 +1,10 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/network/api_config.dart';
 import '../../../data/models/review_model.dart';
 import '../../../data/mock/mock_data.dart';
+import '../../../data/services/graphql_client.dart';
 import '../../listings/providers/listings_provider.dart';
 
 class ReviewsNotifier extends Notifier<List<ReviewModel>> {
@@ -9,10 +13,32 @@ class ReviewsNotifier extends Notifier<List<ReviewModel>> {
     return List.from(mockReviews);
   }
 
-  void addReview(ReviewModel review) {
+  Future<void> addReview(ReviewModel review) async {
     state = [review, ...state];
 
-    // Optionally update the listing's rating
+    // Push review to GraphQL backend
+    try {
+      const mutation = r'''
+        mutation CreateReview($bookingId: ID!, $rating: Int!, $comment: String!) {
+          createReview(bookingId: $bookingId, rating: $rating, comment: $comment) {
+            success
+            message
+          }
+        }
+      ''';
+      await GraphQLClient().execute(
+        query: mutation,
+        variables: {
+          'bookingId': review.bookingId,
+          'rating': review.rating.toInt(),
+          'comment': review.comment,
+        },
+      );
+    } catch (_) {
+      // If backend is unavailable, local review still shows
+    }
+
+    // Update the listing's local average rating
     final listingReviews = state.where((r) => r.listingId == review.listingId).toList();
     if (listingReviews.isNotEmpty) {
       final avg = listingReviews.map((r) => r.rating).reduce((a, b) => a + b) / listingReviews.length;
@@ -43,4 +69,3 @@ final reviewsForOwnerProvider =
   final all = ref.watch(reviewsProvider);
   return all.where((r) => r.ownerId == ownerId).toList();
 });
-
