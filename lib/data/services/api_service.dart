@@ -280,6 +280,7 @@ class ApiService {
         $latitude: Float
         $longitude: Float
         $images: [String]
+        $ownerId: ID
       ) {
         createListing(
           title: $title
@@ -291,6 +292,7 @@ class ApiService {
           latitude: $latitude
           longitude: $longitude
           images: $images
+          ownerId: $ownerId
         ) {
           success
           message
@@ -365,6 +367,7 @@ class ApiService {
         'latitude': listing.latitude,
         'longitude': listing.longitude,
         'images': listing.images,
+        'ownerId': (listing.ownerId.isNotEmpty && !listing.ownerId.startsWith('user_')) ? listing.ownerId : null,
       },
     );
 

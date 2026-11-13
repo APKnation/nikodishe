@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../constants/app_colors.dart';
+import '../network/api_config.dart';
 
 class AppNetworkImage extends StatelessWidget {
   final String imageUrl;
@@ -27,15 +28,25 @@ class AppNetworkImage extends StatelessWidget {
     final clipRadius = borderRadius ?? BorderRadius.zero;
     final cleanUrl = imageUrl.trim();
 
-    if (cleanUrl.isEmpty) {
+    if (cleanUrl.isEmpty || cleanUrl == 'placeholder.jpg') {
       return _buildPlaceholder(clipRadius);
     }
 
+    // Rekebisha URL za media za backend (mf. /media/listings/... au localhost/127.0.0.1)
+    String targetUrl = cleanUrl;
+    if (targetUrl.startsWith('/media/') || targetUrl.startsWith('/static/')) {
+      targetUrl = ApiConfig.resolveMediaUrl(targetUrl);
+    } else if (targetUrl.contains('127.0.0.1:8000') ||
+        targetUrl.contains('localhost:8000') ||
+        targetUrl.contains('10.0.2.2:8000')) {
+      targetUrl = ApiConfig.resolveMediaUrl(targetUrl);
+    }
+
     // 1. Base64 Data URI
-    if (cleanUrl.startsWith('data:image')) {
+    if (targetUrl.startsWith('data:image')) {
       try {
-        final commaIdx = cleanUrl.indexOf(',');
-        final base64Str = commaIdx != -1 ? cleanUrl.substring(commaIdx + 1) : cleanUrl;
+        final commaIdx = targetUrl.indexOf(',');
+        final base64Str = commaIdx != -1 ? targetUrl.substring(commaIdx + 1) : targetUrl;
         final bytes = base64Decode(base64Str);
         return ClipRRect(
           borderRadius: clipRadius,
@@ -52,34 +63,12 @@ class AppNetworkImage extends StatelessWidget {
       }
     }
 
-    // 2. Local File Image (Camera, Gallery, File Path)
-    if (!kIsWeb && (cleanUrl.startsWith('/') || cleanUrl.startsWith('file://'))) {
-      try {
-        final filePath = cleanUrl.replaceFirst('file://', '');
-        final file = File(filePath);
-        if (file.existsSync()) {
-          return ClipRRect(
-            borderRadius: clipRadius,
-            child: Image.file(
-              file,
-              width: width,
-              height: height,
-              fit: fit,
-              errorBuilder: (_, __, ___) => _buildPlaceholder(clipRadius),
-            ),
-          );
-        }
-      } catch (_) {
-        // Fall back to placeholder if file access fails
-      }
-    }
-
-    // 3. Network URL (http/https)
-    if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://')) {
+    // 2. Network URL (http/https) - Pakua picha kutoka mtandaoni au backend
+    if (targetUrl.startsWith('http://') || targetUrl.startsWith('https://')) {
       return ClipRRect(
         borderRadius: clipRadius,
         child: Image.network(
-          cleanUrl,
+          targetUrl,
           width: width,
           height: height,
           fit: fit,
@@ -113,7 +102,29 @@ class AppNetworkImage extends StatelessWidget {
       );
     }
 
-    // 4. Default placeholder for placeholders like 'placeholder.jpg' or assets
+    // 3. Local File Image (Camera, Gallery au Storage ya simu)
+    if (!kIsWeb && (targetUrl.startsWith('/') || targetUrl.startsWith('file://'))) {
+      try {
+        final filePath = targetUrl.replaceFirst('file://', '');
+        final file = File(filePath);
+        if (file.existsSync()) {
+          return ClipRRect(
+            borderRadius: clipRadius,
+            child: Image.file(
+              file,
+              width: width,
+              height: height,
+              fit: fit,
+              errorBuilder: (_, __, ___) => _buildPlaceholder(clipRadius),
+            ),
+          );
+        }
+      } catch (_) {
+        // Fall back to placeholder
+      }
+    }
+
+    // 4. Fallback placeholder
     return _buildPlaceholder(clipRadius);
   }
 

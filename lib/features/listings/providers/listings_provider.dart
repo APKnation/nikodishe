@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../data/models/listing_model.dart';
 import '../../../data/mock/mock_data.dart';
@@ -100,13 +101,14 @@ class ListingsNotifier extends Notifier<List<ListingModel>> {
 
     try {
       final created = await _apiService.createListing(listing);
+      debugPrint('KIFAP KIMEWEKWA BACKEND KWA MAFANIKIO: ID=${created.id}, Jina=${created.title}');
       // Update with server created model (having server generated ID)
       state = [
         created,
         ...state.where((l) => l.id != listing.id),
       ];
-    } catch (_) {
-      // Stays in local state if backend is currently unreachable
+    } catch (e) {
+      debugPrint('HITILAFU YA KUTUMA KIFAP KWENYE BACKEND: $e');
     }
   }
 

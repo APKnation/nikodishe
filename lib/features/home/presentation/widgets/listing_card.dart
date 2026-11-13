@@ -54,7 +54,9 @@ class ListingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final catColor = _getCategoryColor(listing.category);
-    final hasRealImage = listing.images.isNotEmpty && listing.images.first.startsWith('http');
+    final hasRealImage = listing.images.isNotEmpty &&
+        listing.images.first.trim().isNotEmpty &&
+        listing.images.first != 'placeholder.jpg';
 
     return InkWell(
       onTap: () => context.push('/listings/${listing.id}'),

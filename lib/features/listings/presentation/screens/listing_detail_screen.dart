@@ -104,7 +104,9 @@ class ListingDetailScreen extends ConsumerWidget {
                     subtitle: listing.location,
                   );
                 },
-                child: listing.images.isNotEmpty && listing.images.first.startsWith('http')
+                child: listing.images.isNotEmpty &&
+                        listing.images.first.trim().isNotEmpty &&
+                        listing.images.first != 'placeholder.jpg'
                     ? Stack(
                         fit: StackFit.expand,
                         children: [

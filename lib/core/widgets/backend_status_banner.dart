@@ -14,9 +14,9 @@ final backendStatusProvider = StreamProvider<bool>((ref) async* {
 Future<bool> _checkBackend() async {
   try {
     final response = await http
-        .get(Uri.parse(ApiConfig.graphqlUrl))
+        .get(Uri.parse(ApiConfig.healthUrl))
         .timeout(const Duration(seconds: 3));
-    return response.statusCode < 500;
+    return response.statusCode == 200;
   } catch (_) {
     return false;
   }

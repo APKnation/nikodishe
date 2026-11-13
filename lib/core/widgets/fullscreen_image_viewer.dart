@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'app_network_image.dart';
 
 class FullscreenImageViewer extends StatefulWidget {
   final List<String> images;
@@ -56,7 +57,9 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
 
   @override
   Widget build(BuildContext context) {
-    final validImages = widget.images.where((img) => img.startsWith('http')).toList();
+    final validImages = widget.images
+        .where((img) => img.trim().isNotEmpty && img != 'placeholder.jpg')
+        .toList();
     final hasImages = validImages.isNotEmpty;
 
     return Dialog(
@@ -90,20 +93,12 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
                   minScale: 0.8,
                   maxScale: 4.0,
                   child: Center(
-                    child: Image.network(
-                      validImages[index],
+                    child: AppNetworkImage(
+                      imageUrl: validImages[index],
                       fit: BoxFit.contain,
-                      loadingBuilder: (context, child, progress) {
-                        if (progress == null) return child;
-                        return const Center(
-                          child: CircularProgressIndicator(color: Colors.white),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Icon(Icons.broken_image, size: 64, color: Colors.white54),
-                        );
-                      },
+                      width: double.infinity,
+                      height: double.infinity,
+                      placeholderIcon: Icons.image_outlined,
                     ),
                   ),
                 );

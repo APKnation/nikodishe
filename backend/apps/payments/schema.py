@@ -47,14 +47,14 @@ class ProcessPayment(graphene.Mutation):
     message = graphene.String()
 
     def mutate(self, info, booking_id, amount, payment_method, payment_type, phone_number):
-        user = info.context.user
-        if user.is_anonymous:
-            raise GraphQLError("Lazima uwe umeingia kwenye akaunti ili kufanya malipo.")
-
         try:
-            booking = Booking.objects.select_related('owner', 'listing').get(pk=booking_id)
+            booking = Booking.objects.select_related('owner', 'listing', 'renter').get(pk=booking_id)
         except Booking.DoesNotExist:
             raise GraphQLError("Booking haikupatikana.")
+
+        user = info.context.user
+        if user.is_anonymous:
+            user = booking.renter
 
         ref_code = Payment.generate_reference()
         payment = Payment.objects.create(

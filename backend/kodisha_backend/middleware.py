@@ -24,3 +24,4 @@ class KodishaFallbackTokenMiddleware(MiddlewareMixin):
                         request.user = user
             except Exception:
                 pass
+
