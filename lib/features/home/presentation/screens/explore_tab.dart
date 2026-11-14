@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/app_logo.dart';
 import '../../../../data/models/listing_model.dart';
 import '../../../auth/providers/auth_provider.dart';
 import '../../../notifications/providers/notifications_provider.dart';
@@ -35,18 +36,7 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
       appBar: AppBar(
         title: Row(
           children: [
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(
-                Icons.handyman,
-                color: AppColors.primary,
-                size: 20,
-              ),
-            ),
+            const AppLogo(height: 30, radius: 8),
             const SizedBox(width: 8),
             const Text(
               'Kodisha',

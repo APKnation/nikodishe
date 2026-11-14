@@ -72,6 +72,8 @@ flutter:
 
   # ─── Assets ────────────────────────────────────────────────────────────────
   assets:
+    - assets/images/kukodisha.jpeg
+    - assets/images/kukodisha_transparent.png
     - assets/images/login_design.png
     - assets/images/register_design.png
 

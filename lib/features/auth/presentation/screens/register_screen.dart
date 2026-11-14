@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/widgets/auth_background.dart';
+import '../../../../core/widgets/app_logo.dart';
+import '../../../../core/widgets/bottom_wave.dart';
+import '../../../../core/widgets/wave_header.dart';
 import '../../../../data/models/user_model.dart';
 import '../../providers/auth_provider.dart';
 
@@ -12,7 +14,12 @@ class RegisterScreen extends ConsumerStatefulWidget {
   final String? initialPhone;
   final String? redirectTo;
 
-  const RegisterScreen({super.key, this.initialRole = UserRole.renter, this.initialPhone, this.redirectTo});
+  const RegisterScreen({
+    super.key,
+    this.initialRole = UserRole.renter,
+    this.initialPhone,
+    this.redirectTo,
+  });
 
   @override
   ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
@@ -77,82 +84,89 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
+    final size = MediaQuery.sizeOf(context);
+    final bool compact = size.height < 720 || size.width < 360;
+    final double headerHeight =
+        (size.height * (compact ? 0.27 : 0.29)).clamp(166.0, 250.0).toDouble();
+    final double waveHeight = (size.height * 0.12).clamp(70.0, 112.0).toDouble();
+    final double hPad = size.width < 360 ? 20 : 28;
 
     return Scaffold(
-      body: AuthBackground(
-        child: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(22, 16, 22, 22),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight - 38),
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 460),
-                      child: Form(
-                        key: _formKey,
-                        child: Container(
-                          padding: const EdgeInsets.fromLTRB(24, 20, 24, 22),
-                          decoration: BoxDecoration(
-                            color: AppColors.white,
-                            borderRadius: BorderRadius.circular(30),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.18),
-                                blurRadius: 40,
-                                offset: const Offset(0, 20),
-                              ),
-                            ],
-                          ),
+      backgroundColor: AppColors.white,
+      body: Column(
+        children: [
+          WaveHeader(
+            height: headerHeight,
+            colors: const [AppColors.blue, AppColors.blue],
+            child: SafeArea(
+              bottom: false,
+              child: Stack(
+                children: [
+                  Center(
+                    child: LayoutBuilder(
+                      builder: (context, inner) {
+                        final logo = AppLogo.responsiveSize(
+                          inner.maxWidth,
+                          fraction: 0.62,
+                          minWidth: 170,
+                          maxWidth: 250,
+                        );
+                        return AppLogo(
+                          width: logo.width,
+                          height: logo.height,
+                          radius: compact ? 14 : 18,
+                        );
+                      },
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    left: 4,
+                    child: IconButton(
+                      onPressed: () => context.go('/auth/phone'),
+                      icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+                      style: IconButton.styleFrom(
+                        backgroundColor: AppColors.white.withOpacity(0.18),
+                        foregroundColor: AppColors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(hPad, compact ? 16 : 22, hPad, 16),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight - (compact ? 32 : 38)),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 460),
+                        child: Form(
+                          key: _formKey,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Row(
-                                children: [
-                                  IconButton(
-                                    onPressed: () => context.go('/auth/phone'),
-                                    icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-                                    style: IconButton.styleFrom(
-                                      backgroundColor: AppColors.blueTintSoft,
-                                      foregroundColor: AppColors.primary,
-                                    ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  const Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          'Kamilisha usajili',
-                                          style: TextStyle(
-                                            fontSize: 22,
-                                            fontWeight: FontWeight.w800,
-                                            color: AppColors.textPrimary,
-                                            letterSpacing: -0.4,
-                                          ),
-                                        ),
-                                        SizedBox(height: 2),
-                                        Text(
-                                          'Taarifa chache tu ili uanze.',
-                                          style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
+                              const Text(
+                                'USAJILI MPYA',
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.blue,
+                                  letterSpacing: 1.6,
+                                ),
                               ),
-                              const SizedBox(height: 18),
+                              const SizedBox(height: 20),
                               _label('Jina kamili'),
-                              const SizedBox(height: 6),
                               TextFormField(
                                 controller: _nameController,
                                 textCapitalization: TextCapitalization.words,
-                                decoration: InputDecoration(
-                                  hintText: 'Mfano: Juma Said',
-                                  prefixIcon: const Icon(Icons.person_outline_rounded),
-                                  filled: true,
-                                  fillColor: AppColors.surfaceSubtle.withOpacity(0.6),
+                                decoration: _underlineDecoration(
+                                  hint: 'Mfano: Juma Said',
+                                  icon: Icons.person_outline_rounded,
                                 ),
                                 validator: (val) {
                                   final v = val?.trim() ?? '';
@@ -161,19 +175,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 14),
+                              const SizedBox(height: 16),
                               _label('Namba ya simu'),
-                              const SizedBox(height: 6),
                               TextFormField(
                                 controller: _phoneController,
                                 keyboardType: TextInputType.phone,
                                 readOnly: widget.initialPhone != null && widget.initialPhone!.isNotEmpty,
-                                decoration: InputDecoration(
-                                  hintText: '7XX XXX XXX',
-                                  prefixIcon: const Icon(Icons.phone_android_outlined),
-                                  prefixText: '+255 ',
-                                  filled: true,
-                                  fillColor: AppColors.surfaceSubtle.withOpacity(0.6),
+                                decoration: _underlineDecoration(
+                                  hint: '7XX XXX XXX',
+                                  icon: Icons.phone_android_outlined,
                                 ),
                                 validator: (val) {
                                   final v = val?.trim() ?? '';
@@ -182,43 +192,36 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 14),
+                              const SizedBox(height: 16),
                               _label('Eneo unaloishi'),
-                              const SizedBox(height: 6),
                               TextFormField(
                                 controller: _locationController,
                                 textCapitalization: TextCapitalization.words,
-                                decoration: InputDecoration(
-                                  hintText: 'Mfano: Mwenge, Dar es Salaam',
-                                  prefixIcon: const Icon(Icons.location_on_outlined),
-                                  filled: true,
-                                  fillColor: AppColors.surfaceSubtle.withOpacity(0.6),
+                                decoration: _underlineDecoration(
+                                  hint: 'Mfano: Mwenge, Dar es Salaam',
+                                  icon: Icons.location_on_outlined,
                                 ),
                                 validator: (val) {
                                   if ((val?.trim() ?? '').isEmpty) return 'Tafadhali ingiza eneo';
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 14),
+                              const SizedBox(height: 16),
                               _label('Namba ya NIDA (hiari)'),
-                              const SizedBox(height: 6),
                               TextFormField(
                                 controller: _nidaController,
-                                decoration: InputDecoration(
-                                  hintText: 'Huongeza uaminifu wa akaunti',
-                                  prefixIcon: const Icon(Icons.badge_outlined),
-                                  filled: true,
-                                  fillColor: AppColors.surfaceSubtle.withOpacity(0.6),
+                                decoration: _underlineDecoration(
+                                  hint: 'Huongeza uaminifu wa akaunti',
+                                  icon: Icons.badge_outlined,
                                 ),
                               ),
                               if (authState.error != null) ...[
-                                const SizedBox(height: 14),
+                                const SizedBox(height: 16),
                                 Container(
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
-                                    color: AppColors.amberTint.withOpacity(0.7),
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(color: AppColors.amber.withOpacity(0.4)),
+                                    color: AppColors.amberTint,
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Text(
                                     authState.error!,
@@ -226,7 +229,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   ),
                                 ),
                               ],
-                              const SizedBox(height: 20),
+                              const SizedBox(height: 28),
                               SizedBox(
                                 height: 54,
                                 width: double.infinity,
@@ -234,13 +237,19 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   onPressed: authState.isLoading ? null : _handleRegister,
                                   style: ElevatedButton.styleFrom(
                                     elevation: 0,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                    backgroundColor: AppColors.blue,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(14),
+                                    ),
                                   ),
                                   child: authState.isLoading
                                       ? const SizedBox(
                                           width: 22,
                                           height: 22,
-                                          child: CircularProgressIndicator(strokeWidth: 2.5, color: AppColors.white),
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2.5,
+                                            color: AppColors.white,
+                                          ),
                                         )
                                       : const Text('Kamilisha na Ingia'),
                                 ),
@@ -251,22 +260,48 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
-        ),
+          BottomWave(height: waveHeight, color: AppColors.blue),
+        ],
       ),
     );
   }
 
   Widget _label(String text) {
-    return Text(
-      text,
-      style: const TextStyle(
-        fontSize: 13,
-        fontWeight: FontWeight.w700,
-        color: AppColors.textPrimary,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 2),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: AppColors.textPrimary,
+        ),
+      ),
+    );
+  }
+
+  InputDecoration _underlineDecoration({required String hint, required IconData icon}) {
+    return InputDecoration(
+      hintText: hint,
+      prefixIcon: Icon(icon),
+      prefixIconConstraints: const BoxConstraints(minWidth: 38, minHeight: 38),
+      filled: false,
+      isDense: true,
+      contentPadding: const EdgeInsets.symmetric(vertical: 14),
+      border: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
+      enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
+      focusedBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: AppColors.blue, width: 2),
+      ),
+      errorBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: AppColors.amberDark),
+      ),
+      focusedErrorBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: AppColors.amberDark, width: 2),
       ),
     );
   }

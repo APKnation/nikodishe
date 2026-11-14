@@ -6,7 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../core/widgets/auth_background.dart';
+import '../../../../core/widgets/bottom_wave.dart';
+import '../../../../core/widgets/wave_header.dart';
 import '../../../../data/models/user_model.dart';
 import '../../providers/auth_provider.dart';
 
@@ -114,141 +115,149 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
     final isComplete = _otp.length == 6;
+    final size = MediaQuery.sizeOf(context);
+    final bool compact = size.height < 700 || size.width < 360;
+    final double headerHeight =
+        (size.height * (compact ? 0.26 : 0.28)).clamp(160.0, 242.0).toDouble();
+    final double waveHeight = (size.height * 0.12).clamp(70.0, 112.0).toDouble();
+    final double hPad = size.width < 360 ? 20 : 28;
 
     return Scaffold(
-      body: AuthBackground(
-        child: SafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(22, 16, 22, 22),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight - 38),
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 460),
-                      child: Container(
-                        padding: const EdgeInsets.fromLTRB(22, 20, 22, 22),
-                        decoration: BoxDecoration(
-                          color: AppColors.white,
-                          borderRadius: BorderRadius.circular(30),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.18),
-                              blurRadius: 40,
-                              offset: const Offset(0, 20),
-                            ),
-                          ],
+      backgroundColor: AppColors.white,
+      body: Column(
+        children: [
+          WaveHeader(
+            height: headerHeight,
+            colors: const [AppColors.blue, AppColors.blue],
+            child: SafeArea(
+              bottom: false,
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: compact ? 12 : 16),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    IconButton(
+                      onPressed: () => context.pop(),
+                      icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+                      style: IconButton.styleFrom(
+                        backgroundColor: AppColors.white.withOpacity(0.18),
+                        foregroundColor: AppColors.white,
+                      ),
+                    ),
+                    SizedBox(height: compact ? 6 : 10),
+                    Text(
+                      'Thibitisha OTP',
+                      style: TextStyle(
+                        fontSize: compact ? 23 : 27,
+                        fontWeight: FontWeight.w800,
+                        color: AppColors.white,
+                        letterSpacing: -0.5,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          fontSize: compact ? 12 : 13,
+                          color: AppColors.white.withOpacity(0.92),
                         ),
+                        children: [
+                          const TextSpan(text: 'Msimbo umetumwa kwa '),
+                          TextSpan(
+                            text: (widget.identifier != null && widget.identifier!.contains('@'))
+                                ? widget.identifier!
+                                : widget.phone,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  padding: EdgeInsets.fromLTRB(hPad, compact ? 16 : 22, hPad, 16),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight - (compact ? 32 : 38)),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(maxWidth: 460),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            Row(
-                              children: [
-                                IconButton(
-                                  onPressed: () => context.pop(),
-                                  icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-                                  style: IconButton.styleFrom(
-                                    backgroundColor: AppColors.blueTintSoft,
-                                    foregroundColor: AppColors.primary,
-                                  ),
-                                ),
-                                const SizedBox(width: 8),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      const Text(
-                                        'Thibitisha OTP',
-                                        style: TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.w800,
-                                          color: AppColors.textPrimary,
-                                          letterSpacing: -0.4,
-                                        ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      RichText(
-                                        text: TextSpan(
-                                          style: const TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
-                                          children: [
-                                            const TextSpan(text: 'Msimbo umetumwa kwa '),
-                                            TextSpan(
-                                              text: (widget.identifier != null && widget.identifier!.contains('@'))
-                                                  ? widget.identifier!
-                                                  : widget.phone,
-                                              style: const TextStyle(
-                                                fontWeight: FontWeight.w700,
-                                                color: AppColors.textPrimary,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                            const Text(
+                              'UTHIBITISHO',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.blue,
+                                letterSpacing: 1.6,
+                              ),
                             ),
                             const SizedBox(height: 22),
                             Row(
                               children: List.generate(6, (index) {
-                                final filled = _controllers[index].text.isNotEmpty;
                                 return Expanded(
                                   child: Padding(
-                                    padding: EdgeInsets.only(right: index == 5 ? 0 : 8),
-                                    child: SizedBox(
-                                      height: 58,
-                                      child: TextFormField(
-                                        controller: _controllers[index],
-                                        focusNode: _focusNodes[index],
-                                        keyboardType: TextInputType.number,
-                                        textAlign: TextAlign.center,
-                                        maxLength: 1,
-                                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                        style: const TextStyle(
-                                          fontSize: 22,
-                                          fontWeight: FontWeight.w700,
-                                          color: AppColors.textPrimary,
-                                        ),
-                                        decoration: InputDecoration(
-                                          counterText: '',
-                                          contentPadding: EdgeInsets.zero,
-                                          fillColor: filled
-                                              ? AppColors.blueTintSoft
-                                              : AppColors.surfaceSubtle.withOpacity(0.6),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(14),
-                                            borderSide: BorderSide(
-                                              color: filled ? AppColors.primary.withOpacity(0.5) : AppColors.border,
-                                              width: 1.5,
-                                            ),
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderRadius: BorderRadius.circular(14),
-                                            borderSide: const BorderSide(color: AppColors.primary, width: 2),
-                                          ),
-                                        ),
-                                        onChanged: (value) => _onDigitChanged(value, index),
+                                    padding: EdgeInsets.only(right: index == 5 ? 0 : 10),
+                                    child: TextFormField(
+                                      controller: _controllers[index],
+                                      focusNode: _focusNodes[index],
+                                      keyboardType: TextInputType.number,
+                                      textAlign: TextAlign.center,
+                                      maxLength: 1,
+                                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.textPrimary,
                                       ),
+                                      decoration: const InputDecoration(
+                                        counterText: '',
+                                        filled: false,
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.symmetric(vertical: 12),
+                                        border: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: AppColors.border),
+                                        ),
+                                        enabledBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: AppColors.border),
+                                        ),
+                                        focusedBorder: UnderlineInputBorder(
+                                          borderSide: BorderSide(color: AppColors.blue, width: 2),
+                                        ),
+                                      ),
+                                      onChanged: (value) => _onDigitChanged(value, index),
                                     ),
                                   ),
                                 );
                               }),
                             ),
-                            const SizedBox(height: 16),
+                            const SizedBox(height: 20),
                             Container(
                               width: double.infinity,
                               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
                               decoration: BoxDecoration(
-                                color: AppColors.amberTint.withOpacity(0.7),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: AppColors.amber.withOpacity(0.35)),
+                                color: AppColors.amberTint,
+                                borderRadius: BorderRadius.circular(10),
                               ),
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Icon(Icons.info_outline_rounded, size: 18, color: AppColors.amberDark),
+                                  const Icon(
+                                    Icons.info_outline_rounded,
+                                    size: 18,
+                                    color: AppColors.amberDark,
+                                  ),
                                   const SizedBox(width: 8),
                                   Expanded(
                                     child: Text(
@@ -272,18 +281,20 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: AppColors.errorLight,
-                                  borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: AppColors.amber.withOpacity(0.35)),
+                                  color: AppColors.amberTint,
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Text(
                                   authState.error!,
                                   textAlign: TextAlign.center,
-                                  style: const TextStyle(color: AppColors.primaryDark, fontSize: 13),
+                                  style: const TextStyle(
+                                    color: AppColors.primaryDark,
+                                    fontSize: 13,
+                                  ),
                                 ),
                               ),
                             ],
-                            const SizedBox(height: 18),
+                            const SizedBox(height: 26),
                             SizedBox(
                               width: double.infinity,
                               height: 54,
@@ -291,7 +302,10 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                                 onPressed: (!isComplete || authState.isLoading) ? null : _handleVerify,
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                  backgroundColor: AppColors.blue,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(14),
+                                  ),
                                 ),
                                 child: authState.isLoading
                                     ? const SizedBox(
@@ -308,7 +322,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                                       ),
                               ),
                             ),
-                            const SizedBox(height: 14),
+                            const SizedBox(height: 16),
                             Center(
                               child: _secondsLeft > 0
                                   ? Text(
@@ -330,11 +344,12 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                       ),
                     ),
                   ),
-                ),
-              );
-            },
+                );
+              },
+            ),
           ),
-        ),
+          BottomWave(height: waveHeight, color: AppColors.blue),
+        ],
       ),
     );
   }

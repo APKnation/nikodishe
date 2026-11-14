@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/widgets/app_logo.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -55,39 +56,25 @@ class _SplashScreenState extends State<SplashScreen>
                 scale: _scaleAnimation,
                 child: Column(
                   children: [
-                    Container(
-                      width: 100,
-                      height: 100,
-                      decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(24),
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.primaryDark.withOpacity(0.15),
-                            blurRadius: 20,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-                      child: const Icon(
-                        Icons.home_rounded,
-                        size: 56,
-                        color: AppColors.primary,
-                      ),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final logo = AppLogo.responsiveSize(
+                          constraints.maxWidth,
+                          fraction: 0.72,
+                          minWidth: 210,
+                          maxWidth: 330,
+                        );
+                        return AppLogo(
+                          width: logo.width,
+                          height: logo.height,
+                          radius: 22,
+                        );
+                      },
                     ),
-                    const SizedBox(height: 20),
-                    const Text(
-                      'Kodisha',
-                      style: TextStyle(
-                        fontSize: 42,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.white,
-                        letterSpacing: 1.5,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 22),
                     Text(
                       'Kodisha vitu kwa urahisi',
+                      textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 15,
                         color: AppColors.white.withOpacity(0.85),
