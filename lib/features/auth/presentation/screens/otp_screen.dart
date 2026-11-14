@@ -156,7 +156,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                         height: 1.5,
                       ),
                       children: [
-                        const TextSpan(text: 'Ingiza msimbo wa tarakimu 4 uliotumwa kwa '),
+                        const TextSpan(text: 'Tumetuma msimbo wa tarakimu 4 kwa '),
                         TextSpan(
                           text: widget.phone,
                           style: const TextStyle(
@@ -228,7 +228,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                             border: Border.all(color: AppColors.amber.withOpacity(0.45)),
                           ),
                           child: const Text(
-                            'Kwa majaribio tumia msimbo: 1234 au 123456',
+                            'Kwa majaribio tumia msimbo: 123456',
                             style: TextStyle(fontSize: 12.5, color: AppColors.primaryDark, fontWeight: FontWeight.w600),
                           ),
                         ),
