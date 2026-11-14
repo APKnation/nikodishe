@@ -285,7 +285,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                 borderRadius: BorderRadius.circular(12),
                 side: const BorderSide(color: AppColors.border),
               ),
-              tileColor: AppColors.blueTintSoft,
+              tileColor: AppColors.orangeTintSoft,
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(

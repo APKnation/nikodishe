@@ -11,7 +11,7 @@ class AppLogo extends StatelessWidget {
   /// Fixed height. Used with [width] to preserve the lockup proportions.
   final double height;
 
-  /// Draws a white rounded plate behind the image so it reads well on blue.
+  /// Draws a white rounded plate behind the image so it reads well on orange.
   final bool plate;
 
   /// Corner radius of the plate.
@@ -38,7 +38,7 @@ class AppLogo extends StatelessWidget {
   static const String asset = 'assets/images/kukodisha.jpeg';
 
   /// Logo with a transparent background — used for overlays / watermarks
-  /// on colored surfaces (e.g. the blue auth header).
+  /// on colored surfaces (e.g. the orange auth header).
   static const String transparentAsset = 'assets/images/kukodisha_transparent.png';
 
   /// Natural aspect ratio of the artwork (width / height).

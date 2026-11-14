@@ -70,7 +70,7 @@ class AuthField extends StatelessWidget {
               color: AppColors.textTertiary,
               fontWeight: FontWeight.w400,
             ),
-            prefixIcon: Icon(icon, size: 24),
+            prefixIcon: Icon(icon, size: 24, color: AppColors.orangeDark),
             prefixIconConstraints: const BoxConstraints(minWidth: 50, minHeight: 50),
             suffixIcon: suffixIcon,
             filled: false,
@@ -83,13 +83,13 @@ class AuthField extends StatelessWidget {
               borderSide: BorderSide(color: AppColors.border),
             ),
             focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.blue, width: 2),
+              borderSide: BorderSide(color: AppColors.orangeDark, width: 2),
             ),
             errorBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.amberDark),
+              borderSide: BorderSide(color: AppColors.orangeDark),
             ),
             focusedErrorBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.amberDark, width: 2),
+              borderSide: BorderSide(color: AppColors.orangeDark, width: 2),
             ),
           ),
         ),
@@ -121,12 +121,12 @@ class AuthPrimaryButton extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppColors.blueSoft, AppColors.blue],
+          colors: [AppColors.orange, AppColors.orangeDark],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.blue.withOpacity(0.28),
+            color: AppColors.orange.withOpacity(0.35),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
@@ -180,7 +180,7 @@ class AuthNote extends StatelessWidget {
     super.key,
     required this.icon,
     required this.text,
-    this.iconColor = AppColors.blue,
+    this.iconColor = AppColors.orangeDark,
   });
 
   @override
@@ -189,9 +189,9 @@ class AuthNote extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.blueTintSoft,
+        color: AppColors.orangeTint.withOpacity(0.6),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.blueTint),
+        border: Border.all(color: AppColors.orange.withOpacity(0.45)),
       ),
       child: Row(
         children: [
@@ -225,14 +225,14 @@ class AuthSectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 17, color: AppColors.blue),
+        Icon(icon, size: 17, color: AppColors.orangeDark),
         const SizedBox(width: 8),
         Text(
           title,
           style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w700,
-            color: AppColors.blue,
+            color: AppColors.orangeDark,
             letterSpacing: 0.3,
           ),
         ),
@@ -278,14 +278,14 @@ class AuthErrorBox extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.amberTint,
+        color: AppColors.errorLight,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.amber.withOpacity(0.4)),
+        border: Border.all(color: AppColors.error.withOpacity(0.35)),
       ),
       child: Text(
         message,
         style: const TextStyle(
-          color: AppColors.primaryDark,
+          color: AppColors.error,
           fontSize: 13,
           height: 1.35,
           fontWeight: FontWeight.w500,

@@ -64,7 +64,7 @@ class BookingModel {
       case BookingStatus.confirmed:
         return AppColors.primary;
       case BookingStatus.completed:
-        return AppColors.blueSoft;
+        return AppColors.success;
       case BookingStatus.cancelled:
         return AppColors.amberDark;
     }

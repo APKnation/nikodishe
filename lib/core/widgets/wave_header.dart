@@ -42,7 +42,7 @@ class _WaveClipper extends CustomClipper<Path> {
     final path = Path();
     path.moveTo(0, 0);
     path.lineTo(size.width, 0);
-    // Blue fills all the way down to the corners; the bottom edge is a
+    // Orange fills all the way down to the corners; the bottom edge is a
     // gentle wave so the white form area never climbs up into the header.
     path.lineTo(size.width, size.height);
     path.quadraticBezierTo(

@@ -104,7 +104,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
                                   style: TextStyle(
                                     fontSize: compact ? 26 : 30,
                                     fontWeight: FontWeight.w800,
-                                    color: AppColors.textPrimary,
+                                    color: AppColors.orangeDark,
                                     letterSpacing: -0.5,
                                   ),
                                 ),
@@ -166,7 +166,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
                                     const Icon(
                                       Icons.verified_user_outlined,
                                       size: 15,
-                                      color: AppColors.textTertiary,
+                                      color: AppColors.orangeDark,
                                     ),
                                     const SizedBox(width: 6),
                                     Flexible(
@@ -193,7 +193,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
               },
             ),
           ),
-          BottomWave(height: waveHeight, color: AppColors.blue),
+          BottomWave(height: waveHeight, color: AppColors.orange),
         ],
       ),
     );

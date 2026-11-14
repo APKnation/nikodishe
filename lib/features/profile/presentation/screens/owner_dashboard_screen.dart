@@ -86,7 +86,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColors.blueTintSoft,
+                color: AppColors.orangeTintSoft,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColors.border),
               ),
