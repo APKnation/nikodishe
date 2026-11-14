@@ -5,9 +5,10 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/app_logo.dart';
 import '../../../../core/widgets/bottom_wave.dart';
-import '../../../../core/widgets/wave_header.dart';
+import '../../../../core/widgets/curved_divider.dart';
 import '../../../../data/models/user_model.dart';
 import '../../providers/auth_provider.dart';
+import '../widgets/auth_widgets.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   final UserRole initialRole;
@@ -89,210 +90,173 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final double headerHeight =
         (size.height * (compact ? 0.30 : 0.32)).clamp(175.0, 275.0).toDouble();
     final double waveHeight = (size.height * 0.10).clamp(62.0, 100.0).toDouble();
+    final double curveHeight = (size.height * 0.045).clamp(26.0, 42.0).toDouble();
     final double hPad = size.width < 360 ? 20 : 28;
 
     return Scaffold(
       backgroundColor: AppColors.white,
       body: Column(
         children: [
-          WaveHeader(
+          SizedBox(
+            width: double.infinity,
             height: headerHeight,
-            colors: const [AppColors.blue, AppColors.blue],
-            child: SafeArea(
-              bottom: false,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  // Brand logo as a soft background watermark
-                  IgnorePointer(
-                    child: Opacity(
-                      opacity: 0.20,
-                      child: ColorFiltered(
-                        colorFilter: const ColorFilter.mode(
-                          AppColors.white,
-                          BlendMode.srcIn,
-                        ),
-                        child: Image.asset(
-                          AppLogo.transparentAsset,
-                          fit: BoxFit.cover,
-                          alignment: Alignment.center,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.asset(
+                  AppLogo.asset,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center,
+                ),
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: CurvedDivider(height: curveHeight),
+                ),
+                SafeArea(
+                  bottom: false,
+                  child: Align(
+                    alignment: Alignment.topLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10, top: 8),
+                      child: IconButton(
+                        onPressed: () => context.go('/auth/phone'),
+                        icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+                        style: IconButton.styleFrom(
+                          backgroundColor: AppColors.white.withOpacity(0.9),
+                          foregroundColor: AppColors.blue,
                         ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: compact ? 12 : 16),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        IconButton(
-                          onPressed: () => context.go('/auth/phone'),
-                          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-                          style: IconButton.styleFrom(
-                            backgroundColor: AppColors.white.withOpacity(0.18),
-                            foregroundColor: AppColors.white,
-                          ),
-                        ),
-                        SizedBox(height: compact ? 6 : 10),
-                        Text(
-                          'Kamilisha usajili',
-                          style: TextStyle(
-                            fontSize: compact ? 23 : 27,
-                            fontWeight: FontWeight.w800,
-                            color: AppColors.white,
-                            letterSpacing: -0.5,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black.withOpacity(0.22),
-                                blurRadius: 10,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Taarifa chache tu ili uanze.',
-                          style: TextStyle(
-                            fontSize: compact ? 12 : 13,
-                            color: AppColors.white.withOpacity(0.95),
-                            shadows: [
-                              Shadow(
-                                color: Colors.black.withOpacity(0.18),
-                                blurRadius: 6,
-                                offset: const Offset(0, 1),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           Expanded(
             child: LayoutBuilder(
               builder: (context, constraints) {
                 return SingleChildScrollView(
-                  padding: EdgeInsets.fromLTRB(hPad, compact ? 16 : 22, hPad, 16),
+                  padding: EdgeInsets.fromLTRB(hPad, compact ? 18 : 24, hPad, 18),
                   child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight - (compact ? 32 : 38)),
+                    constraints: BoxConstraints(minHeight: constraints.maxHeight - (compact ? 34 : 42)),
                     child: Center(
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(maxWidth: 460),
-                        child: Form(
-                          key: _formKey,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              const Text(
-                                'USAJILI MPYA',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.blue,
-                                  letterSpacing: 1.6,
+                        child: AuthEntrance(
+                          child: Form(
+                            key: _formKey,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text(
+                                  'Jisajili',
+                                  style: TextStyle(
+                                    fontSize: compact ? 26 : 30,
+                                    fontWeight: FontWeight.w800,
+                                    color: AppColors.textPrimary,
+                                    letterSpacing: -0.5,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 20),
-                              _label('Jina kamili'),
-                              TextFormField(
-                                controller: _nameController,
-                                textCapitalization: TextCapitalization.words,
-                                decoration: _underlineDecoration(
-                                  hint: 'Mfano: Juma Said',
+                                const SizedBox(height: 6),
+                                const Text(
+                                  'Unda akaunti yako kwa taarifa chache tu.',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: AppColors.textSecondary,
+                                    height: 1.45,
+                                  ),
+                                ),
+                                const SizedBox(height: 24),
+                                const AuthSectionTitle(
+                                  title: 'TAARIFA BINAFSI',
                                   icon: Icons.person_outline_rounded,
                                 ),
-                                validator: (val) {
-                                  final v = val?.trim() ?? '';
-                                  if (v.isEmpty) return 'Tafadhali ingiza jina';
-                                  if (v.length < 3) return 'Jina liwe na angalau herufi 3';
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 16),
-                              _label('Namba ya simu'),
-                              TextFormField(
-                                controller: _phoneController,
-                                keyboardType: TextInputType.phone,
-                                readOnly: widget.initialPhone != null && widget.initialPhone!.isNotEmpty,
-                                decoration: _underlineDecoration(
+                                const SizedBox(height: 14),
+                                AuthField(
+                                  controller: _nameController,
+                                  label: 'Jina kamili',
+                                  hint: 'Mfano: Juma Said',
+                                  icon: Icons.person_outline_rounded,
+                                  textCapitalization: TextCapitalization.words,
+                                  validator: (val) {
+                                    final v = val?.trim() ?? '';
+                                    if (v.isEmpty) return 'Tafadhali ingiza jina';
+                                    if (v.length < 3) return 'Jina liwe na angalau herufi 3';
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 18),
+                                AuthField(
+                                  controller: _phoneController,
+                                  label: 'Namba ya simu',
                                   hint: '7XX XXX XXX',
                                   icon: Icons.phone_android_outlined,
+                                  keyboardType: TextInputType.phone,
+                                  readOnly: widget.initialPhone != null && widget.initialPhone!.isNotEmpty,
+                                  validator: (val) {
+                                    final v = val?.trim() ?? '';
+                                    if (v.isEmpty) return 'Tafadhali ingiza namba ya simu';
+                                    if (v.length < 9) return 'Namba ya simu si sahihi';
+                                    return null;
+                                  },
                                 ),
-                                validator: (val) {
-                                  final v = val?.trim() ?? '';
-                                  if (v.isEmpty) return 'Tafadhali ingiza namba ya simu';
-                                  if (v.length < 9) return 'Namba ya simu si sahihi';
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 16),
-                              _label('Eneo unaloishi'),
-                              TextFormField(
-                                controller: _locationController,
-                                textCapitalization: TextCapitalization.words,
-                                decoration: _underlineDecoration(
-                                  hint: 'Mfano: Mwenge, Dar es Salaam',
+                                const SizedBox(height: 22),
+                                const AuthSectionTitle(
+                                  title: 'MAHALI',
                                   icon: Icons.location_on_outlined,
                                 ),
-                                validator: (val) {
-                                  if ((val?.trim() ?? '').isEmpty) return 'Tafadhali ingiza eneo';
-                                  return null;
-                                },
-                              ),
-                              const SizedBox(height: 16),
-                              _label('Namba ya NIDA (hiari)'),
-                              TextFormField(
-                                controller: _nidaController,
-                                decoration: _underlineDecoration(
+                                const SizedBox(height: 14),
+                                AuthField(
+                                  controller: _locationController,
+                                  label: 'Eneo unaloishi',
+                                  hint: 'Mfano: Mwenge, Dar es Salaam',
+                                  icon: Icons.location_on_outlined,
+                                  textCapitalization: TextCapitalization.words,
+                                  validator: (val) {
+                                    if ((val?.trim() ?? '').isEmpty) return 'Tafadhali ingiza eneo';
+                                    return null;
+                                  },
+                                ),
+                                const SizedBox(height: 22),
+                                const AuthSectionTitle(
+                                  title: 'UTHIBITISHO (HIARI)',
+                                  icon: Icons.verified_user_outlined,
+                                ),
+                                const SizedBox(height: 14),
+                                AuthField(
+                                  controller: _nidaController,
+                                  label: 'Namba ya NIDA',
                                   hint: 'Huongeza uaminifu wa akaunti',
                                   icon: Icons.badge_outlined,
+                                  keyboardType: TextInputType.number,
                                 ),
-                              ),
-                              if (authState.error != null) ...[
-                                const SizedBox(height: 16),
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.amberTint,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
+                                if (authState.error != null) ...[
+                                  const SizedBox(height: 18),
+                                  AuthErrorBox(message: authState.error!),
+                                ],
+                                const SizedBox(height: 26),
+                                AuthPrimaryButton(
+                                  label: 'Kamilisha na Ingia',
+                                  icon: Icons.check_rounded,
+                                  loading: authState.isLoading,
+                                  onPressed: _handleRegister,
+                                ),
+                                const SizedBox(height: 14),
+                                const Center(
                                   child: Text(
-                                    authState.error!,
-                                    style: const TextStyle(color: AppColors.primaryDark, height: 1.35),
+                                    'Unaweza kuongeza NIDA baadaye kwenye wasifu.',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 11.5,
+                                      color: AppColors.textTertiary,
+                                      height: 1.4,
+                                    ),
                                   ),
                                 ),
                               ],
-                              const SizedBox(height: 28),
-                              SizedBox(
-                                height: 54,
-                                width: double.infinity,
-                                child: ElevatedButton(
-                                  onPressed: authState.isLoading ? null : _handleRegister,
-                                  style: ElevatedButton.styleFrom(
-                                    elevation: 0,
-                                    backgroundColor: AppColors.blue,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(14),
-                                    ),
-                                  ),
-                                  child: authState.isLoading
-                                      ? const SizedBox(
-                                          width: 22,
-                                          height: 22,
-                                          child: CircularProgressIndicator(
-                                            strokeWidth: 2.5,
-                                            color: AppColors.white,
-                                          ),
-                                        )
-                                      : const Text('Kamilisha na Ingia'),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
@@ -304,42 +268,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           ),
           BottomWave(height: waveHeight, color: AppColors.blue),
         ],
-      ),
-    );
-  }
-
-  Widget _label(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 2),
-      child: Text(
-        text,
-        style: const TextStyle(
-          fontSize: 13,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textPrimary,
-        ),
-      ),
-    );
-  }
-
-  InputDecoration _underlineDecoration({required String hint, required IconData icon}) {
-    return InputDecoration(
-      hintText: hint,
-      prefixIcon: Icon(icon),
-      prefixIconConstraints: const BoxConstraints(minWidth: 38, minHeight: 38),
-      filled: false,
-      isDense: true,
-      contentPadding: const EdgeInsets.symmetric(vertical: 14),
-      border: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
-      enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.border)),
-      focusedBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(color: AppColors.blue, width: 2),
-      ),
-      errorBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(color: AppColors.amberDark),
-      ),
-      focusedErrorBorder: const UnderlineInputBorder(
-        borderSide: BorderSide(color: AppColors.amberDark, width: 2),
       ),
     );
   }

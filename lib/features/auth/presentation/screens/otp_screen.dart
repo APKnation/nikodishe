@@ -10,6 +10,7 @@ import '../../../../core/widgets/bottom_wave.dart';
 import '../../../../core/widgets/wave_header.dart';
 import '../../../../data/models/user_model.dart';
 import '../../providers/auth_provider.dart';
+import '../widgets/auth_widgets.dart';
 
 class OtpScreen extends ConsumerStatefulWidget {
   final String phone;
@@ -194,16 +195,38 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
-                            const Text(
-                              'UTHIBITISHO',
-                              style: TextStyle(
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                color: AppColors.blue,
-                                letterSpacing: 1.6,
+                            Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
+                                decoration: BoxDecoration(
+                                  color: AppColors.blueTintSoft,
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(color: AppColors.blueTint),
+                                ),
+                                child: const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.verified_user_outlined,
+                                      size: 16,
+                                      color: AppColors.amberDark,
+                                    ),
+                                    SizedBox(width: 7),
+                                    Text(
+                                      'Uthibitisho',
+                                      style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.primaryDark,
+                                        letterSpacing: 0.1,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            const SizedBox(height: 22),
+                            const SizedBox(height: 24),
                             Row(
                               children: List.generate(6, (index) {
                                 return Expanded(
@@ -217,7 +240,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                                       maxLength: 1,
                                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                                       style: const TextStyle(
-                                        fontSize: 24,
+                                        fontSize: 28,
                                         fontWeight: FontWeight.w700,
                                         color: AppColors.textPrimary,
                                       ),
@@ -225,7 +248,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                                         counterText: '',
                                         filled: false,
                                         isDense: true,
-                                        contentPadding: EdgeInsets.symmetric(vertical: 12),
+                                        contentPadding: EdgeInsets.symmetric(vertical: 18),
                                         border: UnderlineInputBorder(
                                           borderSide: BorderSide(color: AppColors.border),
                                         ),
@@ -295,32 +318,11 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                               ),
                             ],
                             const SizedBox(height: 26),
-                            SizedBox(
-                              width: double.infinity,
-                              height: 54,
-                              child: ElevatedButton(
-                                onPressed: (!isComplete || authState.isLoading) ? null : _handleVerify,
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0,
-                                  backgroundColor: AppColors.blue,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                ),
-                                child: authState.isLoading
-                                    ? const SizedBox(
-                                        width: 22,
-                                        height: 22,
-                                        child: CircularProgressIndicator(
-                                          strokeWidth: 2.5,
-                                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
-                                        ),
-                                      )
-                                    : const Text(
-                                        'Thibitisha na Uendelee',
-                                        style: TextStyle(fontSize: 15.5, fontWeight: FontWeight.w700),
-                                      ),
-                              ),
+                            AuthPrimaryButton(
+                              label: 'Thibitisha na Uendelee',
+                              icon: Icons.verified_rounded,
+                              loading: authState.isLoading,
+                              onPressed: !isComplete ? null : _handleVerify,
                             ),
                             const SizedBox(height: 16),
                             Center(
