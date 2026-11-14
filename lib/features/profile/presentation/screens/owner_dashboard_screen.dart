@@ -10,8 +10,26 @@ import '../../../bookings/providers/bookings_provider.dart';
 import '../../../listings/providers/listings_provider.dart';
 import '../../../payments/providers/payments_provider.dart';
 
-class OwnerDashboardScreen extends ConsumerWidget {
+class OwnerDashboardScreen extends ConsumerStatefulWidget {
   const OwnerDashboardScreen({super.key});
+
+  @override
+  ConsumerState<OwnerDashboardScreen> createState() => _OwnerDashboardScreenState();
+}
+
+class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
+  bool _loaded = false;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _loaded) return;
+      _loaded = true;
+      ref.read(bookingsProvider.notifier).loadFromApi();
+      ref.read(listingsProvider.notifier).loadFromApi();
+    });
+  }
 
   String _formatPrice(double price) {
     return price.toInt().toString().replaceAllMapped(
@@ -21,7 +39,7 @@ class OwnerDashboardScreen extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final lang = ref.watch(localeProvider);
     final user = ref.watch(currentUserProvider);
     final allListings = ref.watch(listingsProvider);
