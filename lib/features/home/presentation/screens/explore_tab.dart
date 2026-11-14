@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../data/models/listing_model.dart';
+import '../../../auth/providers/auth_provider.dart';
 import '../../../notifications/providers/notifications_provider.dart';
 import '../../../listings/providers/listings_provider.dart';
 import '../widgets/listing_card.dart';
@@ -61,7 +62,14 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                 children: [
                   IconButton(
                     icon: const Icon(Icons.notifications_none_outlined),
-                    onPressed: () => context.push('/notifications'),
+                    onPressed: () {
+                      final user = ref.read(currentUserProvider);
+                      if (user == null) {
+                        context.push('/auth/phone', extra: {'redirectTo': '/notifications'});
+                        return;
+                      }
+                      context.push('/notifications');
+                    },
                   ),
                   if (unreadCount > 0)
                     Positioned(

@@ -9,8 +9,9 @@ import '../../providers/auth_provider.dart';
 class RegisterScreen extends ConsumerStatefulWidget {
   final UserRole initialRole;
   final String? initialPhone;
+  final String? redirectTo;
 
-  const RegisterScreen({super.key, this.initialRole = UserRole.renter, this.initialPhone});
+  const RegisterScreen({super.key, this.initialRole = UserRole.renter, this.initialPhone, this.redirectTo});
 
   @override
   ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
@@ -68,7 +69,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final authState = ref.read(authProvider);
     if (!mounted) return;
     if (authState.user != null && authState.error == null) {
-      context.go('/home');
+      context.go(widget.redirectTo ?? '/home');
     }
   }
 

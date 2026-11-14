@@ -6,6 +6,7 @@ import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/app_network_image.dart';
 import '../../../../core/widgets/fullscreen_image_viewer.dart';
 import '../../../../data/models/listing_model.dart';
+import '../../../auth/providers/auth_provider.dart';
 import '../../../reviews/providers/reviews_provider.dart';
 import '../../providers/listings_provider.dart';
 
@@ -596,7 +597,17 @@ class ListingDetailScreen extends ConsumerWidget {
               const Spacer(),
               ElevatedButton(
                 onPressed: listing.isAvailable
-                    ? () => context.push('/listings/${listing.id}/book')
+                    ? () {
+                        final user = ref.read(currentUserProvider);
+                        if (user == null) {
+                          context.push(
+                            '/auth/phone',
+                            extra: {'redirectTo': '/listings/${listing.id}/book'},
+                          );
+                          return;
+                        }
+                        context.push('/listings/${listing.id}/book');
+                      }
                     : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,

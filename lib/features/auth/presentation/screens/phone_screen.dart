@@ -7,7 +7,8 @@ import '../../../../data/models/user_model.dart';
 import '../../providers/auth_provider.dart';
 
 class PhoneScreen extends ConsumerStatefulWidget {
-  const PhoneScreen({super.key});
+  final String? redirectTo;
+  const PhoneScreen({super.key, this.redirectTo});
 
   @override
   ConsumerState<PhoneScreen> createState() => _PhoneScreenState();
@@ -37,6 +38,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
         'phone': resolvedPhone,
         'identifier': identifier,
         'role': UserRole.renter, // actual role resolved after verify
+        'redirectTo': widget.redirectTo,
       });
     }
   }

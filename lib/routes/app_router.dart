@@ -27,7 +27,13 @@ class AppRouter {
       ),
       GoRoute(
         path: '/auth/phone',
-        builder: (context, state) => const PhoneScreen(),
+        builder: (context, state) {
+          final extra = state.extra;
+          String? redirectTo;
+          if (extra is String) redirectTo = extra;
+          if (extra is Map) redirectTo = extra['redirectTo'] as String?;
+          return PhoneScreen(redirectTo: redirectTo);
+        },
       ),
       GoRoute(
         path: '/auth/register',
@@ -35,13 +41,19 @@ class AppRouter {
           final extra = state.extra;
           UserRole role = UserRole.renter;
           String? phone;
+          String? redirectTo;
           if (extra is UserRole) {
             role = extra;
           } else if (extra is Map) {
             role = (extra['role'] as UserRole?) ?? UserRole.renter;
             phone = extra['phone'] as String?;
+            redirectTo = extra['redirectTo'] as String?;
           }
-          return RegisterScreen(initialRole: role, initialPhone: phone);
+          return RegisterScreen(
+            initialRole: role,
+            initialPhone: phone,
+            redirectTo: redirectTo,
+          );
         },
       ),
       GoRoute(
@@ -50,7 +62,8 @@ class AppRouter {
           final extra = state.extra as Map<String, dynamic>?;
           final phone = extra?['phone'] as String? ?? '+255700000000';
           final role = extra?['role'] as UserRole? ?? UserRole.renter;
-          return OtpScreen(phone: phone, role: role);
+          final redirectTo = extra?['redirectTo'] as String?;
+          return OtpScreen(phone: phone, role: role, redirectTo: redirectTo);
         },
       ),
       GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
@@ -120,7 +133,8 @@ class _SplashWrapperState extends State<_SplashWrapper> {
     super.initState();
     Future.delayed(const Duration(milliseconds: 1200), () {
       if (mounted) {
-        context.go('/auth/phone');
+        // Browse-first: guests can view all listings without login
+        context.go('/home');
       }
     });
   }

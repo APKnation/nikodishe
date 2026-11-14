@@ -12,8 +12,9 @@ import '../../providers/auth_provider.dart';
 class OtpScreen extends ConsumerStatefulWidget {
   final String phone;
   final UserRole role;
+  final String? redirectTo;
 
-  const OtpScreen({super.key, required this.phone, required this.role});
+  const OtpScreen({super.key, required this.phone, required this.role, this.redirectTo});
 
   @override
   ConsumerState<OtpScreen> createState() => _OtpScreenState();
@@ -73,11 +74,15 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
       if (authState.user!.role == UserRole.owner) {
         context.go('/owner/home');
       } else {
-        context.go('/home');
+        context.go(widget.redirectTo ?? '/home');
       }
     } else if (authState.error == null) {
       // OTP verified but account not registered yet (customer flow)
-      context.go('/auth/register', extra: {'role': UserRole.renter, 'phone': widget.phone});
+      context.go('/auth/register', extra: {
+        'role': UserRole.renter,
+        'phone': widget.phone,
+        'redirectTo': widget.redirectTo,
+      });
     }
   }
 
