@@ -40,22 +40,24 @@ class _WaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    path.lineTo(0, size.height - 56);
-    // Left valley → center peak
-    path.quadraticBezierTo(
-      size.width * 0.24,
-      size.height + 6,
-      size.width * 0.5,
-      size.height - 44,
-    );
-    // Center peak → right valley
-    path.quadraticBezierTo(
-      size.width * 0.76,
-      size.height - 94,
-      size.width,
-      size.height - 34,
-    );
+    path.moveTo(0, 0);
     path.lineTo(size.width, 0);
+    // Blue fills all the way down to the corners; the bottom edge is a
+    // gentle wave so the white form area never climbs up into the header.
+    path.lineTo(size.width, size.height);
+    path.quadraticBezierTo(
+      size.width * 0.75,
+      size.height - 34,
+      size.width * 0.50,
+      size.height - 14,
+    );
+    path.quadraticBezierTo(
+      size.width * 0.25,
+      size.height + 6,
+      0,
+      size.height - 26,
+    );
+    path.lineTo(0, size.height);
     path.close();
     return path;
   }

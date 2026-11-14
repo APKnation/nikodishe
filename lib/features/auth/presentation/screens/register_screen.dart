@@ -87,8 +87,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     final size = MediaQuery.sizeOf(context);
     final bool compact = size.height < 720 || size.width < 360;
     final double headerHeight =
-        (size.height * (compact ? 0.27 : 0.29)).clamp(166.0, 250.0).toDouble();
-    final double waveHeight = (size.height * 0.12).clamp(70.0, 112.0).toDouble();
+        (size.height * (compact ? 0.30 : 0.32)).clamp(175.0, 275.0).toDouble();
+    final double waveHeight = (size.height * 0.10).clamp(62.0, 100.0).toDouble();
     final double hPad = size.width < 360 ? 20 : 28;
 
     return Scaffold(

@@ -52,8 +52,8 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
     final size = MediaQuery.sizeOf(context);
     final bool compact = size.height < 700 || size.width < 360;
     final double headerHeight =
-        (size.height * (compact ? 0.30 : 0.33)).clamp(178.0, 282.0).toDouble();
-    final double waveHeight = (size.height * 0.13).clamp(74.0, 120.0).toDouble();
+        (size.height * (compact ? 0.34 : 0.37)).clamp(205.0, 320.0).toDouble();
+    final double waveHeight = (size.height * 0.10).clamp(62.0, 100.0).toDouble();
     final double hPad = size.width < 360 ? 20 : 28;
 
     return Scaffold(

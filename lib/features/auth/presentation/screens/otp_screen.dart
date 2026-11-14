@@ -118,8 +118,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
     final size = MediaQuery.sizeOf(context);
     final bool compact = size.height < 700 || size.width < 360;
     final double headerHeight =
-        (size.height * (compact ? 0.26 : 0.28)).clamp(160.0, 242.0).toDouble();
-    final double waveHeight = (size.height * 0.12).clamp(70.0, 112.0).toDouble();
+        (size.height * (compact ? 0.29 : 0.31)).clamp(170.0, 268.0).toDouble();
+    final double waveHeight = (size.height * 0.10).clamp(62.0, 100.0).toDouble();
     final double hPad = size.width < 360 ? 20 : 28;
 
     return Scaffold(
