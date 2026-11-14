@@ -26,7 +26,7 @@ class ApiService {
   // AUTHENTICATION & USERS (FR1 - FR5)
   // ===========================================================================
 
-  Future<String> sendOtp(String identifier) async {
+  Future<Map<String, dynamic>> sendOtp(String identifier) async {
     const mutation = r'''
       mutation SendOtp($identifier: String) {
         sendOtp(identifier: $identifier) {
@@ -44,7 +44,10 @@ class ApiService {
     if (res['success'] != true) {
       throw Exception(res['message'] ?? 'Imeshindikana kutuma msimbo wa uthibitisho.');
     }
-    return (res['phone'] as String?) ?? identifier;
+    return {
+      'phone': (res['phone'] as String?) ?? identifier,
+      'message': (res['message'] as String?) ?? '',
+    };
   }
 
   Future<Map<String, dynamic>> verifyOtp(String phoneOrIdentifier, String otpCode) async {

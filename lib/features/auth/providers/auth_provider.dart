@@ -13,11 +13,15 @@ class AuthState {
   final String? error;
   final bool isOtpSent;
 
+  /// Message returned by the backend when an OTP is requested.
+  final String? otpMessage;
+
   const AuthState({
     this.user,
     this.isLoading = false,
     this.error,
     this.isOtpSent = false,
+    this.otpMessage,
   });
 
   AuthState copyWith({
@@ -25,14 +29,17 @@ class AuthState {
     bool? isLoading,
     String? error,
     bool? isOtpSent,
+    String? otpMessage,
     bool clearUser = false,
     bool clearError = false,
+    bool clearOtpMessage = false,
   }) {
     return AuthState(
       user: clearUser ? null : (user ?? this.user),
       isLoading: isLoading ?? this.isLoading,
       error: clearError ? null : (error ?? this.error),
       isOtpSent: isOtpSent ?? this.isOtpSent,
+      otpMessage: clearOtpMessage ? null : (otpMessage ?? this.otpMessage),
     );
   }
 }
@@ -47,12 +54,17 @@ class AuthNotifier extends Notifier<AuthState> {
   AuthState build() => const AuthState();
 
   /// Send OTP using identifier (email or phone). Returns resolved phone on success.
+  /// The human-readable confirmation comes from the backend, never hardcoded.
   Future<String?> sendOtp(String identifier) async {
-    state = state.copyWith(isLoading: true, clearError: true);
+    state = state.copyWith(isLoading: true, clearError: true, clearOtpMessage: true);
     try {
-      final resolvedPhone = await _apiService.sendOtp(identifier);
-      state = state.copyWith(isLoading: false, isOtpSent: true);
-      return resolvedPhone;
+      final result = await _apiService.sendOtp(identifier);
+      state = state.copyWith(
+        isLoading: false,
+        isOtpSent: true,
+        otpMessage: result['message'] as String?,
+      );
+      return result['phone'] as String?;
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
       return null;
