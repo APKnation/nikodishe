@@ -20,8 +20,8 @@ class OtpScreen extends ConsumerStatefulWidget {
 }
 
 class _OtpScreenState extends ConsumerState<OtpScreen> {
-  final List<TextEditingController> _controllers = List.generate(4, (_) => TextEditingController());
-  final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
+  final List<TextEditingController> _controllers = List.generate(6, (_) => TextEditingController());
+  final List<FocusNode> _focusNodes = List.generate(6, (_) => FocusNode());
 
   int _secondsLeft = 60;
   Timer? _timer;
@@ -60,9 +60,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
 
   Future<void> _handleVerify() async {
     FocusScope.of(context).unfocus();
-    if (_otp.length < 4) {
+    if (_otp.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Tafadhali ingiza nambari zote 4 za OTP')),
+        const SnackBar(content: Text('Tafadhali ingiza nambari zote 6 za OTP')),
       );
       return;
     }
@@ -88,7 +88,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   }
 
   void _onDigitChanged(String value, int index) {
-    if (value.isNotEmpty && index < 3) {
+    if (value.isNotEmpty && index < 5) {
       _focusNodes[index + 1].requestFocus();
     } else if (value.isEmpty && index > 0) {
       _focusNodes[index - 1].requestFocus();
@@ -99,7 +99,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     final authState = ref.watch(authProvider);
-    final isComplete = _otp.length == 4;
+    final isComplete = _otp.length == 6;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -156,7 +156,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                         height: 1.5,
                       ),
                       children: [
-                        const TextSpan(text: 'Tumetuma msimbo wa tarakimu 4 kwa '),
+                        const TextSpan(text: 'Tumetuma msimbo wa tarakimu 6 kwa '),
                         TextSpan(
                           text: widget.phone,
                           style: const TextStyle(
@@ -179,41 +179,44 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                     child: Column(
                       children: [
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: List.generate(4, (index) {
+                          children: List.generate(6, (index) {
                             final filled = _controllers[index].text.isNotEmpty;
-                            return SizedBox(
-                              width: 64,
-                              height: 68,
-                              child: TextFormField(
-                                controller: _controllers[index],
-                                focusNode: _focusNodes[index],
-                                keyboardType: TextInputType.number,
-                                textAlign: TextAlign.center,
-                                maxLength: 1,
-                                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                style: const TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.textPrimary,
-                                ),
-                                decoration: InputDecoration(
-                                  counterText: '',
-                                  contentPadding: EdgeInsets.zero,
-                                  fillColor: filled ? AppColors.blueTintSoft : AppColors.white,
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                    borderSide: BorderSide(
-                                      color: filled ? AppColors.primary.withOpacity(0.4) : AppColors.border,
-                                      width: 1.5,
+                            return Expanded(
+                              child: Padding(
+                                padding: EdgeInsets.only(right: index == 5 ? 0 : 8),
+                                child: SizedBox(
+                                  height: 60,
+                                  child: TextFormField(
+                                    controller: _controllers[index],
+                                    focusNode: _focusNodes[index],
+                                    keyboardType: TextInputType.number,
+                                    textAlign: TextAlign.center,
+                                    maxLength: 1,
+                                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.w700,
+                                      color: AppColors.textPrimary,
                                     ),
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(14),
-                                    borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                                    decoration: InputDecoration(
+                                      counterText: '',
+                                      contentPadding: EdgeInsets.zero,
+                                      fillColor: filled ? AppColors.blueTintSoft : AppColors.white,
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        borderSide: BorderSide(
+                                          color: filled ? AppColors.primary.withOpacity(0.4) : AppColors.border,
+                                          width: 1.5,
+                                        ),
+                                      ),
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(14),
+                                        borderSide: const BorderSide(color: AppColors.primary, width: 2),
+                                      ),
+                                    ),
+                                    onChanged: (value) => _onDigitChanged(value, index),
                                   ),
                                 ),
-                                onChanged: (value) => _onDigitChanged(value, index),
                               ),
                             );
                           }),
