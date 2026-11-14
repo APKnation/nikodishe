@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/localization/locale_provider.dart';
+import '../../../../data/models/booking_model.dart';
 import '../../../auth/providers/auth_provider.dart';
 import '../../../bookings/providers/bookings_provider.dart';
 import '../../../listings/providers/listings_provider.dart';
@@ -253,6 +254,171 @@ class OwnerDashboardScreen extends ConsumerWidget {
                                     );
                                   },
                                 ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Maombi ya Booking',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                ),
+                Text(
+                  '${ownerBookings.length} ${lang == AppLanguage.sw ? 'maombi' : 'requests'}',
+                  style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            if (ownerBookings.isEmpty)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(18),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: const Text(
+                  'Bado hakuna maombi ya booking kwa vifaa vyako.',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                ),
+              )
+            else
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: ownerBookings.length,
+                itemBuilder: (context, index) {
+                  final b = ownerBookings[index];
+                  final statusColor = b.status == BookingStatus.pending
+                      ? AppColors.amber
+                      : b.status == BookingStatus.confirmed
+                          ? AppColors.primary
+                          : b.status == BookingStatus.completed
+                              ? AppColors.success
+                              : AppColors.error;
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.all(14),
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: AppColors.border),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    b.listingTitle,
+                                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textPrimary),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text('Mteja: ${b.renterName}', style: const TextStyle(fontSize: 12.5, color: AppColors.textSecondary)),
+                                  const SizedBox(height: 2),
+                                  Text(
+                                    'Tarehe: ${b.startDate.day}/${b.startDate.month}/${b.startDate.year} - ${b.endDate.day}/${b.endDate.month}/${b.endDate.year} (${b.totalDays} siku)',
+                                    style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: statusColor.withOpacity(0.12),
+                                borderRadius: BorderRadius.circular(999),
+                                border: Border.all(color: statusColor.withOpacity(0.35)),
+                              ),
+                              child: Text(
+                                b.statusLabel,
+                                style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: statusColor),
+                              ),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 10),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              'TZS ${_formatPrice(b.totalPrice)}',
+                              style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.primary),
+                            ),
+                            Row(
+                              children: [
+                                if (b.status == BookingStatus.pending)
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      await ref.read(bookingsProvider.notifier).updateStatus(b.id, BookingStatus.confirmed);
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text('Booking imethibitishwa.')),
+                                        );
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.primary,
+                                      foregroundColor: AppColors.white,
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                    ),
+                                    child: const Text('Thibitisha'),
+                                  ),
+                                if (b.status == BookingStatus.pending) const SizedBox(width: 8),
+                                if (b.status == BookingStatus.pending)
+                                  OutlinedButton(
+                                    onPressed: () async {
+                                      await ref.read(bookingsProvider.notifier).updateStatus(b.id, BookingStatus.cancelled);
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text('Booking imekataliwa.')),
+                                        );
+                                      }
+                                    },
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: AppColors.error,
+                                      side: const BorderSide(color: AppColors.error),
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                    ),
+                                    child: const Text('Kataa'),
+                                  ),
+                                if (b.status == BookingStatus.confirmed)
+                                  OutlinedButton(
+                                    onPressed: () async {
+                                      await ref.read(bookingsProvider.notifier).updateStatus(b.id, BookingStatus.completed);
+                                      if (context.mounted) {
+                                        ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(content: Text('Booking imemarkiwa imekamilika.')),
+                                        );
+                                      }
+                                    },
+                                    style: OutlinedButton.styleFrom(
+                                      foregroundColor: AppColors.primary,
+                                      side: const BorderSide(color: AppColors.primary),
+                                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                                    ),
+                                    child: const Text('Kamilisha'),
+                                  ),
                               ],
                             ),
                           ],

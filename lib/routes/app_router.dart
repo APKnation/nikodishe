@@ -63,7 +63,13 @@ class AppRouter {
           final phone = extra?['phone'] as String? ?? '+255700000000';
           final role = extra?['role'] as UserRole? ?? UserRole.renter;
           final redirectTo = extra?['redirectTo'] as String?;
-          return OtpScreen(phone: phone, role: role, redirectTo: redirectTo);
+          final identifier = extra?['identifier'] as String?;
+          return OtpScreen(
+            phone: phone,
+            role: role,
+            redirectTo: redirectTo,
+            identifier: identifier,
+          );
         },
       ),
       GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),

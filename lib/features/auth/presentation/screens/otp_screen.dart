@@ -13,8 +13,9 @@ class OtpScreen extends ConsumerStatefulWidget {
   final String phone;
   final UserRole role;
   final String? redirectTo;
+  final String? identifier;
 
-  const OtpScreen({super.key, required this.phone, required this.role, this.redirectTo});
+  const OtpScreen({super.key, required this.phone, required this.role, this.redirectTo, this.identifier});
 
   @override
   ConsumerState<OtpScreen> createState() => _OtpScreenState();
@@ -161,9 +162,15 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                         height: 1.5,
                       ),
                       children: [
-                        const TextSpan(text: 'Tumetuma msimbo wa tarakimu 6 kwa '),
                         TextSpan(
-                          text: widget.phone,
+                          text: (widget.identifier != null && widget.identifier!.contains('@'))
+                              ? 'Tumetuma msimbo wa tarakimu 6 kwenye namba ya simu iliyosajiliwa na akaunti ya '
+                              : 'Tumetuma msimbo wa tarakimu 6 kwa ',
+                        ),
+                        TextSpan(
+                          text: (widget.identifier != null && widget.identifier!.contains('@'))
+                              ? widget.identifier!
+                              : widget.phone,
                           style: const TextStyle(
                             color: AppColors.primary,
                             fontWeight: FontWeight.w700,
@@ -235,9 +242,11 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(color: AppColors.amber.withOpacity(0.45)),
                           ),
-                          child: const Text(
-                            'Kwa majaribio tumia msimbo: 123456',
-                            style: TextStyle(fontSize: 12.5, color: AppColors.primaryDark, fontWeight: FontWeight.w600),
+                          child: Text(
+                            (widget.identifier != null && widget.identifier!.contains('@'))
+                                ? 'Msimbo umetumwa kwenye namba ya simu ya akaunti yako. Kwa majaribio tumia: 123456'
+                                : 'Kwa majaribio tumia msimbo: 123456',
+                            style: const TextStyle(fontSize: 12.5, color: AppColors.primaryDark, fontWeight: FontWeight.w600),
                           ),
                         ),
                         if (authState.error != null) ...[
