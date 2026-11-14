@@ -26,10 +26,10 @@ class ApiService {
   // AUTHENTICATION & USERS (FR1 - FR5)
   // ===========================================================================
 
-  Future<bool> sendOtp(String phone) async {
+  Future<String> sendOtp(String identifier) async {
     const mutation = r'''
-      mutation SendOtp($phone: String!) {
-        sendOtp(phone: $phone) {
+      mutation SendOtp($identifier: String) {
+        sendOtp(identifier: $identifier) {
           success
           message
           phone
@@ -38,15 +38,18 @@ class ApiService {
     ''';
     final data = await _client.execute(
       query: mutation,
-      variables: {'phone': phone},
+      variables: {'identifier': identifier},
     );
-    final res = data['sendOtp'] as Map<String, dynamic>?;
-    return res?['success'] == true;
+    final res = data['sendOtp'] as Map<String, dynamic>? ?? {};
+    if (res['success'] != true) {
+      throw Exception(res['message'] ?? 'Imeshindikana kutuma msimbo wa uthibitisho.');
+    }
+    return (res['phone'] as String?) ?? identifier;
   }
 
-  Future<Map<String, dynamic>> verifyOtp(String phone, String otpCode) async {
+  Future<Map<String, dynamic>> verifyOtp(String phoneOrIdentifier, String otpCode) async {
     const mutation = r'''
-      mutation VerifyOtp($phone: String!, $otpCode: String!) {
+      mutation VerifyOtp($phone: String, $otpCode: String!) {
         verifyOtp(phone: $phone, otpCode: $otpCode) {
           token
           userExists
@@ -69,7 +72,7 @@ class ApiService {
     ''';
     final data = await _client.execute(
       query: mutation,
-      variables: {'phone': phone, 'otpCode': otpCode},
+      variables: {'phone': phoneOrIdentifier, 'otpCode': otpCode},
     );
 
     final res = data['verifyOtp'] as Map<String, dynamic>? ?? {};

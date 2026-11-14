@@ -46,18 +46,20 @@ class AuthNotifier extends Notifier<AuthState> {
   @override
   AuthState build() => const AuthState();
 
-  /// Send OTP using GraphQL API
-  Future<void> sendOtp(String phone) async {
+  /// Send OTP using identifier (email or phone). Returns resolved phone on success.
+  Future<String?> sendOtp(String identifier) async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
-      await _apiService.sendOtp(phone);
+      final resolvedPhone = await _apiService.sendOtp(identifier);
       state = state.copyWith(isLoading: false, isOtpSent: true);
+      return resolvedPhone;
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
+      return null;
     }
   }
 
-  /// Verify OTP using GraphQL API
+  /// Verify OTP using resolved phone/identifier
   Future<void> verifyOtp(String phone, String otp, UserRole role) async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
@@ -70,7 +72,7 @@ class AuthNotifier extends Notifier<AuthState> {
         );
         return;
       }
-      // OTP verified but no account yet - keep token-less state, UI should go register
+      // OTP verified but no account yet (customer phone flow)
       state = state.copyWith(isLoading: false, isOtpSent: false);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());

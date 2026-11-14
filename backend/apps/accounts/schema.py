@@ -35,32 +35,74 @@ class VerifyOTPResponseType(graphene.ObjectType):
 # Mutations
 class SendOTP(graphene.Mutation):
     class Arguments:
-        phone = graphene.String(required=True)
+        identifier = graphene.String(required=False)  # email or phone
+        phone = graphene.String(required=False)       # backward compatibility
 
     Output = OTPResponseType
 
-    def mutate(self, info, phone):
-        clean_phone = phone.strip()
-        if not clean_phone:
-            raise GraphQLError("Tafadhali weka namba sahihi ya simu.")
-        
-        otp = OTPVerification.generate_otp(clean_phone)
+    def mutate(self, info, identifier=None, phone=None):
+        raw = (identifier or phone or '').strip()
+        if not raw:
+            raise GraphQLError("Tafadhali weka barua pepe au namba ya simu.")
+
+        target_phone = None
+        if '@' in raw:
+            # Owner login via email
+            user = CustomUser.objects.filter(email__iexact=raw).first()
+            if not user:
+                raise GraphQLError("Barua pepe haijapatikana. Wasiliana na msimamizi wa mfumo.")
+            target_phone = user.phone
+        else:
+            clean_phone = raw.replace(' ', '')
+            if clean_phone.startswith('0'):
+                clean_phone = '+255' + clean_phone[1:]
+            elif clean_phone.startswith('255') and not clean_phone.startswith('+255'):
+                clean_phone = '+' + clean_phone
+            elif not clean_phone.startswith('+'):
+                # assume local TZ number fragment
+                clean_phone = '+255' + clean_phone
+
+            user = CustomUser.objects.filter(phone=clean_phone).first()
+            if user:
+                target_phone = user.phone
+            else:
+                # New customer registration flow allowed only for phone numbers
+                target_phone = clean_phone
+
+        OTPVerification.generate_otp(target_phone)
         return OTPResponseType(
             success=True,
-            message="OTP imetumwa kikamilifu kwenye namba yako.",
-            phone=clean_phone
+            message="Msimbo wa uthibitisho umetumwa.",
+            phone=target_phone
         )
 
 class VerifyOTP(graphene.Mutation):
     class Arguments:
-        phone = graphene.String(required=True)
+        phone = graphene.String(required=False)
+        identifier = graphene.String(required=False)
         otp_code = graphene.String(required=True)
 
     Output = VerifyOTPResponseType
 
-    def mutate(self, info, phone, otp_code):
-        clean_phone = phone.strip()
+    def mutate(self, info, otp_code, phone=None, identifier=None):
+        raw = (phone or identifier or '').strip()
         clean_code = otp_code.strip()
+        if not raw:
+            raise GraphQLError("Taarifa za uthibitisho hazijakamilika.")
+
+        if '@' in raw:
+            user_obj = CustomUser.objects.filter(email__iexact=raw).first()
+            if not user_obj:
+                raise GraphQLError("Barua pepe haijapatikana.")
+            clean_phone = user_obj.phone
+        else:
+            clean_phone = raw.replace(' ', '')
+            if clean_phone.startswith('0'):
+                clean_phone = '+255' + clean_phone[1:]
+            elif clean_phone.startswith('255') and not clean_phone.startswith('+255'):
+                clean_phone = '+' + clean_phone
+            elif not clean_phone.startswith('+'):
+                clean_phone = '+255' + clean_phone
 
         # Check OTP in database (or demo code '123456')
         otp_records = OTPVerification.objects.filter(
@@ -90,14 +132,14 @@ class VerifyOTP(graphene.Mutation):
                 token=token,
                 user_exists=True,
                 user=user,
-                message="Umeingia kikamilifu."
+                message="Uthibitisho umefanikiwa."
             )
         except CustomUser.DoesNotExist:
             return VerifyOTPResponseType(
                 token=None,
                 user_exists=False,
                 user=None,
-                message="Namba imethibitishwa. Kamilisha usajili wa akaunti."
+                message="Namba imethibitishwa. Kamilisha usajili wa akaunti ya mteja."
             )
 
 class RegisterUser(graphene.Mutation):
