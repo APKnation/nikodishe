@@ -21,7 +21,7 @@ class AppTheme {
       outline: AppColors.border,
     ),
 
-    // ─── AppBar: clean white surface, strong orange typography ────────────────
+    // ─── AppBar: clean white surface, strong blue typography ────────────────
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.surface,
       foregroundColor: AppColors.textPrimary,
@@ -38,12 +38,12 @@ class AppTheme {
       ),
     ),
 
-    // ─── Primary CTA: high-contrast orange, clear affordance ──────────────────
+    // ─── Primary CTA: high-contrast blue, clear affordance ──────────────────
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
         foregroundColor: AppColors.white,
-        disabledBackgroundColor: AppColors.orangeTint,
+        disabledBackgroundColor: AppColors.blueTint,
         disabledForegroundColor: AppColors.textTertiary,
         elevation: 0,
         minimumSize: const Size(64, 52),
@@ -77,7 +77,7 @@ class AppTheme {
       ),
     ),
 
-    // ─── Inputs: white fields, orange focus, clear validation states ──────────
+    // ─── Inputs: white fields, blue focus, clear validation states ──────────
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.white,
@@ -120,7 +120,7 @@ class AppTheme {
       ),
     ),
 
-    // ─── Cards: white surfaces with subtle warm border (clarity) ────────────
+    // ─── Cards: white surfaces with subtle blue border (clarity) ────────────
     cardTheme: CardThemeData(
       elevation: 0,
       margin: EdgeInsets.zero,
@@ -143,7 +143,7 @@ class AppTheme {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
     ),
 
-    // ─── Navigation: white bar, orange active state, clear labels ─────────────
+    // ─── Navigation: white bar, blue active state, clear labels ─────────────
     navigationBarTheme: NavigationBarThemeData(
       backgroundColor: AppColors.white,
       surfaceTintColor: Colors.transparent,

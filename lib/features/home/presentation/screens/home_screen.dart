@@ -40,7 +40,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 width: 64,
                 height: 64,
                 decoration: const BoxDecoration(
-                  color: AppColors.orangeTintSoft,
+                  color: AppColors.blueTintSoft,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(Icons.lock_outline_rounded, color: AppColors.primary, size: 30),

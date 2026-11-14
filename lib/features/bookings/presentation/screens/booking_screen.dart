@@ -444,7 +444,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: AppColors.orangeTintSoft,
+                color: AppColors.blueTintSoft,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Row(

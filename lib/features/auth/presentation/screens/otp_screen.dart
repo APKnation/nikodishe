@@ -140,7 +140,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
         children: [
           WaveHeader(
             height: headerHeight,
-            colors: const [AppColors.orangeDark, AppColors.orangeSoft],
+            colors: const [AppColors.blue, AppColors.blue],
             child: SafeArea(
               bottom: false,
               child: Padding(
@@ -211,9 +211,9 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                               child: Container(
                                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 9),
                                 decoration: BoxDecoration(
-                                  color: AppColors.orangeTint.withOpacity(0.6),
+                                  color: AppColors.blueTintSoft,
                                   borderRadius: BorderRadius.circular(12),
-                                  border: Border.all(color: AppColors.orange.withOpacity(0.45)),
+                                  border: Border.all(color: AppColors.blueTint),
                                 ),
                                 child: const Row(
                                   mainAxisSize: MainAxisSize.min,
@@ -221,7 +221,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                                     Icon(
                                       Icons.verified_user_outlined,
                                       size: 16,
-                                      color: AppColors.orangeDark,
+                                      color: AppColors.blue,
                                     ),
                                     SizedBox(width: 7),
                                     Text(
@@ -267,7 +267,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                                           borderSide: BorderSide(color: AppColors.border),
                                         ),
                                         focusedBorder: UnderlineInputBorder(
-                                          borderSide: BorderSide(color: AppColors.orangeDark, width: 2),
+                                          borderSide: BorderSide(color: AppColors.blue, width: 2),
                                         ),
                                       ),
                                       onChanged: (value) => _onDigitChanged(value, index),
@@ -289,14 +289,14 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: AppColors.errorLight,
+                                  color: AppColors.amberTint,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 child: Text(
                                   authState.error!,
                                   textAlign: TextAlign.center,
                                   style: const TextStyle(
-                                    color: AppColors.error,
+                                    color: AppColors.primaryDark,
                                     fontSize: 13,
                                   ),
                                 ),
@@ -335,7 +335,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
               },
             ),
           ),
-          BottomWave(height: waveHeight, color: AppColors.orange),
+          BottomWave(height: waveHeight, color: AppColors.blue),
         ],
       ),
     );

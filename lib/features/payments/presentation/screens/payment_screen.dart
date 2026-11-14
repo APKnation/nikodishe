@@ -53,7 +53,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       case PaymentMethod.airtelMoney:
         return AppColors.amberDark; // Airtel Red
       case PaymentMethod.tigoPesa:
-        return AppColors.orangeDark; // Tigo
+        return AppColors.blueDark; // Tigo
       case PaymentMethod.haloPesa:
         return AppColors.amber; // Halotel Orange
     }
@@ -376,7 +376,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
               title: 'Tigo Pesa / Mixx by Yas',
               subtitle: 'Malipo ya haraka na salama',
               icon: Icons.account_balance_wallet,
-              color: AppColors.orangeDark,
+              color: AppColors.blueDark,
             ),
             const SizedBox(height: 10),
             _buildMethodTile(

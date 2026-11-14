@@ -166,7 +166,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         gradient: const LinearGradient(
-          colors: [AppColors.primary, AppColors.orangeSoft],
+          colors: [AppColors.primary, AppColors.blueSoft],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -485,7 +485,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: AppColors.orangeTintSoft,
+        color: AppColors.blueTintSoft,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppColors.border),
       ),

@@ -11,7 +11,7 @@ class BottomWave extends StatelessWidget {
   const BottomWave({
     super.key,
     this.height = 80,
-    this.color = AppColors.orange,
+    this.color = AppColors.blue,
   });
 
   @override

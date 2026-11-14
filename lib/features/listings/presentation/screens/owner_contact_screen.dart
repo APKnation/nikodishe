@@ -242,7 +242,7 @@ class OwnerContactScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: AppColors.orangeTintSoft,
+                  color: AppColors.blueTintSoft,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(color: AppColors.primary.withOpacity(0.2)),
                 ),
@@ -341,7 +341,7 @@ class OwnerContactScreen extends ConsumerWidget {
               title: 'Tuma Ujumbe wa SMS',
               subtitle: owner.phone,
               icon: Icons.message_outlined,
-              iconBgColor: AppColors.orangeSoft,
+              iconBgColor: AppColors.blueSoft,
               actionLabel: 'Tuma SMS',
               onTap: () => _simulateExternalLaunch(context, 'SMS', owner.phone),
               onCopy: () =>
@@ -446,7 +446,7 @@ class OwnerContactScreen extends ConsumerWidget {
                         backgroundColor: AppColors.primaryDark.withOpacity(0.1),
                         child: const Icon(
                           Icons.music_note,
-                          color: AppColors.orangeDark,
+                          color: AppColors.blueDark,
                         ),
                       ),
                       title: const Text(
@@ -499,7 +499,7 @@ class OwnerContactScreen extends ConsumerWidget {
                       'Muda wa kupokea simu: 06:00 Asubuhi - 09:00 Usiku. Kwa usalama wako, kagua kifaa kabla ya kulipa malipo ya mwisho.',
                       style: TextStyle(
                         fontSize: 12,
-                        color: AppColors.orangeDark,
+                        color: AppColors.blueDark,
                         height: 1.3,
                       ),
                     ),

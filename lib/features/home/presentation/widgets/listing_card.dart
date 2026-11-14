@@ -18,7 +18,7 @@ class ListingCard extends StatelessWidget {
       case ListingCategory.ujenzi:
         return AppColors.amber;
       case ListingCategory.ukumbi:
-        return AppColors.orangeDark;
+        return AppColors.blueSoft;
     }
   }
 
@@ -117,7 +117,7 @@ class ListingCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                         boxShadow: [
                           BoxShadow(
-                            color: AppColors.orangeDark.withOpacity(0.12),
+                            color: AppColors.blueDark.withOpacity(0.12),
                             blurRadius: 4,
                           ),
                         ],
@@ -143,7 +143,7 @@ class ListingCard extends StatelessWidget {
                         vertical: 3,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.orangeDark.withOpacity(0.7),
+                        color: AppColors.blueDark.withOpacity(0.7),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -180,7 +180,7 @@ class ListingCard extends StatelessWidget {
                           vertical: 5,
                         ),
                         decoration: BoxDecoration(
-                          color: AppColors.orangeDark.withOpacity(0.72),
+                          color: AppColors.blueDark.withOpacity(0.72),
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
                             color: AppColors.white.withOpacity(0.3),
@@ -272,7 +272,7 @@ class ListingCard extends StatelessWidget {
                       vertical: 7,
                     ),
                     decoration: BoxDecoration(
-                      color: AppColors.orangeTintSoft,
+                      color: AppColors.blueTintSoft,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(color: AppColors.border),
                     ),

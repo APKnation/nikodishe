@@ -22,7 +22,7 @@ class ListingDetailScreen extends ConsumerWidget {
       case ListingCategory.ujenzi:
         return AppColors.amber;
       case ListingCategory.ukumbi:
-        return AppColors.orangeDark;
+        return AppColors.blueSoft;
     }
   }
 
@@ -410,7 +410,7 @@ class ListingDetailScreen extends ConsumerWidget {
                             'Kumbuka kulinda kifaa na kukiweka katika hali nzuri. Malipo hufanyika kupitia mfumo salama au makubaliano na mwenye kifaa.',
                             style: TextStyle(
                               fontSize: 12,
-                              color: AppColors.orangeDark,
+                              color: AppColors.blueDark,
                               height: 1.4,
                             ),
                           ),

@@ -125,7 +125,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
                         style: IconButton.styleFrom(
                           backgroundColor: AppColors.white.withOpacity(0.9),
-                          foregroundColor: AppColors.orangeDark,
+                          foregroundColor: AppColors.blue,
                         ),
                       ),
                     ),
@@ -155,8 +155,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   style: TextStyle(
                                     fontSize: compact ? 26 : 30,
                                     fontWeight: FontWeight.w800,
-                                    color: AppColors.orangeDark,
-                                    letterSpacing: -0.5,
+                                    color: AppColors.textPrimary,
+                                    letterSpacing: -0.6,
                                   ),
                                 ),
                                 const SizedBox(height: 6),
@@ -266,7 +266,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               },
             ),
           ),
-          BottomWave(height: waveHeight, color: AppColors.orange),
+          BottomWave(height: waveHeight, color: AppColors.blue),
         ],
       ),
     );

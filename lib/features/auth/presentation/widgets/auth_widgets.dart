@@ -70,8 +70,11 @@ class AuthField extends StatelessWidget {
               color: AppColors.textTertiary,
               fontWeight: FontWeight.w400,
             ),
-            prefixIcon: Icon(icon, size: 24, color: AppColors.orangeDark),
-            prefixIconConstraints: const BoxConstraints(minWidth: 50, minHeight: 50),
+            prefixIcon: Icon(icon, size: 24),
+            prefixIconConstraints: const BoxConstraints(
+              minWidth: 50,
+              minHeight: 50,
+            ),
             suffixIcon: suffixIcon,
             filled: false,
             isDense: true,
@@ -83,13 +86,13 @@ class AuthField extends StatelessWidget {
               borderSide: BorderSide(color: AppColors.border),
             ),
             focusedBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.orangeDark, width: 2),
+              borderSide: BorderSide(color: AppColors.blue, width: 2),
             ),
             errorBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.orangeDark),
+              borderSide: BorderSide(color: AppColors.amberDark),
             ),
             focusedErrorBorder: const UnderlineInputBorder(
-              borderSide: BorderSide(color: AppColors.orangeDark, width: 2),
+              borderSide: BorderSide(color: AppColors.amberDark, width: 2),
             ),
           ),
         ),
@@ -121,12 +124,12 @@ class AuthPrimaryButton extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppColors.orange, AppColors.orangeDark],
+          colors: [AppColors.blueSoft, AppColors.blue],
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.orange.withOpacity(0.35),
+            color: AppColors.blue.withOpacity(0.28),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
@@ -180,7 +183,7 @@ class AuthNote extends StatelessWidget {
     super.key,
     required this.icon,
     required this.text,
-    this.iconColor = AppColors.orangeDark,
+    this.iconColor = AppColors.blue,
   });
 
   @override
@@ -189,9 +192,9 @@ class AuthNote extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.orangeTint.withOpacity(0.6),
+        color: AppColors.blueTintSoft,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.orange.withOpacity(0.45)),
+        border: Border.all(color: AppColors.blueTint),
       ),
       child: Row(
         children: [
@@ -225,14 +228,14 @@ class AuthSectionTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(icon, size: 17, color: AppColors.orangeDark),
+        Icon(icon, size: 17, color: AppColors.blue),
         const SizedBox(width: 8),
         Text(
           title,
           style: const TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w700,
-            color: AppColors.orangeDark,
+            color: AppColors.blue,
             letterSpacing: 0.3,
           ),
         ),
@@ -258,7 +261,10 @@ class AuthEntrance extends StatelessWidget {
       builder: (context, t, child) {
         return Opacity(
           opacity: t,
-          child: Transform.translate(offset: Offset(0, 18 * (1 - t)), child: child),
+          child: Transform.translate(
+            offset: Offset(0, 18 * (1 - t)),
+            child: child,
+          ),
         );
       },
       child: child,
@@ -278,14 +284,14 @@ class AuthErrorBox extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: AppColors.errorLight,
+        color: AppColors.amberTint,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.error.withOpacity(0.35)),
+        border: Border.all(color: AppColors.amber.withOpacity(0.4)),
       ),
       child: Text(
         message,
         style: const TextStyle(
-          color: AppColors.error,
+          color: AppColors.primaryDark,
           fontSize: 13,
           height: 1.35,
           fontWeight: FontWeight.w500,
