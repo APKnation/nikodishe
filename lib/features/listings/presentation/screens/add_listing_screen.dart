@@ -1,7 +1,9 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/widgets/app_network_image.dart';
 import '../../../../data/models/listing_model.dart';
@@ -37,7 +39,8 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
     ListingCategory.sherehe: [
       {
         'title': 'Viti 100 vya Sherehe',
-        'url': 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800',
+        'url':
+            'https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=800',
       },
       {
         'title': 'Meza za Sherehe',
@@ -49,7 +52,8 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
       },
       {
         'title': 'Spika na Mziki (PA)',
-        'url': 'https://images.unsplash.com/photo-1545128485-c400e7702796?w=800',
+        'url':
+            'https://images.unsplash.com/photo-1545128485-c400e7702796?w=800',
       },
     ],
     ListingCategory.ujenzi: [
@@ -183,7 +187,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
 
     return Container(
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.only(
@@ -202,7 +206,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
+                  color: AppColors.border,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -225,7 +229,10 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
 
             // Kitufe cha 1: BROWSE DEVICE GALLERY
             ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 4,
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
                 side: const BorderSide(color: AppColors.primary, width: 1.5),
@@ -237,17 +244,29 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                   color: AppColors.primary,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.photo_library, color: Colors.white, size: 22),
+                child: const Icon(
+                  Icons.photo_library,
+                  color: AppColors.white,
+                  size: 22,
+                ),
               ),
               title: const Text(
                 'Chagua Kutoka Simuni (Browse Files)',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.primary),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: AppColors.primary,
+                ),
               ),
               subtitle: const Text(
                 'Fungua matunzio au mafaili ya picha kwenye simu yako',
                 style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
               ),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.primary),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: AppColors.primary,
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _pickImagesFromGallery();
@@ -258,29 +277,44 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
 
             // Kitufe cha 2: CAMERA
             ListTile(
-              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 4,
+              ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
                 side: const BorderSide(color: AppColors.border),
               ),
-              tileColor: Colors.grey.shade50,
+              tileColor: AppColors.blueTintSoft,
               leading: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.orange.shade700,
+                  color: AppColors.amberDark,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.camera_alt, color: Colors.white, size: 22),
+                child: const Icon(
+                  Icons.camera_alt,
+                  color: AppColors.white,
+                  size: 22,
+                ),
               ),
               title: const Text(
                 'Piga Picha kwa Kamera (Take Photo)',
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textPrimary),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  color: AppColors.textPrimary,
+                ),
               ),
               subtitle: const Text(
                 'Tumia kamera kupiga picha ya kifaa chako sasa hivi',
                 style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
               ),
-              trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.textSecondary),
+              trailing: const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: AppColors.textSecondary,
+              ),
               onTap: () {
                 Navigator.pop(context);
                 _pickImageFromCamera();
@@ -294,11 +328,18 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
             // Kitufe cha 3: SAMPULI ZA HARAKA
             Row(
               children: [
-                const Icon(Icons.auto_awesome, size: 18, color: AppColors.primary),
+                const Icon(
+                  Icons.auto_awesome,
+                  size: 18,
+                  color: AppColors.primary,
+                ),
                 const SizedBox(width: 8),
                 Text(
                   'Au Tumia Sampuli za Picha (${_getCategoryName(_selectedCategory)})',
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
                 ),
               ],
             ),
@@ -311,7 +352,9 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                 separatorBuilder: (_, __) => const SizedBox(width: 10),
                 itemBuilder: (context, index) {
                   final template = templates[index];
-                  final isAlreadyAdded = _selectedImages.contains(template['url']);
+                  final isAlreadyAdded = _selectedImages.contains(
+                    template['url'],
+                  );
 
                   return GestureDetector(
                     onTap: () {
@@ -329,7 +372,9 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: isAlreadyAdded ? AppColors.success : AppColors.border,
+                              color: isAlreadyAdded
+                                  ? AppColors.success
+                                  : AppColors.border,
                               width: isAlreadyAdded ? 2 : 1,
                             ),
                           ),
@@ -345,11 +390,15 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                           Container(
                             width: 95,
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.4),
+                              color: AppColors.primaryDark.withOpacity(0.4),
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Center(
-                              child: Icon(Icons.check_circle, color: Colors.white, size: 24),
+                              child: Icon(
+                                Icons.check_circle,
+                                color: AppColors.white,
+                                size: 24,
+                              ),
                             ),
                           ),
                         Positioned(
@@ -357,14 +406,23 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                           left: 0,
                           right: 0,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.65),
-                              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(11)),
+                              color: AppColors.primaryDark.withOpacity(0.65),
+                              borderRadius: const BorderRadius.vertical(
+                                bottom: Radius.circular(11),
+                              ),
                             ),
                             child: Text(
                               template['title']!,
-                              style: const TextStyle(color: Colors.white, fontSize: 9.5, fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                color: AppColors.white,
+                                fontSize: 9.5,
+                                fontWeight: FontWeight.bold,
+                              ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
@@ -396,7 +454,10 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
               controller: urlInputController,
               decoration: InputDecoration(
                 hintText: 'https://...',
-                prefixIcon: const Icon(Icons.image_search, color: AppColors.primary),
+                prefixIcon: const Icon(
+                  Icons.image_search,
+                  color: AppColors.primary,
+                ),
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.add_circle, color: AppColors.primary),
                   onPressed: () {
@@ -460,8 +521,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
     final finalImages = uploadedImages.isNotEmpty
         ? uploadedImages
         : [
-            _sampleTemplates[_selectedCategory]?.first['url'] ??
-                'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800'
+            _sampleTemplates[_selectedCategory]?.first['url'] ?? 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?w=800',
           ];
 
     final newListing = ListingModel(
@@ -492,7 +552,9 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Kifaa chako na picha za simu zimehifadhiwa kwa mafanikio! 🎉'),
+        content: Text(
+          'Kifaa chako na picha za simu zimehifadhiwa kwa mafanikio! 🎉',
+        ),
         backgroundColor: AppColors.success,
       ),
     );
@@ -507,10 +569,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Weka Kifaa Kipya'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Weka Kifaa Kipya'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
         child: Form(
@@ -518,7 +577,9 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionLabel('Picha za Kifaa Kutoka Kwenye Simu * (${_selectedImages.length} zimechaguliwa)'),
+              _buildSectionLabel(
+                'Picha za Kifaa Kutoka Kwenye Simu * (${_selectedImages.length} zimechaguliwa)',
+              ),
               const SizedBox(height: 6),
 
               // Sehemu ya Kupakia Picha
@@ -526,7 +587,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(color: AppColors.border, width: 1.5),
                   ),
@@ -538,7 +599,11 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                           color: AppColors.primaryLight,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.add_a_photo_outlined, size: 30, color: AppColors.primary),
+                        child: const Icon(
+                          Icons.add_a_photo_outlined,
+                          size: 30,
+                          color: AppColors.primary,
+                        ),
                       ),
                       const SizedBox(height: 12),
                       const Text(
@@ -552,7 +617,10 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                       const SizedBox(height: 4),
                       const Text(
                         'Picha ya wazi inasaidia wateja kuamini na kukodi haraka.',
-                        style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: AppColors.textSecondary,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 16),
@@ -566,12 +634,20 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                               child: ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primary,
-                                  foregroundColor: Colors.white,
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                  foregroundColor: AppColors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                   elevation: 0,
                                 ),
-                                icon: const Icon(Icons.photo_library_outlined, size: 20),
-                                label: const Text('Browse Files', style: TextStyle(fontWeight: FontWeight.bold)),
+                                icon: const Icon(
+                                  Icons.photo_library_outlined,
+                                  size: 20,
+                                ),
+                                label: const Text(
+                                  'Browse Files',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                                 onPressed: _pickImagesFromGallery,
                               ),
                             ),
@@ -583,11 +659,22 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                               child: OutlinedButton.icon(
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: AppColors.primary,
-                                  side: const BorderSide(color: AppColors.primary, width: 1.5),
-                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                                  side: const BorderSide(
+                                    color: AppColors.primary,
+                                    width: 1.5,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
                                 ),
-                                icon: const Icon(Icons.camera_alt_outlined, size: 20),
-                                label: const Text('Kamera', style: TextStyle(fontWeight: FontWeight.bold)),
+                                icon: const Icon(
+                                  Icons.camera_alt_outlined,
+                                  size: 20,
+                                ),
+                                label: const Text(
+                                  'Kamera',
+                                  style: TextStyle(fontWeight: FontWeight.bold),
+                                ),
                                 onPressed: _pickImageFromCamera,
                               ),
                             ),
@@ -596,8 +683,18 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                       ),
                       const SizedBox(height: 8),
                       TextButton.icon(
-                        icon: const Icon(Icons.auto_awesome, size: 16, color: AppColors.textSecondary),
-                        label: const Text('Au fungua machaguo zaidi na sampuli', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                        icon: const Icon(
+                          Icons.auto_awesome,
+                          size: 16,
+                          color: AppColors.textSecondary,
+                        ),
+                        label: const Text(
+                          'Au fungua machaguo zaidi na sampuli',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
+                          ),
+                        ),
                         onPressed: _showImagePickerModal,
                       ),
                     ],
@@ -621,22 +718,36 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                               child: Container(
                                 width: 125,
                                 decoration: BoxDecoration(
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                   borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(color: AppColors.primary, width: 1.5),
+                                  border: Border.all(
+                                    color: AppColors.primary,
+                                    width: 1.5,
+                                  ),
                                 ),
                                 child: const Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Icon(Icons.add_photo_alternate_outlined, size: 30, color: AppColors.primary),
+                                    Icon(
+                                      Icons.add_photo_alternate_outlined,
+                                      size: 30,
+                                      color: AppColors.primary,
+                                    ),
                                     SizedBox(height: 6),
                                     Text(
                                       'Ongeza Picha',
-                                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold, color: AppColors.primary),
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.primary,
+                                      ),
                                     ),
                                     Text(
                                       'Browse/Kamera',
-                                      style: TextStyle(fontSize: 10, color: AppColors.textSecondary),
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: AppColors.textSecondary,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -654,7 +765,9 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(14),
                                   border: Border.all(
-                                    color: isPrimary ? AppColors.primary : AppColors.border,
+                                    color: isPrimary
+                                        ? AppColors.primary
+                                        : AppColors.border,
                                     width: isPrimary ? 2.5 : 1,
                                   ),
                                 ),
@@ -673,14 +786,21 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                                   top: 8,
                                   left: 8,
                                   child: Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 3,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: AppColors.primary,
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: const Text(
                                       'Jalada Kuu',
-                                      style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
+                                      style: TextStyle(
+                                        color: AppColors.white,
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -695,11 +815,17 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                                   },
                                   child: Container(
                                     padding: const EdgeInsets.all(4),
-                                    decoration: const BoxDecoration(
-                                      color: Colors.black54,
+                                    decoration: BoxDecoration(
+                                      color: AppColors.primaryDark.withOpacity(
+                                        0.54,
+                                      ),
                                       shape: BoxShape.circle,
                                     ),
-                                    child: const Icon(Icons.close, color: Colors.white, size: 16),
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: AppColors.white,
+                                      size: 16,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -714,7 +840,10 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                       children: [
                         Text(
                           'Picha ya kwanza ndiyo itakayoonekana kama jalada.',
-                          style: TextStyle(fontSize: 11, color: Colors.grey.shade600),
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                         TextButton(
                           onPressed: () {
@@ -722,7 +851,13 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                               _selectedImages.clear();
                             });
                           },
-                          child: const Text('Futa Zote', style: TextStyle(color: Colors.red, fontSize: 12)),
+                          child: const Text(
+                            'Futa Zote',
+                            style: TextStyle(
+                              color: AppColors.amberDark,
+                              fontSize: 12,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -736,10 +871,16 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
               TextFormField(
                 controller: _titleController,
                 decoration: const InputDecoration(
-                  hintText: 'Mfano: Scaffolding za Ujenzi, Viti 50 vya Plastiki',
-                  prefixIcon: Icon(Icons.handyman_outlined, color: AppColors.primary),
+                  hintText:
+                      'Mfano: Scaffolding za Ujenzi, Viti 50 vya Plastiki',
+                  prefixIcon: Icon(
+                    Icons.handyman_outlined,
+                    color: AppColors.primary,
+                  ),
                 ),
-                validator: (val) => val == null || val.trim().isEmpty ? 'Tafadhali ingiza jina la kifaa' : null,
+                validator: (val) => val == null || val.trim().isEmpty
+                    ? 'Tafadhali ingiza jina la kifaa'
+                    : null,
               ),
 
               const SizedBox(height: 18),
@@ -749,12 +890,24 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
               DropdownButtonFormField<ListingCategory>(
                 value: _selectedCategory,
                 decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.category_outlined, color: AppColors.primary),
+                  prefixIcon: Icon(
+                    Icons.category_outlined,
+                    color: AppColors.primary,
+                  ),
                 ),
                 items: const [
-                  DropdownMenuItem(value: ListingCategory.sherehe, child: Text('🎉 Vifaa vya Sherehe')),
-                  DropdownMenuItem(value: ListingCategory.ujenzi, child: Text('🏗️ Vifaa vya Ujenzi')),
-                  DropdownMenuItem(value: ListingCategory.ukumbi, child: Text('🏛️ Ukumbi / Venue')),
+                  DropdownMenuItem(
+                    value: ListingCategory.sherehe,
+                    child: Text('🎉 Vifaa vya Sherehe'),
+                  ),
+                  DropdownMenuItem(
+                    value: ListingCategory.ujenzi,
+                    child: Text('🏗️ Vifaa vya Ujenzi'),
+                  ),
+                  DropdownMenuItem(
+                    value: ListingCategory.ukumbi,
+                    child: Text('🏛️ Ukumbi / Venue'),
+                  ),
                 ],
                 onChanged: (val) {
                   if (val != null) setState(() => _selectedCategory = val);
@@ -768,12 +921,24 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
               DropdownButtonFormField<ListingType>(
                 value: _selectedType,
                 decoration: const InputDecoration(
-                  prefixIcon: Icon(Icons.sell_outlined, color: AppColors.primary),
+                  prefixIcon: Icon(
+                    Icons.sell_outlined,
+                    color: AppColors.primary,
+                  ),
                 ),
                 items: const [
-                  DropdownMenuItem(value: ListingType.kukodisha, child: Text('Kukodisha tu')),
-                  DropdownMenuItem(value: ListingType.kuuza, child: Text('Kuuza tu')),
-                  DropdownMenuItem(value: ListingType.zote, child: Text('Kukodisha na Kuuza')),
+                  DropdownMenuItem(
+                    value: ListingType.kukodisha,
+                    child: Text('Kukodisha tu'),
+                  ),
+                  DropdownMenuItem(
+                    value: ListingType.kuuza,
+                    child: Text('Kuuza tu'),
+                  ),
+                  DropdownMenuItem(
+                    value: ListingType.zote,
+                    child: Text('Kukodisha na Kuuza'),
+                  ),
                 ],
                 onChanged: (val) {
                   if (val != null) setState(() => _selectedType = val);
@@ -790,10 +955,18 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                 decoration: const InputDecoration(
                   hintText: 'Mfano: 25,000',
                   prefixText: 'TZS ',
-                  prefixStyle: TextStyle(fontWeight: FontWeight.bold, color: AppColors.textPrimary),
-                  prefixIcon: Icon(Icons.payments_outlined, color: AppColors.primary),
+                  prefixStyle: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
+                  prefixIcon: Icon(
+                    Icons.payments_outlined,
+                    color: AppColors.primary,
+                  ),
                 ),
-                validator: (val) => val == null || val.trim().isEmpty ? 'Tafadhali ingiza bei' : null,
+                validator: (val) => val == null || val.trim().isEmpty
+                    ? 'Tafadhali ingiza bei'
+                    : null,
               ),
 
               const SizedBox(height: 18),
@@ -804,9 +977,14 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                 controller: _locationController,
                 decoration: const InputDecoration(
                   hintText: 'Mfano: Mwenge, Dar es Salaam',
-                  prefixIcon: Icon(Icons.location_on_outlined, color: AppColors.primary),
+                  prefixIcon: Icon(
+                    Icons.location_on_outlined,
+                    color: AppColors.primary,
+                  ),
                 ),
-                validator: (val) => val == null || val.trim().isEmpty ? 'Tafadhali ingiza eneo' : null,
+                validator: (val) => val == null || val.trim().isEmpty
+                    ? 'Tafadhali ingiza eneo'
+                    : null,
               ),
 
               const SizedBox(height: 18),
@@ -819,7 +997,9 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                 decoration: const InputDecoration(
                   hintText: 'Eleza ubora, hali yake (mpya/imetumika), idadi, na masharti yoyote...',
                 ),
-                validator: (val) => val == null || val.trim().isEmpty ? 'Tafadhali andika maelezo ya kifaa' : null,
+                validator: (val) => val == null || val.trim().isEmpty
+                    ? 'Tafadhali andika maelezo ya kifaa'
+                    : null,
               ),
 
               const SizedBox(height: 32),
@@ -834,11 +1014,17 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                       ? const SizedBox(
                           width: 20,
                           height: 20,
-                          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                          child: CircularProgressIndicator(
+                            color: AppColors.white,
+                            strokeWidth: 2,
+                          ),
                         )
                       : const Text(
                           'Weka Kifaa Kwenye Mfumo',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                 ),
               ),

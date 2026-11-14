@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../core/constants/app_colors.dart';
+
 enum BookingStatus { pending, confirmed, completed, cancelled }
 
 class BookingModel {
@@ -36,7 +38,10 @@ class BookingModel {
   });
 
   int get totalDays {
-    return endDate.difference(startDate).inDays.clamp(1, double.maxFinite.toInt());
+    return endDate
+        .difference(startDate)
+        .inDays
+        .clamp(1, double.maxFinite.toInt());
   }
 
   String get statusLabel {
@@ -55,13 +60,13 @@ class BookingModel {
   Color get statusColor {
     switch (status) {
       case BookingStatus.pending:
-        return const Color(0xFFFFA000); // amber
+        return AppColors.amber;
       case BookingStatus.confirmed:
-        return const Color(0xFF1976D2); // blue
+        return AppColors.primary;
       case BookingStatus.completed:
-        return const Color(0xFF388E3C); // green
+        return AppColors.blueSoft;
       case BookingStatus.cancelled:
-        return const Color(0xFFD32F2F); // red
+        return AppColors.amberDark;
     }
   }
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../data/models/booking_model.dart';
 import '../../../reviews/presentation/widgets/add_review_dialog.dart';
@@ -22,9 +23,9 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
 
   String _formatPrice(double price) {
     return price.toInt().toString().replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]},',
-        );
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    );
   }
 
   Color _getStatusColor(BookingStatus status) {
@@ -34,7 +35,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
       case BookingStatus.confirmed:
         return AppColors.success;
       case BookingStatus.completed:
-        return Colors.blue;
+        return AppColors.primary;
       case BookingStatus.cancelled:
         return AppColors.error;
     }
@@ -50,15 +51,12 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Bookings Zangu'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Bookings Zangu'), centerTitle: true),
       body: Column(
         children: [
           // Filter Tabs
           Container(
-            color: Colors.white,
+            color: AppColors.white,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -87,7 +85,11 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.calendar_today_outlined, size: 64, color: Colors.grey.shade400),
+                          Icon(
+                            Icons.calendar_today_outlined,
+                            size: 64,
+                            color: AppColors.textTertiary,
+                          ),
                           const SizedBox(height: 16),
                           const Text(
                             'Huna bookings kwa sasa',
@@ -101,14 +103,19 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
                           const Text(
                             'Vifaa utakavyokodisha vitaonekana hapa.',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.textSecondary,
+                            ),
                           ),
                           const SizedBox(height: 20),
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              foregroundColor: AppColors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
                             ),
                             onPressed: () => context.go('/home'),
                             child: const Text('Gundua Vifaa'),
@@ -127,12 +134,12 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
                       return Container(
                         margin: const EdgeInsets.only(bottom: 14),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.white,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: AppColors.border),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF0F172A).withOpacity(0.03),
+                              color: AppColors.primaryDark.withOpacity(0.03),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -158,11 +165,16 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
                                     ),
                                   ),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 10,
+                                      vertical: 4,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: statusColor.withOpacity(0.12),
                                       borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(color: statusColor.withOpacity(0.4)),
+                                      border: Border.all(
+                                        color: statusColor.withOpacity(0.4),
+                                      ),
                                     ),
                                     child: Text(
                                       booking.statusLabel,
@@ -181,7 +193,11 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
                               // Booking Details Row
                               Row(
                                 children: [
-                                  const Icon(Icons.date_range, size: 15, color: AppColors.primary),
+                                  const Icon(
+                                    Icons.date_range,
+                                    size: 15,
+                                    color: AppColors.primary,
+                                  ),
                                   const SizedBox(width: 6),
                                   Text(
                                     '${_formatDate(booking.startDate)} - ${_formatDate(booking.endDate)}',
@@ -206,14 +222,19 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
 
                               // Bottom Row: Price & Actions
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       const Text(
                                         'Gharama ya Jumla',
-                                        style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: AppColors.textSecondary,
+                                        ),
                                       ),
                                       Text(
                                         'TZS ${_formatPrice(booking.totalPrice)}',
@@ -228,51 +249,91 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
                                   if (booking.status == BookingStatus.pending)
                                     OutlinedButton(
                                       onPressed: () {
-                                        ref.read(bookingsProvider.notifier).updateStatus(
+                                        ref
+                                            .read(bookingsProvider.notifier)
+                                            .updateStatus(
                                               booking.id,
                                               BookingStatus.cancelled,
                                             );
-                                        ScaffoldMessenger.of(context).showSnackBar(
-                                          const SnackBar(content: Text('Booking imefutwa.')),
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text('Booking imefutwa.'),
+                                          ),
                                         );
                                       },
                                       style: OutlinedButton.styleFrom(
                                         foregroundColor: AppColors.error,
-                                        side: const BorderSide(color: AppColors.error),
-                                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        side: const BorderSide(
+                                          color: AppColors.error,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 14,
+                                          vertical: 8,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
                                       ),
                                       child: const Text('Ghairi'),
                                     )
-                                  else if (booking.status == BookingStatus.confirmed)
+                                  else if (booking.status ==
+                                      BookingStatus.confirmed)
                                     ElevatedButton.icon(
                                       onPressed: () {
-                                        context.push('/payments/pay?bookingId=${booking.id}');
+                                        context.push(
+                                          '/payments/pay?bookingId=${booking.id}',
+                                        );
                                       },
                                       icon: const Icon(Icons.payment, size: 16),
                                       label: const Text('Lipa Sasa'),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: AppColors.primary,
-                                        foregroundColor: Colors.white,
-                                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        foregroundColor: AppColors.white,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 14,
+                                          vertical: 8,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
                                       ),
                                     )
-                                  else if (booking.status == BookingStatus.completed)
+                                  else if (booking.status ==
+                                      BookingStatus.completed)
                                     OutlinedButton.icon(
                                       onPressed: () {
                                         showDialog(
                                           context: context,
-                                          builder: (_) => AddReviewDialog(booking: booking),
+                                          builder: (_) =>
+                                              AddReviewDialog(booking: booking),
                                         );
                                       },
-                                      icon: const Icon(Icons.star_rate_rounded, size: 16, color: Colors.amber),
+                                      icon: const Icon(
+                                        Icons.star_rate_rounded,
+                                        size: 16,
+                                        color: AppColors.amber,
+                                      ),
                                       label: const Text('Toa Review'),
                                       style: OutlinedButton.styleFrom(
                                         foregroundColor: AppColors.primary,
-                                        side: const BorderSide(color: AppColors.primary),
-                                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        side: const BorderSide(
+                                          color: AppColors.primary,
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 12,
+                                          vertical: 8,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
                                       ),
                                     ),
                                 ],
@@ -298,18 +359,17 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
         setState(() => _selectedStatus = status);
       },
       selectedColor: AppColors.primary,
-      backgroundColor: Colors.grey.shade100,
+      backgroundColor: AppColors.surfaceSubtle,
       labelStyle: TextStyle(
-        color: isSelected ? Colors.white : AppColors.textPrimary,
+        color: isSelected ? AppColors.white : AppColors.textPrimary,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         fontSize: 12,
       ),
       side: BorderSide(
-        color: isSelected ? AppColors.primary : Colors.grey.shade300,
+        color: isSelected ? AppColors.primary : AppColors.border,
       ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       showCheckmark: false,
     );
   }
 }
-

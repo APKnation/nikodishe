@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../data/models/user_model.dart';
 import '../../providers/auth_provider.dart';
@@ -14,24 +15,45 @@ class PhoneScreen extends ConsumerStatefulWidget {
 
 class _PhoneScreenState extends ConsumerState<PhoneScreen> {
   final _phoneController = TextEditingController();
-  UserRole _selectedRole = UserRole.renter;
+  final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+  bool _isOwnerMode = false;
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
     _phoneController.dispose();
+    _passwordController.dispose();
     super.dispose();
   }
 
-  Future<void> _handleEndelea() async {
+  String _fullPhone() => '+255${_phoneController.text.trim()}';
+
+  Future<void> _handleCustomerContinue() async {
+    FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
-    final phone = '+255${_phoneController.text.trim()}';
+    final phone = _fullPhone();
     await ref.read(authProvider.notifier).sendOtp(phone);
-    if (mounted) {
-      context.push('/auth/otp', extra: {
-        'phone': phone,
-        'role': _selectedRole,
-      });
+    final error = ref.read(authProvider).error;
+    if (mounted && error == null) {
+      context.push('/auth/otp', extra: {'phone': phone, 'role': UserRole.renter});
+    }
+  }
+
+  Future<void> _handleOwnerLogin() async {
+    FocusScope.of(context).unfocus();
+    if (!_formKey.currentState!.validate()) return;
+    final phone = _fullPhone();
+    final password = _passwordController.text.trim();
+    await ref.read(authProvider.notifier).loginOwner(phone: phone, password: password);
+    final auth = ref.read(authProvider);
+    if (!mounted) return;
+    if (auth.user != null) {
+      if (auth.user!.role == UserRole.owner) {
+        context.go('/owner/home');
+      } else {
+        context.go('/home');
+      }
     }
   }
 
@@ -42,270 +64,277 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 40),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(height: 32),
-                // Logo / Icon
-                Container(
-                  width: 96,
-                  height: 96,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AppColors.primary.withOpacity(0.35),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 460),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 84,
+                        height: 84,
+                        decoration: BoxDecoration(
+                          color: AppColors.primary,
+                          borderRadius: BorderRadius.circular(22),
+                          boxShadow: [
+                            BoxShadow(
+                              color: AppColors.primary.withOpacity(0.2),
+                              blurRadius: 18,
+                              offset: const Offset(0, 8),
+                            ),
+                          ],
+                        ),
+                        child: const Icon(
+                          Icons.handyman_rounded,
+                          size: 42,
+                          color: AppColors.white,
+                        ),
                       ),
-                    ],
-                  ),
-                  child: const Icon(
-                    Icons.home_rounded,
-                    size: 52,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(height: 28),
-                Text(
-                  'Karibu Kodisha',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Kodisha',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 32,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.textPrimary,
+                        color: AppColors.primary,
                         letterSpacing: -0.5,
                       ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Panga vifaa na maeneo kwa urahisi',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      _isOwnerMode
+                          ? 'Ingia kama mwenye kifaa (akaunti huundwa na super admin)'
+                          : 'Gundua na kodisha vifaa kutoka kwa wamiliki mbalimbali',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
                         color: AppColors.textSecondary,
+                        fontSize: 14,
+                        height: 1.4,
                       ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 48),
-                // Phone label
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Ingiza namba yako ya simu',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textPrimary,
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                // Phone field
-                TextFormField(
-                  controller: _phoneController,
-                  keyboardType: TextInputType.phone,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: AppColors.textPrimary,
-                  ),
-                  decoration: InputDecoration(
-                    prefixText: '+255 ',
-                    prefixStyle: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.primary,
                     ),
-                    hintText: '7XX XXX XXX',
-                    hintStyle: TextStyle(
-                      color: AppColors.textSecondary.withOpacity(0.6),
-                    ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 18),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(
-                          color: Color(0xFFE2E8F0), width: 1.5),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide: const BorderSide(
-                          color: Color(0xFFE2E8F0), width: 1.5),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide:
-                          const BorderSide(color: AppColors.primary, width: 2),
-                    ),
-                    errorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide:
-                          const BorderSide(color: AppColors.error, width: 1.5),
-                    ),
-                    focusedErrorBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(14),
-                      borderSide:
-                          const BorderSide(color: AppColors.error, width: 2),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.trim().isEmpty) {
-                      return 'Tafadhali ingiza namba ya simu';
-                    }
-                    if (value.trim().length < 9) {
-                      return 'Namba ya simu si sahihi';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 24),
-                // Role selector label
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Mimi ni',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
-                          color: AppColors.textPrimary,
-                        ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                // Role toggle
-                Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(14),
-                    border: Border.all(color: const Color(0xFFE2E8F0), width: 1.5),
-                  ),
-                  padding: const EdgeInsets.all(6),
-                  child: Row(
-                    children: [
-                      _RoleChip(
-                        label: 'Mpangaji',
-                        icon: Icons.person_outline_rounded,
-                        selected: _selectedRole == UserRole.renter,
-                        onTap: () =>
-                            setState(() => _selectedRole = UserRole.renter),
-                      ),
-                      _RoleChip(
-                        label: 'Mmiliki',
-                        icon: Icons.business_center_outlined,
-                        selected: _selectedRole == UserRole.owner,
-                        onTap: () =>
-                            setState(() => _selectedRole = UserRole.owner),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 40),
-                // Error message
-                if (authState.error != null) ...[
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: AppColors.error.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                          color: AppColors.error.withOpacity(0.3), width: 1),
-                    ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.error_outline,
-                            color: AppColors.error, size: 18),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            authState.error!,
-                            style: const TextStyle(
-                                color: AppColors.error, fontSize: 13),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                ],
-                // Endelea button
-                SizedBox(
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: authState.isLoading ? null : _handleEndelea,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
-                      disabledBackgroundColor:
-                          AppColors.primary.withOpacity(0.5),
-                      elevation: 0,
-                      shape: RoundedRectangleBorder(
+                    const SizedBox(height: 22),
+
+                    Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.blueTintSoft,
                         borderRadius: BorderRadius.circular(14),
+                        border: Border.all(color: AppColors.border),
+                      ),
+                      padding: const EdgeInsets.all(4),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: _ModeChip(
+                              label: 'Mteja',
+                              selected: !_isOwnerMode,
+                              icon: Icons.shopping_bag_outlined,
+                              onTap: () => setState(() => _isOwnerMode = false),
+                            ),
+                          ),
+                          Expanded(
+                            child: _ModeChip(
+                              label: 'Mwenye Kifaa',
+                              selected: _isOwnerMode,
+                              icon: Icons.storefront_outlined,
+                              onTap: () => setState(() => _isOwnerMode = true),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    child: authState.isLoading
-                        ? const SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2.5,
-                            ),
-                          )
-                        : const Text(
-                            'Ingia Kwenye Akaunti',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.3,
-                            ),
-                          ),
-                  ),
-                ),
-                const SizedBox(height: 20),
+                    const SizedBox(height: 18),
 
-                // Register Link
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.grey.shade300),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Huna akaunti bado? ',
-                        style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
-                      ),
-                      GestureDetector(
-                        onTap: () => context.push('/auth/register'),
-                        child: const Text(
-                          'Jisajili Hapa',
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: AppColors.border),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primaryDark.withOpacity(0.04),
+                            blurRadius: 16,
+                            offset: const Offset(0, 6),
                           ),
-                        ),
+                        ],
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Namba ya simu',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          TextFormField(
+                            controller: _phoneController,
+                            keyboardType: TextInputType.phone,
+                            maxLength: 9,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                            ),
+                            decoration: InputDecoration(
+                              hintText: '7XX XXX XXX',
+                              counterText: '',
+                              prefixIcon: Container(
+                                margin: const EdgeInsets.only(right: 8),
+                                padding: const EdgeInsets.symmetric(horizontal: 12),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text('🇹🇿', style: TextStyle(fontSize: 20)),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      '+255',
+                                      style: TextStyle(
+                                        color: AppColors.textPrimary,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 15,
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: const EdgeInsets.only(left: 10),
+                                      width: 1,
+                                      height: 22,
+                                      color: AppColors.border,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
+                            ),
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Tafadhali ingiza namba ya simu';
+                              }
+                              if (value.trim().length < 9) {
+                                return 'Namba ya simu haijakamilika';
+                              }
+                              return null;
+                            },
+                          ),
+
+                          if (_isOwnerMode) ...[
+                            const SizedBox(height: 14),
+                            const Text(
+                              'Nenosiri',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.textPrimary,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            TextFormField(
+                              controller: _passwordController,
+                              obscureText: _obscurePassword,
+                              decoration: InputDecoration(
+                                hintText: 'Weka nenosiri ulilopewa na msimamizi',
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                                    color: AppColors.textSecondary,
+                                  ),
+                                  onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
+                                ),
+                              ),
+                              validator: (value) {
+                                if (!_isOwnerMode) return null;
+                                if (value == null || value.trim().isEmpty) {
+                                  return 'Tafadhali ingiza nenosiri';
+                                }
+                                if (value.trim().length < 4) {
+                                  return 'Nenosiri si sahihi';
+                                }
+                                return null;
+                              },
+                            ),
+                            const SizedBox(height: 10),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: AppColors.amberTint,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: AppColors.amber.withOpacity(0.4)),
+                              ),
+                              child: const Text(
+                                'Wamiliki wa vifaa huongezwa na Super Admin pekee na hupewa nenosiri la awali (mf. Kodisha@123).',
+                                style: TextStyle(fontSize: 12.5, color: AppColors.textPrimary, height: 1.35),
+                              ),
+                            ),
+                          ] else ...[
+                            const SizedBox(height: 14),
+                            Container(
+                              width: double.infinity,
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: AppColors.blueTintSoft,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: AppColors.border),
+                              ),
+                              child: const Text(
+                                'Wateja hujisajili kwa OTP. Dashibodi ya pamoja inaonyesha vifaa vyote kutoka kwa wamiliki tofauti.',
+                                style: TextStyle(fontSize: 12.5, color: AppColors.textSecondary, height: 1.35),
+                              ),
+                            ),
+                          ],
+
+                          if (authState.error != null) ...[
+                            const SizedBox(height: 12),
+                            Text(
+                              authState.error!,
+                              style: const TextStyle(color: AppColors.error, fontSize: 13),
+                            ),
+                          ],
+
+                          const SizedBox(height: 18),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 52,
+                            child: ElevatedButton(
+                              onPressed: authState.isLoading
+                                  ? null
+                                  : (_isOwnerMode ? _handleOwnerLogin : _handleCustomerContinue),
+                              child: authState.isLoading
+                                  ? const SizedBox(
+                                      width: 22,
+                                      height: 22,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2.5,
+                                        valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
+                                      ),
+                                    )
+                                  : Text(_isOwnerMode ? 'Ingia kama Mwenye Kifaa' : 'Endelea kwa OTP'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    if (!_isOwnerMode) ...[
+                      const SizedBox(height: 14),
+                      TextButton(
+                        onPressed: () => context.push('/auth/register', extra: UserRole.renter),
+                        child: const Text('Huna akaunti ya mteja? Jisajili hapa'),
                       ),
                     ],
-                  ),
+                  ],
                 ),
-
-                const SizedBox(height: 24),
-                Text(
-                  'Kwa kuendelea, unakubali masharti yetu ya matumizi na sera ya faragha.',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+              ),
             ),
           ),
         ),
@@ -314,50 +343,50 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
   }
 }
 
-class _RoleChip extends StatelessWidget {
+class _ModeChip extends StatelessWidget {
   final String label;
-  final IconData icon;
   final bool selected;
+  final IconData icon;
   final VoidCallback onTap;
 
-  const _RoleChip({
+  const _ModeChip({
     required this.label,
-    required this.icon,
     required this.selected,
+    required this.icon,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: selected ? AppColors.primary : Colors.transparent,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                size: 18,
-                color: selected ? Colors.white : AppColors.textSecondary,
-              ),
-              const SizedBox(width: 6),
-              Text(
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 180),
+        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+        decoration: BoxDecoration(
+          color: selected ? AppColors.white : Colors.transparent,
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: selected ? AppColors.border : Colors.transparent),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 16, color: selected ? AppColors.primary : AppColors.textSecondary),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
                 label,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 14,
-                  color: selected ? Colors.white : AppColors.textSecondary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w700,
+                  color: selected ? AppColors.primary : AppColors.textSecondary,
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

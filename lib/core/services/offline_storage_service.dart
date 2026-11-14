@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+
 import '../../../data/models/booking_model.dart';
 
 class OfflineStorageService {
-  static final OfflineStorageService instance = OfflineStorageService._internal();
+  static final OfflineStorageService instance =
+      OfflineStorageService._internal();
   OfflineStorageService._internal();
 
   File? _cacheFile;
@@ -61,4 +63,3 @@ class OfflineStorageService {
     return '${ref.substring(0, 2)}***${ref.substring(ref.length - 2)}';
   }
 }
-

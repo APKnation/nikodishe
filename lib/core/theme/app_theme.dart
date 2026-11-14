@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../constants/app_colors.dart';
 
 class AppTheme {
@@ -6,21 +7,27 @@ class AppTheme {
     useMaterial3: true,
     brightness: Brightness.light,
     primaryColor: AppColors.primary,
-    scaffoldBackgroundColor: AppColors.background, // 70% Dominant Neutral
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: AppColors.primary,
-      primary: AppColors.primary,           // 10% Accent CTA
+    scaffoldBackgroundColor: AppColors.background,
+    colorScheme: ColorScheme(
+      brightness: Brightness.light,
+      primary: AppColors.primary,
+      onPrimary: AppColors.white,
       secondary: AppColors.secondary,
-      surface: AppColors.surface,           // 70% Neutral Card Surface
+      onSecondary: AppColors.primaryDark,
       error: AppColors.error,
+      onError: AppColors.white,
+      surface: AppColors.surface,
+      onSurface: AppColors.textPrimary,
+      outline: AppColors.border,
     ),
 
-    // ─── Modern Clean AppBar (70% Canvas, 20% Typography) ───────────────────
+    // ─── AppBar: clean white surface, strong blue typography ────────────────
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.surface,
       foregroundColor: AppColors.textPrimary,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
+      scrolledUnderElevation: 0,
       centerTitle: true,
       iconTheme: IconThemeData(color: AppColors.textPrimary, size: 22),
       titleTextStyle: TextStyle(
@@ -31,18 +38,17 @@ class AppTheme {
       ),
     ),
 
-    // ─── 10% Primary CTA Buttons (Focal Touchpoints) ─────────────────────────
+    // ─── Primary CTA: high-contrast blue, clear affordance ──────────────────
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        foregroundColor: AppColors.white,
+        disabledBackgroundColor: AppColors.blueTint,
+        disabledForegroundColor: AppColors.textTertiary,
         elevation: 0,
-        shadowColor: AppColors.primary.withOpacity(0.3),
-        minimumSize: const Size(64, 50), // Ergonomic touch target >= 48dp
+        minimumSize: const Size(64, 52),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         textStyle: const TextStyle(
           fontSize: 15,
           fontWeight: FontWeight.w700,
@@ -57,13 +63,8 @@ class AppTheme {
         minimumSize: const Size(64, 48),
         side: const BorderSide(color: AppColors.border, width: 1.5),
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
-        textStyle: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
       ),
     ),
 
@@ -72,41 +73,44 @@ class AppTheme {
         foregroundColor: AppColors.primary,
         minimumSize: const Size(48, 48),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-        textStyle: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w600,
-        ),
+        textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
       ),
     ),
 
-    // ─── Input Fields (70% Neutral Foundation) ──────────────────────────────
+    // ─── Inputs: white fields, blue focus, clear validation states ──────────
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Colors.white,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
+      fillColor: AppColors.white,
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+      labelStyle: const TextStyle(
+        color: AppColors.textSecondary,
+        fontWeight: FontWeight.w500,
+      ),
       hintStyle: const TextStyle(
         fontSize: 14,
         color: AppColors.textTertiary,
         fontWeight: FontWeight.w400,
       ),
+      prefixIconColor: AppColors.primary,
+      suffixIconColor: AppColors.textSecondary,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         borderSide: const BorderSide(color: AppColors.border),
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         borderSide: const BorderSide(color: AppColors.border),
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         borderSide: const BorderSide(color: AppColors.primary, width: 2),
       ),
       errorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         borderSide: const BorderSide(color: AppColors.error, width: 1.5),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(14),
         borderSide: const BorderSide(color: AppColors.error, width: 2),
       ),
       errorStyle: const TextStyle(
@@ -116,9 +120,10 @@ class AppTheme {
       ),
     ),
 
-    // ─── Cards & Containers (70% Neutral Foundation) ─────────────────────────
+    // ─── Cards: white surfaces with subtle blue border (clarity) ────────────
     cardTheme: CardThemeData(
       elevation: 0,
+      margin: EdgeInsets.zero,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
         side: const BorderSide(color: AppColors.border, width: 1),
@@ -126,11 +131,24 @@ class AppTheme {
       color: AppColors.surface,
     ),
 
-    // ─── Navigation Bar ──────────────────────────────────────────────────────
+    chipTheme: ChipThemeData(
+      backgroundColor: AppColors.surfaceSubtle,
+      selectedColor: AppColors.primaryLight,
+      secondarySelectedColor: AppColors.amberTint,
+      labelStyle: const TextStyle(
+        color: AppColors.textSecondary,
+        fontWeight: FontWeight.w600,
+      ),
+      side: const BorderSide(color: AppColors.border),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    ),
+
+    // ─── Navigation: white bar, blue active state, clear labels ─────────────
     navigationBarTheme: NavigationBarThemeData(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
+      height: 68,
       indicatorColor: AppColors.primaryLight,
       iconTheme: WidgetStateProperty.resolveWith((states) {
         if (states.contains(WidgetState.selected)) {
@@ -154,11 +172,20 @@ class AppTheme {
       }),
     ),
 
-    // ─── Dividers & Separators ───────────────────────────────────────────────
     dividerTheme: const DividerThemeData(
       color: AppColors.border,
       thickness: 1,
       space: 1,
+    ),
+
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: AppColors.primaryDark,
+      contentTextStyle: const TextStyle(
+        color: AppColors.white,
+        fontWeight: FontWeight.w500,
+      ),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     ),
   );
 }

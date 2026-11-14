@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../data/mock/mock_data.dart';
 import '../../../../data/models/user_model.dart';
@@ -9,10 +10,7 @@ import '../../providers/listings_provider.dart';
 class OwnerContactScreen extends ConsumerWidget {
   final String listingId;
 
-  const OwnerContactScreen({
-    super.key,
-    required this.listingId,
-  });
+  const OwnerContactScreen({super.key, required this.listingId});
 
   UserModel _getOwner(String ownerId, String ownerName) {
     try {
@@ -46,7 +44,11 @@ class OwnerContactScreen extends ConsumerWidget {
     );
   }
 
-  void _simulateExternalLaunch(BuildContext context, String platform, String value) {
+  void _simulateExternalLaunch(
+    BuildContext context,
+    String platform,
+    String value,
+  ) {
     showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -60,18 +62,29 @@ class OwnerContactScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.open_in_new, color: AppColors.primary, size: 24),
+                const Icon(
+                  Icons.open_in_new,
+                  color: AppColors.primary,
+                  size: 24,
+                ),
                 const SizedBox(width: 10),
                 Text(
                   'Fungua $platform',
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
             Text(
               'Unakaribia kufungua $platform kwa anwani/namba: $value.',
-              style: const TextStyle(fontSize: 14, color: AppColors.textSecondary, height: 1.4),
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColors.textSecondary,
+                height: 1.4,
+              ),
             ),
             const SizedBox(height: 20),
             Row(
@@ -87,12 +100,14 @@ class OwnerContactScreen extends ConsumerWidget {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                      foregroundColor: Colors.white,
+                      foregroundColor: AppColors.white,
                     ),
                     onPressed: () {
                       Navigator.of(ctx).pop();
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Inafungua $platform ($value)...')),
+                        SnackBar(
+                          content: Text('Inafungua $platform ($value)...'),
+                        ),
                       );
                     },
                     child: const Text('Fungua Sasa'),
@@ -128,11 +143,11 @@ class OwnerContactScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(20),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: AppColors.primaryDark.withOpacity(0.05),
                     blurRadius: 10,
                     offset: const Offset(0, 4),
                   ),
@@ -146,7 +161,11 @@ class OwnerContactScreen extends ConsumerWidget {
                       CircleAvatar(
                         radius: 44,
                         backgroundColor: AppColors.primary.withOpacity(0.15),
-                        child: const Icon(Icons.person, size: 54, color: AppColors.primary),
+                        child: const Icon(
+                          Icons.person,
+                          size: 54,
+                          color: AppColors.primary,
+                        ),
                       ),
                       Container(
                         padding: const EdgeInsets.all(4),
@@ -154,7 +173,11 @@ class OwnerContactScreen extends ConsumerWidget {
                           color: AppColors.success,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(Icons.check, size: 14, color: Colors.white),
+                        child: const Icon(
+                          Icons.check,
+                          size: 14,
+                          color: AppColors.white,
+                        ),
                       ),
                     ],
                   ),
@@ -171,7 +194,11 @@ class OwnerContactScreen extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(Icons.verified, size: 16, color: AppColors.primary),
+                      const Icon(
+                        Icons.verified,
+                        size: 16,
+                        color: AppColors.primary,
+                      ),
                       const SizedBox(width: 4),
                       const Text(
                         'Mwenye Vifaa Aliyethibitishwa',
@@ -188,11 +215,18 @@ class OwnerContactScreen extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(Icons.location_on_outlined, size: 14, color: AppColors.textSecondary),
+                        const Icon(
+                          Icons.location_on_outlined,
+                          size: 14,
+                          color: AppColors.textSecondary,
+                        ),
                         const SizedBox(width: 2),
                         Text(
                           owner.location!,
-                          style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: AppColors.textSecondary,
+                          ),
                         ),
                       ],
                     ),
@@ -208,7 +242,7 @@ class OwnerContactScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(14),
                 decoration: BoxDecoration(
-                  color: Colors.teal.shade50.withOpacity(0.7),
+                  color: AppColors.blueTintSoft,
                   borderRadius: BorderRadius.circular(14),
                   border: Border.all(color: AppColors.primary.withOpacity(0.2)),
                 ),
@@ -217,10 +251,14 @@ class OwnerContactScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(Icons.handyman, color: AppColors.primary, size: 24),
+                      child: const Icon(
+                        Icons.handyman,
+                        color: AppColors.primary,
+                        size: 24,
+                      ),
                     ),
                     const SizedBox(width: 12),
                     Expanded(
@@ -229,7 +267,10 @@ class OwnerContactScreen extends ConsumerWidget {
                         children: [
                           const Text(
                             'Kuhusu Kifaa:',
-                            style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: AppColors.textSecondary,
+                            ),
                           ),
                           Text(
                             listing.title,
@@ -251,7 +292,11 @@ class OwnerContactScreen extends ConsumerWidget {
             // Direct Contact Methods Header
             const Text(
               'Mawasiliano ya Moja kwa Moja',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
             ),
             const SizedBox(height: 10),
 
@@ -260,10 +305,18 @@ class OwnerContactScreen extends ConsumerWidget {
               title: 'WhatsApp Chat & Call',
               subtitle: owner.whatsapp ?? owner.phone,
               icon: Icons.chat_bubble_outline,
-              iconBgColor: const Color(0xFF25D366),
+              iconBgColor: AppColors.primary,
               actionLabel: 'Fungua WhatsApp',
-              onTap: () => _simulateExternalLaunch(context, 'WhatsApp', owner.whatsapp ?? owner.phone),
-              onCopy: () => _copyToClipboard(context, owner.whatsapp ?? owner.phone, 'Namba ya WhatsApp'),
+              onTap: () => _simulateExternalLaunch(
+                context,
+                'WhatsApp',
+                owner.whatsapp ?? owner.phone,
+              ),
+              onCopy: () => _copyToClipboard(
+                context,
+                owner.whatsapp ?? owner.phone,
+                'Namba ya WhatsApp',
+              ),
             ),
 
             const SizedBox(height: 10),
@@ -275,8 +328,10 @@ class OwnerContactScreen extends ConsumerWidget {
               icon: Icons.phone,
               iconBgColor: AppColors.primary,
               actionLabel: 'Piga Sasa',
-              onTap: () => _simulateExternalLaunch(context, 'Piga Simu', owner.phone),
-              onCopy: () => _copyToClipboard(context, owner.phone, 'Namba ya Simu'),
+              onTap: () =>
+                  _simulateExternalLaunch(context, 'Piga Simu', owner.phone),
+              onCopy: () =>
+                  _copyToClipboard(context, owner.phone, 'Namba ya Simu'),
             ),
 
             const SizedBox(height: 10),
@@ -286,10 +341,11 @@ class OwnerContactScreen extends ConsumerWidget {
               title: 'Tuma Ujumbe wa SMS',
               subtitle: owner.phone,
               icon: Icons.message_outlined,
-              iconBgColor: Colors.blueAccent,
+              iconBgColor: AppColors.blueSoft,
               actionLabel: 'Tuma SMS',
               onTap: () => _simulateExternalLaunch(context, 'SMS', owner.phone),
-              onCopy: () => _copyToClipboard(context, owner.phone, 'Namba ya Simu'),
+              onCopy: () =>
+                  _copyToClipboard(context, owner.phone, 'Namba ya Simu'),
             ),
 
             const SizedBox(height: 24),
@@ -297,15 +353,19 @@ class OwnerContactScreen extends ConsumerWidget {
             // Social Media Accounts Section
             const Text(
               'Akaunti za Mitandao ya Kijamii',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
             ),
             const SizedBox(height: 10),
 
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.grey.shade200),
+                border: Border.all(color: AppColors.border),
               ),
               child: Column(
                 children: [
@@ -313,13 +373,33 @@ class OwnerContactScreen extends ConsumerWidget {
                   if (owner.instagram != null) ...[
                     ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: const Color(0xFFE1306C).withOpacity(0.12),
-                        child: const Icon(Icons.camera_alt_outlined, color: Color(0xFFE1306C)),
+                        backgroundColor: AppColors.amberDark.withOpacity(0.12),
+                        child: const Icon(
+                          Icons.camera_alt_outlined,
+                          color: AppColors.amberDark,
+                        ),
                       ),
-                      title: const Text('Instagram', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                      subtitle: Text(owner.instagram!, style: const TextStyle(color: AppColors.primary)),
-                      trailing: const Icon(Icons.open_in_new, size: 18, color: AppColors.textSecondary),
-                      onTap: () => _simulateExternalLaunch(context, 'Instagram', owner.instagram!),
+                      title: const Text(
+                        'Instagram',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      subtitle: Text(
+                        owner.instagram!,
+                        style: const TextStyle(color: AppColors.primary),
+                      ),
+                      trailing: const Icon(
+                        Icons.open_in_new,
+                        size: 18,
+                        color: AppColors.textSecondary,
+                      ),
+                      onTap: () => _simulateExternalLaunch(
+                        context,
+                        'Instagram',
+                        owner.instagram!,
+                      ),
                     ),
                     const Divider(height: 1),
                   ],
@@ -328,13 +408,33 @@ class OwnerContactScreen extends ConsumerWidget {
                   if (owner.facebook != null) ...[
                     ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: const Color(0xFF1877F2).withOpacity(0.12),
-                        child: const Icon(Icons.facebook, color: Color(0xFF1877F2)),
+                        backgroundColor: AppColors.primary.withOpacity(0.12),
+                        child: const Icon(
+                          Icons.facebook,
+                          color: AppColors.primary,
+                        ),
                       ),
-                      title: const Text('Facebook', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                      subtitle: Text(owner.facebook!, style: const TextStyle(color: AppColors.textSecondary)),
-                      trailing: const Icon(Icons.open_in_new, size: 18, color: AppColors.textSecondary),
-                      onTap: () => _simulateExternalLaunch(context, 'Facebook', owner.facebook!),
+                      title: const Text(
+                        'Facebook',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      subtitle: Text(
+                        owner.facebook!,
+                        style: const TextStyle(color: AppColors.textSecondary),
+                      ),
+                      trailing: const Icon(
+                        Icons.open_in_new,
+                        size: 18,
+                        color: AppColors.textSecondary,
+                      ),
+                      onTap: () => _simulateExternalLaunch(
+                        context,
+                        'Facebook',
+                        owner.facebook!,
+                      ),
                     ),
                     const Divider(height: 1),
                   ],
@@ -343,13 +443,33 @@ class OwnerContactScreen extends ConsumerWidget {
                   if (owner.tiktok != null) ...[
                     ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: Colors.black.withOpacity(0.1),
-                        child: const Icon(Icons.music_note, color: Colors.black),
+                        backgroundColor: AppColors.primaryDark.withOpacity(0.1),
+                        child: const Icon(
+                          Icons.music_note,
+                          color: AppColors.blueDark,
+                        ),
                       ),
-                      title: const Text('TikTok', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
-                      subtitle: Text(owner.tiktok!, style: const TextStyle(color: AppColors.textSecondary)),
-                      trailing: const Icon(Icons.open_in_new, size: 18, color: AppColors.textSecondary),
-                      onTap: () => _simulateExternalLaunch(context, 'TikTok', owner.tiktok!),
+                      title: const Text(
+                        'TikTok',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      subtitle: Text(
+                        owner.tiktok!,
+                        style: const TextStyle(color: AppColors.textSecondary),
+                      ),
+                      trailing: const Icon(
+                        Icons.open_in_new,
+                        size: 18,
+                        color: AppColors.textSecondary,
+                      ),
+                      onTap: () => _simulateExternalLaunch(
+                        context,
+                        'TikTok',
+                        owner.tiktok!,
+                      ),
                     ),
                   ],
                 ],
@@ -362,18 +482,26 @@ class OwnerContactScreen extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: Colors.amber.shade50,
+                color: AppColors.amberTint,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.amber.shade200),
+                border: Border.all(color: AppColors.amber.withOpacity(0.4)),
               ),
               child: const Row(
                 children: [
-                  Icon(Icons.access_time_filled, color: Colors.amber, size: 20),
+                  Icon(
+                    Icons.access_time_filled,
+                    color: AppColors.amber,
+                    size: 20,
+                  ),
                   SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       'Muda wa kupokea simu: 06:00 Asubuhi - 09:00 Usiku. Kwa usalama wako, kagua kifaa kabla ya kulipa malipo ya mwisho.',
-                      style: TextStyle(fontSize: 12, color: Colors.brown, height: 1.3),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.blueDark,
+                        height: 1.3,
+                      ),
                     ),
                   ),
                 ],
@@ -399,12 +527,12 @@ class OwnerContactScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.border),
         boxShadow: [
           BoxShadow(
-            color: const Color(0xFF0F172A).withOpacity(0.03),
+            color: AppColors.primaryDark.withOpacity(0.03),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -415,7 +543,7 @@ class OwnerContactScreen extends ConsumerWidget {
           CircleAvatar(
             backgroundColor: iconBgColor,
             radius: 22,
-            child: Icon(icon, color: Colors.white, size: 22),
+            child: Icon(icon, color: AppColors.white, size: 22),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -424,18 +552,28 @@ class OwnerContactScreen extends ConsumerWidget {
               children: [
                 Text(
                   title,
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
-                  style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
           ),
           IconButton(
-            icon: const Icon(Icons.copy, size: 18, color: AppColors.textSecondary),
+            icon: const Icon(
+              Icons.copy,
+              size: 18,
+              color: AppColors.textSecondary,
+            ),
             tooltip: 'Nakili Namba',
             onPressed: onCopy,
           ),
@@ -443,15 +581,19 @@ class OwnerContactScreen extends ConsumerWidget {
             onPressed: onTap,
             style: ElevatedButton.styleFrom(
               backgroundColor: iconBgColor,
-              foregroundColor: Colors.white,
+              foregroundColor: AppColors.white,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-            child: Text(actionLabel, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+            child: Text(
+              actionLabel,
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),
     );
   }
 }
-

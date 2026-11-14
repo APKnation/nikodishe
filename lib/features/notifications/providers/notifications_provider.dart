@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../data/models/notification_model.dart';
-import '../../../data/mock/mock_data.dart';
 import '../../../data/services/api_service.dart';
 import '../../auth/providers/auth_provider.dart';
 
@@ -9,19 +9,24 @@ class NotificationsNotifier extends Notifier<List<AppNotificationModel>> {
 
   @override
   List<AppNotificationModel> build() {
-    final initial = List<AppNotificationModel>.from(mockNotifications);
+    ref.listen(currentUserProvider, (_, __) {
+      Future.microtask(() => loadFromApi());
+    });
     Future.microtask(() => loadFromApi());
-    return initial;
+    return const [];
   }
 
   Future<void> loadFromApi() async {
     try {
-      final remote = await _apiService.fetchNotifications();
-      if (remote.isNotEmpty) {
-        state = remote;
+      final user = ref.read(currentUserProvider);
+      if (user == null) {
+        state = const [];
+        return;
       }
+      final remote = await _apiService.fetchNotifications();
+      state = remote;
     } catch (_) {
-      // Backend offline — retain mock notifications
+      // Backend offline or unauthenticated — keep current state
     }
   }
 
@@ -32,7 +37,7 @@ class NotificationsNotifier extends Notifier<List<AppNotificationModel>> {
     String? userId,
     String? relatedId,
   }) {
-    final currentUserId = userId ?? ref.read(currentUserProvider)?.id ?? 'user_001';
+    final currentUserId = userId ?? ref.read(currentUserProvider)?.id ?? '';
     final notif = AppNotificationModel(
       id: 'notif_${DateTime.now().millisecondsSinceEpoch}',
       userId: currentUserId,
@@ -46,21 +51,28 @@ class NotificationsNotifier extends Notifier<List<AppNotificationModel>> {
     state = [notif, ...state];
   }
 
-  void markAsRead(String id) {
-    state = state.map((n) {
-      if (n.id == id) return n.copyWith(isRead: true);
-      return n;
-    }).toList();
+  Future<void> markAsRead(String id) async {
+    state = [
+      for (final n in state)
+        if (n.id == id) n.copyWith(isRead: true) else n,
+    ];
+    try {
+      await _apiService.markNotificationAsRead(id);
+    } catch (_) {}
   }
 
-  void markAllAsRead() {
-    state = state.map((n) => n.copyWith(isRead: true)).toList();
+  Future<void> markAllAsRead() async {
+    state = [for (final n in state) n.copyWith(isRead: true)];
+    try {
+      await _apiService.markAllNotificationsAsRead();
+    } catch (_) {}
   }
 }
 
 final notificationsProvider =
     NotifierProvider<NotificationsNotifier, List<AppNotificationModel>>(
-        () => NotificationsNotifier());
+      () => NotificationsNotifier(),
+    );
 
 final unreadNotificationsCountProvider = Provider<int>((ref) {
   final notifs = ref.watch(notificationsProvider);
@@ -68,8 +80,5 @@ final unreadNotificationsCountProvider = Provider<int>((ref) {
 });
 
 final userNotificationsProvider = Provider<List<AppNotificationModel>>((ref) {
-  final user = ref.watch(currentUserProvider);
-  final all = ref.watch(notificationsProvider);
-  if (user == null) return all;
-  return all.where((n) => n.userId == user.id || n.userId.isEmpty).toList();
+  return ref.watch(notificationsProvider);
 });

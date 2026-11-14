@@ -1,36 +1,55 @@
 import 'package:flutter/material.dart';
 
 /// ─────────────────────────────────────────────────────────────────────────────
-/// UI/UX COLOR SYSTEM (The 70 - 20 - 10 Rule)
+/// KODISHA COLOR SYSTEM (3-Color Palette: Blue, White, Amber)
 /// ─────────────────────────────────────────────────────────────────────────────
-/// • 70% DOMINANT / NEUTRALS: Backgrounds, cards, surface, dividers (Clean & Airy)
-/// • 20% STRUCTURAL / BRAND: Typography hierarchy, icons, structural elements
-/// • 10% ACCENT / CTA: Primary actions, buttons, active highlights, key prices
+/// • Blue: brand, structure, primary actions, trust
+/// • White: surfaces, canvas, clarity, breathing space
+/// • Amber: accent, highlights, emphasis, attention cues
+/// All UI colors are derived from these three hues (including states/tints).
 /// ─────────────────────────────────────────────────────────────────────────────
 class AppColors {
-  // ─── 70% DOMINANT NEUTRALS ──────────────────────────────────────────────────
-  static const Color background = Color(0xFFF8FAFC);      // Slate 50 (Soft Canvas)
-  static const Color surface = Color(0xFFFFFFFF);         // Pure Card Surface
-  static const Color surfaceSubtle = Color(0xFFF1F5F9);   // Slate 100 (Inputs & Pills)
-  static const Color border = Color(0xFFE2E8F0);          // Slate 200 (Subtle dividers)
+  // ─── Core palette ───────────────────────────────────────────────────────────
+  static const Color blue = Color(0xFF1D4ED8); // Primary brand blue
+  static const Color blueDark = Color(0xFF1E3A8A); // Deep structural blue
+  static const Color blueSoft = Color(0xFF2563EB); // Interactive/hover blue
+  static const Color blueTint = Color(0xFFDBEAFE); // Light blue tint
+  static const Color blueTintSoft = Color(
+    0xFFEFF6FF,
+  ); // Very soft blue background
 
-  // ─── 20% STRUCTURAL TYPOGRAPHY & BRAND ELEMENTS ─────────────────────────────
-  static const Color textPrimary = Color(0xFF0F172A);     // Slate 900 (High contrast)
-  static const Color textSecondary = Color(0xFF475569);   // Slate 600 (Readable body)
-  static const Color textTertiary = Color(0xFF94A3B8);    // Slate 400 (Hints/Captions)
-  static const Color brandDark = Color(0xFF134E4A);       // Dark Teal Brand Slate
+  static const Color white = Color(0xFFFFFFFF);
+  static const Color canvas = Color(0xFFF7FAFF); // White with subtle blue cast
+  static const Color surfaceSubtle = Color(
+    0xFFF1F5FF,
+  ); // Subtle input/pill surface
 
-  // ─── 10% VIBRANT ACCENT (CTAs, Key Badges & Active States) ──────────────────
-  static const Color primary = Color(0xFF0D9488);         // Vibrant Teal (Primary CTA)
-  static const Color secondary = Color(0xFF14B8A6);       // Secondary Teal Accent
-  static const Color primaryLight = Color(0xFFCCFBF1);    // 10% Teal Tint for badges
-  static const Color primaryDark = Color(0xFF0F766E);     // Pressed/Hover CTA State
+  static const Color amber = Color(0xFFF59E0B); // Third color accent
+  static const Color amberDark = Color(0xFFD97706); // Strong amber emphasis
+  static const Color amberTint = Color(0xFFFEF3C7); // Soft amber highlight
 
-  // ─── STATE ACCENTS (Used strictly for contextual alerts) ────────────────────
-  static const Color error = Color(0xFFEF4444);           // Red
-  static const Color errorLight = Color(0xFFFEE2E2);      // Red Tint
-  static const Color success = Color(0xFF16A34A);         // Green
-  static const Color successLight = Color(0xFFDCFCE7);    // Green Tint
-  static const Color warning = Color(0xFFD97706);         // Amber
-  static const Color warningLight = Color(0xFFFEF3C7);    // Amber Tint
+  // ─── Semantic aliases (used across app) ─────────────────────────────────────
+  static const Color background = canvas; // 70% dominant neutral
+  static const Color surface = white; // Cards/surfaces
+  static const Color border = Color(0xFFD6E4FF); // Soft blue border (tint)
+
+  static const Color textPrimary = blueDark; // High-contrast headings
+  static const Color textSecondary = Color(
+    0xFF3357A6,
+  ); // Readable body (blue tone)
+  static const Color textTertiary = Color(0xFF6B8CC6); // Hints/captions
+  static const Color brandDark = blueDark;
+
+  static const Color primary = blue; // Primary CTA
+  static const Color secondary = amber; // Accent/secondary emphasis
+  static const Color primaryLight = blueTint; // Selected/badge tint
+  static const Color primaryDark = Color(0xFF1E40AF); // Pressed state
+
+  // ─── Feedback states (derived from 3-color palette) ─────────────────────────
+  static const Color error = amberDark; // Attention/error emphasis
+  static const Color errorLight = amberTint; // Soft attention background
+  static const Color success = blue; // Positive/trust confirmation
+  static const Color successLight = blueTint; // Positive background
+  static const Color warning = amber; // Warning/highlight
+  static const Color warningLight = amberTint; // Warning background
 }

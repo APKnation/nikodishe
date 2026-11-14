@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../data/models/user_model.dart';
-import '../../../data/mock/mock_data.dart';
 import '../../../data/services/api_service.dart';
+import '../../../data/services/graphql_client.dart';
 
 // ---------------------------------------------------------------------------
 // AuthState
@@ -45,27 +46,20 @@ class AuthNotifier extends Notifier<AuthState> {
   @override
   AuthState build() => const AuthState();
 
-  /// Send OTP using GraphQL API (with fallback simulation if backend is offline)
+  /// Send OTP using GraphQL API
   Future<void> sendOtp(String phone) async {
     state = state.copyWith(isLoading: true, clearError: true);
     try {
       await _apiService.sendOtp(phone);
       state = state.copyWith(isLoading: false, isOtpSent: true);
-    } catch (_) {
-      // Graceful offline fallback
-      await Future.delayed(const Duration(milliseconds: 600));
-      state = state.copyWith(isLoading: false, isOtpSent: true);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
   /// Verify OTP using GraphQL API
-  Future<void> verifyOtp(
-    String phone,
-    String otp,
-    UserRole role,
-  ) async {
+  Future<void> verifyOtp(String phone, String otp, UserRole role) async {
     state = state.copyWith(isLoading: true, clearError: true);
-
     try {
       final result = await _apiService.verifyOtp(phone, otp);
       if (result['user'] != null) {
@@ -76,41 +70,20 @@ class AuthNotifier extends Notifier<AuthState> {
         );
         return;
       }
-    } catch (_) {
-      // Ikiwa seva bado haijawashwa, tumia test code '1234' au '123456'
+      // OTP verified but no account yet - keep token-less state, UI should go register
+      state = state.copyWith(isLoading: false, isOtpSent: false);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
-
-    // Fallback verification
-    if (otp != '1234' && otp != '123456') {
-      state = state.copyWith(
-        isLoading: false,
-        error: 'Msimbo wa OTP si sahihi (Tumia 123456).',
-      );
-      return;
-    }
-
-    UserModel? found;
-    try {
-      found = mockUsers.firstWhere((u) => u.phone == phone);
-    } catch (_) {
-      found = UserModel(
-        id: 'user_${DateTime.now().millisecondsSinceEpoch}',
-        name: 'Mtumiaji Mpya',
-        phone: phone,
-        role: role,
-        createdAt: DateTime.now(),
-      );
-    }
-
-    state = state.copyWith(isLoading: false, user: found, isOtpSent: false);
   }
 
   /// Log out the current user
   void logout() {
+    GraphQLClient().setAuthToken(null);
     state = const AuthState();
   }
 
-  /// Register a new user as Customer (Renter) or Equipment Owner
+  /// Register a new customer (public). Owners are added by super admin only.
   Future<void> registerUser({
     required String name,
     required String phone,
@@ -123,12 +96,11 @@ class AuthNotifier extends Notifier<AuthState> {
     String? nidaNumber,
   }) async {
     state = state.copyWith(isLoading: true, clearError: true);
-
     try {
       final user = await _apiService.registerUser(
         phone: phone,
         name: name,
-        role: role,
+        role: UserRole.renter,
         location: location,
         whatsapp: whatsapp,
         instagram: instagram,
@@ -136,48 +108,61 @@ class AuthNotifier extends Notifier<AuthState> {
         tiktok: tiktok,
         nidaNumber: nidaNumber,
       );
-      state = state.copyWith(isLoading: false, user: user, isOtpSent: true);
-    } catch (_) {
-      // Fallback
-      final newUser = UserModel(
-        id: 'user_${DateTime.now().millisecondsSinceEpoch}',
-        name: name,
-        phone: phone,
-        role: role,
-        location: location,
-        whatsapp: whatsapp ?? phone,
-        instagram: instagram,
-        facebook: facebook,
-        tiktok: tiktok,
-        createdAt: DateTime.now(),
-      );
-      mockUsers.add(newUser);
-      state = state.copyWith(isLoading: false, user: newUser, isOtpSent: true);
+      state = state.copyWith(isLoading: false, user: user, isOtpSent: false);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
     }
   }
 
-  /// Switch user role between Renter and Owner
-  Future<void> switchRole(UserRole newRole) async {
-    final current = state.user;
-    if (current == null) return;
-    final updated = current.copyWith(role: newRole);
-    state = state.copyWith(user: updated);
+  /// Login for equipment owners using phone + password (owner added by super admin)
+  Future<void> loginOwner({
+    required String phone,
+    required String password,
+  }) async {
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      final user = await _apiService.loginWithPassword(
+        phone: phone,
+        password: password,
+      );
+      state = state.copyWith(isLoading: false, user: user, isOtpSent: false);
+    } catch (e) {
+      state = state.copyWith(isLoading: false, error: e.toString());
+    }
   }
 
-  /// Update the current user's display name, location, or photo.
-  Future<void> updateProfile({String? name, String? location, String? photoUrl}) async {
+  /// Update the current user's profile via backend when possible.
+  Future<void> updateProfile({
+    String? name,
+    String? location,
+    String? photoUrl,
+  }) async {
     final current = state.user;
     if (current == null) return;
 
-    state = state.copyWith(isLoading: true);
-    await Future.delayed(const Duration(milliseconds: 500));
-
-    final updated = current.copyWith(
-      name: name ?? current.name,
-      location: location ?? current.location,
-      photoUrl: photoUrl ?? current.photoUrl,
-    );
-    state = state.copyWith(isLoading: false, user: updated);
+    state = state.copyWith(isLoading: true, clearError: true);
+    try {
+      final updated = await _apiService.updateProfile(
+        name: name,
+        location: location,
+      );
+      state = state.copyWith(
+        isLoading: false,
+        user: updated.copyWith(
+          photoUrl: photoUrl ?? updated.photoUrl ?? current.photoUrl,
+        ),
+      );
+    } catch (e) {
+      // Keep local update if backend fails (e.g. photo-only local path)
+      state = state.copyWith(
+        isLoading: false,
+        user: current.copyWith(
+          name: name ?? current.name,
+          location: location ?? current.location,
+          photoUrl: photoUrl ?? current.photoUrl,
+        ),
+      );
+    }
   }
 }
 

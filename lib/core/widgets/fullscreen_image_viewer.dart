@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+
+import '../constants/app_colors.dart';
+
 import 'app_network_image.dart';
 
 class FullscreenImageViewer extends StatefulWidget {
@@ -24,7 +27,7 @@ class FullscreenImageViewer extends StatefulWidget {
   }) {
     showDialog(
       context: context,
-      barrierColor: Colors.black.withOpacity(0.92),
+      barrierColor: AppColors.primaryDark.withOpacity(0.92),
       builder: (ctx) => FullscreenImageViewer(
         images: images,
         initialIndex: initialIndex,
@@ -74,11 +77,18 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Icon(Icons.image_not_supported_outlined, size: 72, color: Colors.grey.shade400),
+                  Icon(
+                    Icons.image_not_supported_outlined,
+                    size: 72,
+                    color: AppColors.textTertiary,
+                  ),
                   const SizedBox(height: 12),
-                  const Text(
+                  Text(
                     'Picha haipatikani kwa sasa',
-                    style: TextStyle(color: Colors.white70, fontSize: 16),
+                    style: TextStyle(
+                      color: AppColors.white.withOpacity(0.85),
+                      fontSize: 16,
+                    ),
                   ),
                 ],
               ),
@@ -115,16 +125,21 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
                   // Page Counter Badge
                   if (validImages.length > 1)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.6),
+                        color: AppColors.primaryDark.withOpacity(0.6),
                         borderRadius: BorderRadius.circular(20),
-                        border: Border.all(color: Colors.white24),
+                        border: Border.all(
+                          color: AppColors.white.withOpacity(0.3),
+                        ),
                       ),
                       child: Text(
                         '${_currentIndex + 1} / ${validImages.length}',
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: AppColors.white,
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
                         ),
@@ -135,9 +150,13 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
 
                   // Close Button
                   CircleAvatar(
-                    backgroundColor: Colors.black.withOpacity(0.6),
+                    backgroundColor: AppColors.primaryDark.withOpacity(0.6),
                     child: IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white, size: 22),
+                      icon: const Icon(
+                        Icons.close,
+                        color: AppColors.white,
+                        size: 22,
+                      ),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),
@@ -158,8 +177,8 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   colors: [
-                    Colors.black.withOpacity(0.9),
-                    Colors.black.withOpacity(0.5),
+                    AppColors.primaryDark.withOpacity(0.9),
+                    AppColors.primaryDark.withOpacity(0.5),
                     Colors.transparent,
                   ],
                 ),
@@ -173,7 +192,7 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
                     Text(
                       widget.title,
                       style: const TextStyle(
-                        color: Colors.white,
+                        color: AppColors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         letterSpacing: -0.2,
@@ -183,20 +202,27 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
                       const SizedBox(height: 4),
                       Text(
                         widget.subtitle!,
-                        style: const TextStyle(
-                          color: Colors.white70,
+                        style: TextStyle(
+                          color: AppColors.white.withOpacity(0.85),
                           fontSize: 14,
                         ),
                       ),
                     ],
                     const SizedBox(height: 8),
-                    const Row(
+                    Row(
                       children: [
-                        Icon(Icons.zoom_in, color: Colors.white54, size: 16),
-                        SizedBox(width: 6),
+                        Icon(
+                          Icons.zoom_in,
+                          color: AppColors.white.withOpacity(0.7),
+                          size: 16,
+                        ),
+                        const SizedBox(width: 6),
                         Text(
                           'Bana au vuta picha kwa vidole viwili ili kuikuza (Pinch to zoom)',
-                          style: TextStyle(color: Colors.white54, fontSize: 11),
+                          style: TextStyle(
+                            color: AppColors.white.withOpacity(0.7),
+                            fontSize: 11,
+                          ),
                         ),
                       ],
                     ),
@@ -210,4 +236,3 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
     );
   }
 }
-

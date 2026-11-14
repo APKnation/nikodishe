@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+
 import '../constants/app_colors.dart';
 import '../network/api_config.dart';
 
@@ -46,7 +48,9 @@ class AppNetworkImage extends StatelessWidget {
     if (targetUrl.startsWith('data:image')) {
       try {
         final commaIdx = targetUrl.indexOf(',');
-        final base64Str = commaIdx != -1 ? targetUrl.substring(commaIdx + 1) : targetUrl;
+        final base64Str = commaIdx != -1
+            ? targetUrl.substring(commaIdx + 1)
+            : targetUrl;
         final bytes = base64Decode(base64Str);
         return ClipRRect(
           borderRadius: clipRadius,
@@ -72,8 +76,12 @@ class AppNetworkImage extends StatelessWidget {
           width: width,
           height: height,
           fit: fit,
-          cacheWidth: width != null && width!.isFinite ? (width! * 2).toInt() : 600,
-          cacheHeight: height != null && height!.isFinite ? (height! * 2).toInt() : 600,
+          cacheWidth: width != null && width!.isFinite
+              ? (width! * 2).toInt()
+              : 600,
+          cacheHeight: height != null && height!.isFinite
+              ? (height! * 2).toInt()
+              : 600,
           loadingBuilder: (context, child, loadingProgress) {
             if (loadingProgress == null) return child;
             final total = loadingProgress.expectedTotalBytes;
@@ -81,7 +89,7 @@ class AppNetworkImage extends StatelessWidget {
             return Container(
               width: width,
               height: height,
-              color: Colors.grey.shade100,
+              color: AppColors.surfaceSubtle,
               child: Center(
                 child: SizedBox(
                   width: 24,
@@ -103,7 +111,8 @@ class AppNetworkImage extends StatelessWidget {
     }
 
     // 3. Local File Image (Camera, Gallery au Storage ya simu)
-    if (!kIsWeb && (targetUrl.startsWith('/') || targetUrl.startsWith('file://'))) {
+    if (!kIsWeb &&
+        (targetUrl.startsWith('/') || targetUrl.startsWith('file://'))) {
       try {
         final filePath = targetUrl.replaceFirst('file://', '');
         final file = File(filePath);
@@ -136,7 +145,11 @@ class AppNetworkImage extends StatelessWidget {
         height: height,
         color: AppColors.primary.withOpacity(0.08),
         child: Center(
-          child: Icon(placeholderIcon, color: AppColors.primary.withOpacity(0.6), size: 36),
+          child: Icon(
+            placeholderIcon,
+            color: AppColors.primary.withOpacity(0.6),
+            size: 36,
+          ),
         ),
       ),
     );

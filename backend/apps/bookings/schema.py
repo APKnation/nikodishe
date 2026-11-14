@@ -8,6 +8,9 @@ from apps.accounts.schema import UserType
 from apps.listings.schema import ListingNode
 
 class BookingType(DjangoObjectType):
+    total_price = graphene.Float()
+    deposit_amount = graphene.Float()
+
     class Meta:
         model = Booking
         fields = (
@@ -15,6 +18,12 @@ class BookingType(DjangoObjectType):
             'end_date', 'total_price', 'deposit_amount', 'status',
             'delivery_address', 'notes', 'created_at', 'updated_at'
         )
+
+    def resolve_total_price(self, info):
+        return float(self.total_price) if self.total_price is not None else 0.0
+
+    def resolve_deposit_amount(self, info):
+        return float(self.deposit_amount) if self.deposit_amount is not None else 0.0
 
 class Query(graphene.ObjectType):
     my_bookings = graphene.List(BookingType)

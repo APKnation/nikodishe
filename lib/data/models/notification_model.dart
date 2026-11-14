@@ -1,10 +1,10 @@
 enum NotificationType {
-  newBooking,       // == bookingNew  - Ombi jipya la booking
+  newBooking, // == bookingNew  - Ombi jipya la booking
   bookingConfirmed, // Booking imethibitishwa
-  bookingRejected,  // Booking imekataliwa
-  paymentReceived,  // Malipo yamepokelewa
-  bookingReminder,  // Kikumbusho cha booking (== reminder)
-  system,           // Taarifa ya mfumo
+  bookingRejected, // Booking imekataliwa
+  paymentReceived, // Malipo yamepokelewa
+  bookingReminder, // Kikumbusho cha booking (== reminder)
+  system, // Taarifa ya mfumo
 }
 
 // Convenience aliases used by api_service mapping

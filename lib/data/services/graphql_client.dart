@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
+
 import '../../core/network/api_config.dart';
 
 class ApiException implements Exception {
@@ -49,11 +51,7 @@ class GraphQLClient {
 
     try {
       final response = await http
-          .post(
-            uri,
-            headers: _buildHeaders(),
-            body: payload,
-          )
+          .post(uri, headers: _buildHeaders(), body: payload)
           .timeout(const Duration(seconds: 10));
 
       if (response.statusCode != 200) {
@@ -63,13 +61,17 @@ class GraphQLClient {
         );
       }
 
-      final Map<String, dynamic> body = jsonDecode(utf8.decode(response.bodyBytes));
+      final Map<String, dynamic> body = jsonDecode(
+        utf8.decode(response.bodyBytes),
+      );
 
       if (body.containsKey('errors')) {
         final List errors = body['errors'] as List;
         if (errors.isNotEmpty) {
           final firstError = errors.first;
-          final errorMsg = firstError is Map ? firstError['message'] : errors.toString();
+          final errorMsg = firstError is Map
+              ? firstError['message']
+              : errors.toString();
           throw ApiException(errorMsg.toString());
         }
       }
@@ -82,4 +84,3 @@ class GraphQLClient {
     }
   }
 }
-

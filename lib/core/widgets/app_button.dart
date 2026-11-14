@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../constants/app_colors.dart';
 
 class AppButton extends StatelessWidget {
@@ -27,19 +28,16 @@ class AppButton extends StatelessWidget {
             width: 20,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
             ),
           )
         : Text(
             label,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           );
 
-    final buttonPadding = padding ??
-        const EdgeInsets.symmetric(horizontal: 24, vertical: 14);
+    final buttonPadding =
+        padding ?? const EdgeInsets.symmetric(horizontal: 24, vertical: 14);
 
     if (isOutlined) {
       return SizedBox(
@@ -66,7 +64,7 @@ class AppButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           padding: buttonPadding,
           backgroundColor: AppColors.primary,
-          foregroundColor: Colors.white,
+          foregroundColor: AppColors.white,
           disabledBackgroundColor: AppColors.primary.withOpacity(0.6),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../data/models/booking_model.dart';
 import '../../../auth/providers/auth_provider.dart';
@@ -10,10 +11,7 @@ import '../../providers/bookings_provider.dart';
 class BookingScreen extends ConsumerStatefulWidget {
   final String listingId;
 
-  const BookingScreen({
-    super.key,
-    required this.listingId,
-  });
+  const BookingScreen({super.key, required this.listingId});
 
   @override
   ConsumerState<BookingScreen> createState() => _BookingScreenState();
@@ -42,7 +40,8 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
     if (picked != null) {
       setState(() {
         _startDate = picked;
-        if (_endDate.isBefore(_startDate) || _endDate.isAtSameMomentAs(_startDate)) {
+        if (_endDate.isBefore(_startDate) ||
+            _endDate.isAtSameMomentAs(_startDate)) {
           _endDate = _startDate.add(const Duration(days: 1));
         }
       });
@@ -52,7 +51,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
   Future<void> _selectEndDate() async {
     final picked = await showDatePicker(
       context: context,
-      initialDate: _endDate.isAfter(_startDate) ? _endDate : _startDate.add(const Duration(days: 1)),
+      initialDate: _endDate.isAfter(_startDate)
+          ? _endDate
+          : _startDate.add(const Duration(days: 1)),
       firstDate: _startDate.add(const Duration(days: 1)),
       lastDate: DateTime.now().add(const Duration(days: 365)),
       helpText: 'CHAGUA TAREHE YA MWISHO',
@@ -72,12 +73,16 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
 
   String _formatPrice(double price) {
     return price.toInt().toString().replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]},',
-        );
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    );
   }
 
-  Future<void> _confirmBooking(double totalPrice, String title, String ownerId) async {
+  Future<void> _confirmBooking(
+    double totalPrice,
+    String title,
+    String ownerId,
+  ) async {
     setState(() => _isSubmitting = true);
 
     final currentUser = ref.read(currentUserProvider);
@@ -107,7 +112,9 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
         context: context,
         barrierDismissible: false,
         builder: (ctx) => AlertDialog(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           title: const Row(
             children: [
               Icon(Icons.check_circle, color: AppColors.success, size: 28),
@@ -123,7 +130,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
+                foregroundColor: AppColors.white,
               ),
               onPressed: () {
                 Navigator.of(ctx).pop();
@@ -152,10 +159,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        title: const Text('Weka Booking'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Weka Booking'), centerTitle: true),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
@@ -165,12 +169,12 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColors.border),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF0F172A).withOpacity(0.03),
+                    color: AppColors.primaryDark.withOpacity(0.03),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -185,7 +189,11 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                       color: AppColors.primary.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(Icons.handyman, color: AppColors.primary, size: 30),
+                    child: const Icon(
+                      Icons.handyman,
+                      color: AppColors.primary,
+                      size: 30,
+                    ),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
@@ -247,7 +255,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.white,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.border),
                       ),
@@ -256,11 +264,18 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                         children: [
                           const Row(
                             children: [
-                              Icon(Icons.calendar_today, size: 14, color: AppColors.primary),
+                              Icon(
+                                Icons.calendar_today,
+                                size: 14,
+                                color: AppColors.primary,
+                              ),
                               SizedBox(width: 6),
                               Text(
                                 'Tarehe ya Kuanza',
-                                style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: AppColors.textSecondary,
+                                ),
                               ),
                             ],
                           ),
@@ -287,7 +302,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                     child: Container(
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.white,
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.border),
                       ),
@@ -296,11 +311,18 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                         children: [
                           const Row(
                             children: [
-                              Icon(Icons.event_available, size: 14, color: AppColors.secondary),
+                              Icon(
+                                Icons.event_available,
+                                size: 14,
+                                color: AppColors.secondary,
+                              ),
                               SizedBox(width: 6),
                               Text(
                                 'Tarehe ya Mwisho',
-                                style: TextStyle(fontSize: 11, color: AppColors.textSecondary),
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: AppColors.textSecondary,
+                                ),
                               ),
                             ],
                           ),
@@ -327,12 +349,12 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColors.border),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF0F172A).withOpacity(0.03),
+                    color: AppColors.primaryDark.withOpacity(0.03),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -355,11 +377,17 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                     children: [
                       Text(
                         'TZS ${_formatPrice(listing.pricePerDay)} × $_totalDays siku',
-                        style: const TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                        style: const TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 14,
+                        ),
                       ),
                       Text(
                         'TZS ${_formatPrice(totalPrice)}',
-                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
                       ),
                     ],
                   ),
@@ -369,7 +397,10 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                     children: [
                       Text(
                         'Ada ya huduma (App)',
-                        style: TextStyle(color: AppColors.textSecondary, fontSize: 14),
+                        style: TextStyle(
+                          color: AppColors.textSecondary,
+                          fontSize: 14,
+                        ),
                       ),
                       Text(
                         'Bure (Promo)',
@@ -413,17 +444,21 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                color: Colors.blue.shade50,
+                color: AppColors.blueTintSoft,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: const Row(
                 children: [
-                  Icon(Icons.payment, color: Colors.blue, size: 22),
+                  Icon(Icons.payment, color: AppColors.primary, size: 22),
                   SizedBox(width: 10),
                   Expanded(
                     child: Text(
                       'Malipo yatakamilishwa kupitia M-Pesa / Tigo Pesa / Airtel Money baada ya booking kuthibitishwa na mwenye kifaa.',
-                      style: TextStyle(fontSize: 12, color: Colors.blueGrey, height: 1.3),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: AppColors.textSecondary,
+                        height: 1.3,
+                      ),
                     ),
                   ),
                 ],
@@ -439,17 +474,26 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
               child: ElevatedButton(
                 onPressed: _isSubmitting
                     ? null
-                    : () => _confirmBooking(totalPrice, listing.title, listing.ownerId),
+                    : () => _confirmBooking(
+                        totalPrice,
+                        listing.title,
+                        listing.ownerId,
+                      ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  foregroundColor: AppColors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
                 child: _isSubmitting
-                    ? const CircularProgressIndicator(color: Colors.white)
+                    ? const CircularProgressIndicator(color: AppColors.white)
                     : const Text(
                         'Thibitisha Booking',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
               ),
             ),
@@ -459,4 +503,3 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
     );
   }
 }
-

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/localization/locale_provider.dart';
 import '../../../../data/models/booking_model.dart';
@@ -11,7 +12,8 @@ class BookingHistoryScreen extends ConsumerStatefulWidget {
   const BookingHistoryScreen({super.key});
 
   @override
-  ConsumerState<BookingHistoryScreen> createState() => _BookingHistoryScreenState();
+  ConsumerState<BookingHistoryScreen> createState() =>
+      _BookingHistoryScreenState();
 }
 
 class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
@@ -23,9 +25,9 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
 
   String _formatPrice(double price) {
     return price.toInt().toString().replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]},',
-        );
+      RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+      (Match m) => '${m[1]},',
+    );
   }
 
   Color _getStatusColor(BookingStatus status) {
@@ -35,7 +37,7 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
       case BookingStatus.confirmed:
         return AppColors.success;
       case BookingStatus.completed:
-        return Colors.blue;
+        return AppColors.primary;
       case BookingStatus.cancelled:
         return AppColors.error;
     }
@@ -60,14 +62,15 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
         children: [
           // Filter Chips Row
           Container(
-            color: Colors.white,
+            color: AppColors.white,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
                 children: [
                   _buildFilterChip(
-                    label: '${AppStrings.get(lang, 'cat_all')} (${allBookings.length})',
+                    label:
+                        '${AppStrings.get(lang, 'cat_all')} (${allBookings.length})',
                     isSelected: _filterStatus == null,
                     onSelected: () => setState(() => _filterStatus = null),
                   ),
@@ -75,19 +78,22 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
                   _buildFilterChip(
                     label: AppStrings.get(lang, 'status_completed'),
                     isSelected: _filterStatus == BookingStatus.completed,
-                    onSelected: () => setState(() => _filterStatus = BookingStatus.completed),
+                    onSelected: () =>
+                        setState(() => _filterStatus = BookingStatus.completed),
                   ),
                   const SizedBox(width: 8),
                   _buildFilterChip(
                     label: AppStrings.get(lang, 'status_confirmed'),
                     isSelected: _filterStatus == BookingStatus.confirmed,
-                    onSelected: () => setState(() => _filterStatus = BookingStatus.confirmed),
+                    onSelected: () =>
+                        setState(() => _filterStatus = BookingStatus.confirmed),
                   ),
                   const SizedBox(width: 8),
                   _buildFilterChip(
                     label: AppStrings.get(lang, 'status_cancelled'),
                     isSelected: _filterStatus == BookingStatus.cancelled,
-                    onSelected: () => setState(() => _filterStatus = BookingStatus.cancelled),
+                    onSelected: () =>
+                        setState(() => _filterStatus = BookingStatus.cancelled),
                   ),
                 ],
               ),
@@ -103,13 +109,20 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.history_toggle_off, size: 64, color: Colors.grey.shade400),
+                          Icon(
+                            Icons.history_toggle_off,
+                            size: 64,
+                            color: AppColors.textTertiary,
+                          ),
                           const SizedBox(height: 16),
                           Text(
                             lang == AppLanguage.sw
                                 ? 'Hakuna kumbukumbu za bookings'
                                 : 'No booking history found',
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ],
                       ),
@@ -126,12 +139,12 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
                         margin: const EdgeInsets.only(bottom: 12),
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: AppColors.white,
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(color: AppColors.border),
                           boxShadow: [
                             BoxShadow(
-                              color: const Color(0xFF0F172A).withOpacity(0.03),
+                              color: AppColors.primaryDark.withOpacity(0.03),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -153,7 +166,10 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
                                   ),
                                 ),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: statusColor.withOpacity(0.12),
                                     borderRadius: BorderRadius.circular(8),
@@ -172,11 +188,18 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                const Icon(Icons.date_range, size: 14, color: AppColors.primary),
+                                const Icon(
+                                  Icons.date_range,
+                                  size: 14,
+                                  color: AppColors.primary,
+                                ),
                                 const SizedBox(width: 4),
                                 Text(
                                   '${_formatDate(booking.startDate)} - ${_formatDate(booking.endDate)} (${booking.totalDays} ${lang == AppLanguage.sw ? 'siku' : 'days'})',
-                                  style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.textSecondary,
+                                  ),
                                 ),
                               ],
                             ),
@@ -194,34 +217,61 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
                                 ),
                                 Row(
                                   children: [
-                                    if (booking.status == BookingStatus.completed)
+                                    if (booking.status ==
+                                        BookingStatus.completed)
                                       ElevatedButton.icon(
                                         onPressed: () {
                                           showDialog(
                                             context: context,
-                                            builder: (_) => AddReviewDialog(booking: booking),
+                                            builder: (_) => AddReviewDialog(
+                                              booking: booking,
+                                            ),
                                           );
                                         },
-                                        icon: const Icon(Icons.star, size: 14, color: Colors.amber),
-                                        label: Text(AppStrings.get(lang, 'add_review')),
+                                        icon: const Icon(
+                                          Icons.star,
+                                          size: 14,
+                                          color: AppColors.amber,
+                                        ),
+                                        label: Text(
+                                          AppStrings.get(lang, 'add_review'),
+                                        ),
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: AppColors.primary,
-                                          foregroundColor: Colors.white,
-                                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                          foregroundColor: AppColors.white,
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 12,
+                                            vertical: 6,
+                                          ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     const SizedBox(width: 8),
                                     OutlinedButton(
                                       onPressed: () {
-                                        context.push('/listings/${booking.listingId}');
+                                        context.push(
+                                          '/listings/${booking.listingId}',
+                                        );
                                       },
                                       style: OutlinedButton.styleFrom(
-                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 10,
+                                          vertical: 6,
+                                        ),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
                                       ),
                                       child: Text(
-                                        lang == AppLanguage.sw ? 'Angalia Kifaa' : 'View Item',
+                                        lang == AppLanguage.sw
+                                            ? 'Angalia Kifaa'
+                                            : 'View Item',
                                         style: const TextStyle(fontSize: 12),
                                       ),
                                     ),
@@ -249,17 +299,18 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
       label: Text(label),
       selected: isSelected,
       onSelected: (_) => onSelected(),
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       selectedColor: AppColors.primary,
       labelStyle: TextStyle(
-        color: isSelected ? Colors.white : AppColors.textPrimary,
+        color: isSelected ? AppColors.white : AppColors.textPrimary,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         fontSize: 12,
       ),
-      side: BorderSide(color: isSelected ? AppColors.primary : Colors.grey.shade300),
+      side: BorderSide(
+        color: isSelected ? AppColors.primary : AppColors.border,
+      ),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       showCheckmark: false,
     );
   }
 }
-

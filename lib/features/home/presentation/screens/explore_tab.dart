@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../data/models/listing_model.dart';
 import '../../../notifications/providers/notifications_provider.dart';
@@ -36,10 +37,14 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: const Icon(Icons.handyman, color: AppColors.primary, size: 20),
+              child: const Icon(
+                Icons.handyman,
+                color: AppColors.primary,
+                size: 20,
+              ),
             ),
             const SizedBox(width: 8),
             const Text(
@@ -71,7 +76,7 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                         child: Text(
                           '$unreadCount',
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: AppColors.white,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                           ),
@@ -89,7 +94,7 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
         children: [
           // Search & Filter Header
           Container(
-            color: Colors.white,
+            color: AppColors.white,
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
             child: Column(
               children: [
@@ -101,20 +106,31 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                   },
                   decoration: InputDecoration(
                     hintText: 'Tafuta vifaa vya ujenzi, sherehe, ukumbi...',
-                    hintStyle: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
-                    prefixIcon: const Icon(Icons.search, color: AppColors.primary),
+                    hintStyle: const TextStyle(
+                      fontSize: 13,
+                      color: AppColors.textSecondary,
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: AppColors.primary,
+                    ),
                     suffixIcon: _searchController.text.isNotEmpty
                         ? IconButton(
                             icon: const Icon(Icons.clear, size: 18),
                             onPressed: () {
                               _searchController.clear();
-                              ref.read(searchStateProvider.notifier).setQuery('');
+                              ref
+                                  .read(searchStateProvider.notifier)
+                                  .setQuery('');
                             },
                           )
                         : null,
                     filled: true,
-                    fillColor: Colors.grey.shade100,
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    fillColor: AppColors.surfaceSubtle,
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 12,
+                    ),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
@@ -132,16 +148,23 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                         label: 'Zote',
                         isSelected: searchState.selectedCategory == null,
                         onSelected: () {
-                          ref.read(searchStateProvider.notifier).setCategory(null);
+                          ref
+                              .read(searchStateProvider.notifier)
+                              .setCategory(null);
                         },
                       ),
                       const SizedBox(width: 8),
                       _buildFilterChip(
                         label: '🎉 Sherehe',
-                        isSelected: searchState.selectedCategory == ListingCategory.sherehe,
+                        isSelected:
+                            searchState.selectedCategory ==
+                            ListingCategory.sherehe,
                         onSelected: () {
-                          ref.read(searchStateProvider.notifier).setCategory(
-                                searchState.selectedCategory == ListingCategory.sherehe
+                          ref
+                              .read(searchStateProvider.notifier)
+                              .setCategory(
+                                searchState.selectedCategory ==
+                                        ListingCategory.sherehe
                                     ? null
                                     : ListingCategory.sherehe,
                               );
@@ -150,10 +173,15 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                       const SizedBox(width: 8),
                       _buildFilterChip(
                         label: '🏗️ Ujenzi',
-                        isSelected: searchState.selectedCategory == ListingCategory.ujenzi,
+                        isSelected:
+                            searchState.selectedCategory ==
+                            ListingCategory.ujenzi,
                         onSelected: () {
-                          ref.read(searchStateProvider.notifier).setCategory(
-                                searchState.selectedCategory == ListingCategory.ujenzi
+                          ref
+                              .read(searchStateProvider.notifier)
+                              .setCategory(
+                                searchState.selectedCategory ==
+                                        ListingCategory.ujenzi
                                     ? null
                                     : ListingCategory.ujenzi,
                               );
@@ -162,10 +190,15 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                       const SizedBox(width: 8),
                       _buildFilterChip(
                         label: '🏛️ Ukumbi',
-                        isSelected: searchState.selectedCategory == ListingCategory.ukumbi,
+                        isSelected:
+                            searchState.selectedCategory ==
+                            ListingCategory.ukumbi,
                         onSelected: () {
-                          ref.read(searchStateProvider.notifier).setCategory(
-                                searchState.selectedCategory == ListingCategory.ukumbi
+                          ref
+                              .read(searchStateProvider.notifier)
+                              .setCategory(
+                                searchState.selectedCategory ==
+                                        ListingCategory.ukumbi
                                     ? null
                                     : ListingCategory.ukumbi,
                               );
@@ -208,7 +241,7 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                           Icon(
                             Icons.search_off_rounded,
                             size: 64,
-                            color: Colors.grey.shade400,
+                            color: AppColors.textTertiary,
                           ),
                           const SizedBox(height: 16),
                           const Text(
@@ -223,24 +256,43 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                           const Text(
                             'Jaribu kutafuta kwa jina lingine au kubadilisha category.',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                            style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.textSecondary,
+                            ),
                           ),
                         ],
                       ),
                     ),
                   )
-                : GridView.builder(
+                : SingleChildScrollView(
                     padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 14,
-                      crossAxisSpacing: 14,
-                      childAspectRatio: 0.68,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            children: [
+                              for (int i = 0; i < listings.length; i += 2) ...[
+                                ListingCard(listing: listings[i]),
+                                const SizedBox(height: 14),
+                              ],
+                            ],
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              for (int i = 1; i < listings.length; i += 2) ...[
+                                ListingCard(listing: listings[i]),
+                                const SizedBox(height: 14),
+                              ],
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                    itemCount: listings.length,
-                    itemBuilder: (context, index) {
-                      return ListingCard(listing: listings[index]);
-                    },
                   ),
           ),
         ],
@@ -257,22 +309,19 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
       label: Text(label),
       selected: isSelected,
       onSelected: (_) => onSelected(),
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.white,
       selectedColor: AppColors.primary,
       labelStyle: TextStyle(
-        color: isSelected ? Colors.white : AppColors.textPrimary,
+        color: isSelected ? AppColors.white : AppColors.textPrimary,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         fontSize: 13,
       ),
       side: BorderSide(
-        color: isSelected ? AppColors.primary : Colors.grey.shade300,
+        color: isSelected ? AppColors.primary : AppColors.border,
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       showCheckmark: false,
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
     );
   }
 }
-

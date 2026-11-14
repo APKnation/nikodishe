@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../../core/constants/app_colors.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -22,12 +23,14 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(milliseconds: 1200),
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
-    );
-    _scaleAnimation = Tween<double>(begin: 0.7, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.elasticOut),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
+    _scaleAnimation = Tween<double>(
+      begin: 0.7,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.elasticOut));
 
     _controller.forward();
   }
@@ -56,11 +59,11 @@ class _SplashScreenState extends State<SplashScreen>
                       width: 100,
                       height: 100,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: AppColors.white,
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
+                            color: AppColors.primaryDark.withOpacity(0.15),
                             blurRadius: 20,
                             offset: const Offset(0, 8),
                           ),
@@ -78,7 +81,7 @@ class _SplashScreenState extends State<SplashScreen>
                       style: TextStyle(
                         fontSize: 42,
                         fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                        color: AppColors.white,
                         letterSpacing: 1.5,
                       ),
                     ),
@@ -87,7 +90,7 @@ class _SplashScreenState extends State<SplashScreen>
                       'Kodisha vitu kwa urahisi',
                       style: TextStyle(
                         fontSize: 15,
-                        color: Colors.white.withOpacity(0.85),
+                        color: AppColors.white.withOpacity(0.85),
                         letterSpacing: 0.3,
                       ),
                     ),
@@ -97,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen>
             ),
             const SizedBox(height: 60),
             const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
               strokeWidth: 2.5,
             ),
           ],

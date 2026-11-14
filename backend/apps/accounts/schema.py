@@ -104,7 +104,7 @@ class RegisterUser(graphene.Mutation):
     class Arguments:
         phone = graphene.String(required=True)
         name = graphene.String(required=True)
-        role = graphene.String(required=True) # 'RENTER' or 'OWNER'
+        role = graphene.String(required=False)  # Public registration is customer-only
         location = graphene.String(required=False)
         email = graphene.String(required=False)
         whatsapp_number = graphene.String(required=False)
@@ -117,15 +117,16 @@ class RegisterUser(graphene.Mutation):
     user = graphene.Field(UserType)
     message = graphene.String()
 
-    def mutate(self, info, phone, name, role, **kwargs):
+    def mutate(self, info, phone, name, role='RENTER', **kwargs):
         clean_phone = phone.strip()
         if CustomUser.objects.filter(phone=clean_phone).exists():
             raise GraphQLError("Mtumiaji mwenye namba hii tayari yupo. Tafadhali ingia.")
 
+        # Owners are created only by super admin
         user = CustomUser.objects.create_user(
             phone=clean_phone,
             name=name.strip(),
-            role=role.upper(),
+            role='RENTER',
             email=kwargs.get('email', ''),
             location=kwargs.get('location', ''),
             whatsapp_number=kwargs.get('whatsapp_number', clean_phone),
@@ -135,7 +136,7 @@ class RegisterUser(graphene.Mutation):
             nida_number=kwargs.get('nida_number', ''),
         )
         token = get_token(user)
-        return RegisterUser(token=token, user=user, message="Umefanikiwa kujisajili.")
+        return RegisterUser(token=token, user=user, message="Akaunti ya mteja imefunguliwa kikamilifu.")
 
 class UpdateProfile(graphene.Mutation):
     class Arguments:
@@ -162,6 +163,78 @@ class UpdateProfile(graphene.Mutation):
         user.save()
         return UpdateProfile(user=user, message="Wasifu umesasishwa kikamilifu.")
 
+class LoginUser(graphene.Mutation):
+    class Arguments:
+        phone = graphene.String(required=True)
+        password = graphene.String(required=True)
+
+    token = graphene.String()
+    user = graphene.Field(UserType)
+    message = graphene.String()
+
+    def mutate(self, info, phone, password):
+        clean_phone = phone.strip()
+        try:
+            user = CustomUser.objects.get(phone=clean_phone)
+        except CustomUser.DoesNotExist:
+            raise GraphQLError("Namba ya simu au nenosiri si sahihi.")
+
+        if not user.check_password(password):
+            raise GraphQLError("Namba ya simu au nenosiri si sahihi.")
+
+        if not user.is_active:
+            raise GraphQLError("Akaunti hii imezimwa. Wasiliana na msimamizi.")
+
+        token = get_token(user)
+        return LoginUser(token=token, user=user, message="Umeingia kikamilifu.")
+
+class CreateOwnerUser(graphene.Mutation):
+    class Arguments:
+        phone = graphene.String(required=True)
+        name = graphene.String(required=True)
+        location = graphene.String(required=False)
+        email = graphene.String(required=False)
+        whatsapp_number = graphene.String(required=False)
+        instagram_handle = graphene.String(required=False)
+        facebook_url = graphene.String(required=False)
+        tiktok_handle = graphene.String(required=False)
+        nida_number = graphene.String(required=False)
+        password = graphene.String(required=False)
+
+    user = graphene.Field(UserType)
+    message = graphene.String()
+    default_password = graphene.String()
+
+    def mutate(self, info, phone, name, **kwargs):
+        admin = info.context.user
+        if admin.is_anonymous or not (admin.is_staff or admin.is_superuser):
+            raise GraphQLError("Ruhusa imetolewa: super admin pekee anaweza kuongeza mwenye kifaa.")
+
+        clean_phone = phone.strip()
+        if CustomUser.objects.filter(phone=clean_phone).exists():
+            raise GraphQLError("Mtumiaji mwenye namba hii tayari yupo.")
+
+        password = (kwargs.get('password') or 'Kodisha@123').strip() or 'Kodisha@123'
+        user = CustomUser.objects.create_user(
+            phone=clean_phone,
+            name=name.strip(),
+            role='OWNER',
+            password=password,
+            email=kwargs.get('email', ''),
+            location=kwargs.get('location', ''),
+            whatsapp_number=kwargs.get('whatsapp_number', clean_phone),
+            instagram_handle=kwargs.get('instagram_handle', ''),
+            facebook_url=kwargs.get('facebook_url', ''),
+            tiktok_handle=kwargs.get('tiktok_handle', ''),
+            nida_number=kwargs.get('nida_number', ''),
+            is_verified=True,
+        )
+        return CreateOwnerUser(
+            user=user,
+            message="Mwenye kifaa ameongezwa kikamilifu.",
+            default_password=password,
+        )
+
 class Query(graphene.ObjectType):
     me = graphene.Field(UserType)
     user_by_id = graphene.Field(UserType, id=graphene.ID(required=True))
@@ -183,4 +256,6 @@ class Mutation(graphene.ObjectType):
     verify_otp = VerifyOTP.Field()
     register_user = RegisterUser.Field()
     update_profile = UpdateProfile.Field()
+    login_user = LoginUser.Field()
+    create_owner_user = CreateOwnerUser.Field()
 

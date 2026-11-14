@@ -127,8 +127,9 @@ class ListingModel {
       ownerName: map['ownerName'] as String,
       title: map['title'] as String,
       description: map['description'] as String,
-      category: ListingCategory.values
-          .firstWhere((e) => e.name == map['category']),
+      category: ListingCategory.values.firstWhere(
+        (e) => e.name == map['category'],
+      ),
       type: ListingType.values.firstWhere((e) => e.name == map['type']),
       pricePerDay: (map['pricePerDay'] as num).toDouble(),
       images: List<String>.from(map['images'] as List),

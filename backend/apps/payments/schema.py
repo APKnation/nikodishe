@@ -8,6 +8,8 @@ from apps.accounts.schema import UserType
 from apps.bookings.schema import BookingType
 
 class PaymentNodeType(DjangoObjectType):
+    amount = graphene.Float()
+
     class Meta:
         model = Payment
         fields = (
@@ -15,6 +17,9 @@ class PaymentNodeType(DjangoObjectType):
             'payment_method', 'payment_type', 'status',
             'reference_code', 'phone_number', 'created_at'
         )
+
+    def resolve_amount(self, info):
+        return float(self.amount) if self.amount is not None else 0.0
 
 class Query(graphene.ObjectType):
     my_payments = graphene.List(PaymentNodeType)

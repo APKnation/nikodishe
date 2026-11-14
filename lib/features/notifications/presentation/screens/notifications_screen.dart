@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../data/models/notification_model.dart';
 import '../../providers/notifications_provider.dart';
@@ -28,7 +29,7 @@ class NotificationsScreen extends ConsumerWidget {
   Color _getNotificationColor(NotificationType type) {
     switch (type) {
       case NotificationType.newBooking:
-        return Colors.blue;
+        return AppColors.primary;
       case NotificationType.bookingConfirmed:
         return AppColors.success;
       case NotificationType.bookingRejected:
@@ -68,7 +69,14 @@ class NotificationsScreen extends ConsumerWidget {
               onPressed: () {
                 ref.read(notificationsProvider.notifier).markAllAsRead();
               },
-              child: const Text('Zote zimesomwa', style: TextStyle(color: Colors.white, fontSize: 12)),
+              child: const Text(
+                'Zote zimesomwa',
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ),
         ],
       ),
@@ -77,7 +85,11 @@ class NotificationsScreen extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.notifications_off_outlined, size: 64, color: Colors.grey.shade400),
+                  Icon(
+                    Icons.notifications_off_outlined,
+                    size: 64,
+                    color: AppColors.textTertiary,
+                  ),
                   const SizedBox(height: 16),
                   const Text(
                     'Huna arifa mpya kwa sasa',
@@ -97,16 +109,21 @@ class NotificationsScreen extends ConsumerWidget {
                 return Dismissible(
                   key: Key(notif.id),
                   onDismissed: (_) {
-                    ref.read(notificationsProvider.notifier).markAsRead(notif.id);
+                    ref
+                        .read(notificationsProvider.notifier)
+                        .markAsRead(notif.id);
                   },
                   child: InkWell(
                     onTap: () {
-                      ref.read(notificationsProvider.notifier).markAsRead(notif.id);
+                      ref
+                          .read(notificationsProvider.notifier)
+                          .markAsRead(notif.id);
                       if (notif.type == NotificationType.newBooking ||
                           notif.type == NotificationType.bookingConfirmed ||
                           notif.type == NotificationType.bookingReminder) {
                         context.go('/home');
-                      } else if (notif.type == NotificationType.paymentReceived) {
+                      } else if (notif.type ==
+                          NotificationType.paymentReceived) {
                         context.push('/payments/history');
                       }
                     },
@@ -115,14 +132,18 @@ class NotificationsScreen extends ConsumerWidget {
                       margin: const EdgeInsets.only(bottom: 10),
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: notif.isRead ? Colors.white : AppColors.primaryLight.withOpacity(0.4),
+                        color: notif.isRead
+                            ? AppColors.white
+                            : AppColors.primaryLight.withOpacity(0.4),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                          color: notif.isRead ? AppColors.border : AppColors.primary.withOpacity(0.4),
+                          color: notif.isRead
+                              ? AppColors.border
+                              : AppColors.primary.withOpacity(0.4),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.03),
+                            color: AppColors.primaryDark.withOpacity(0.03),
                             blurRadius: 6,
                             offset: const Offset(0, 2),
                           ),
@@ -141,13 +162,16 @@ class NotificationsScreen extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Expanded(
                                       child: Text(
                                         notif.title,
                                         style: TextStyle(
-                                          fontWeight: notif.isRead ? FontWeight.w600 : FontWeight.bold,
+                                          fontWeight: notif.isRead
+                                              ? FontWeight.w600
+                                              : FontWeight.bold,
                                           fontSize: 14,
                                           color: AppColors.textPrimary,
                                         ),
@@ -178,7 +202,7 @@ class NotificationsScreen extends ConsumerWidget {
                                   _formatTimeAgo(notif.createdAt),
                                   style: TextStyle(
                                     fontSize: 11,
-                                    color: Colors.grey.shade500,
+                                    color: AppColors.textTertiary,
                                   ),
                                 ),
                               ],
@@ -194,4 +218,3 @@ class NotificationsScreen extends ConsumerWidget {
     );
   }
 }
-

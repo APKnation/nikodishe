@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/localization/locale_provider.dart';
 import '../../../../core/widgets/app_network_image.dart';
@@ -19,7 +20,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   Future<void> _pickProfilePhoto() async {
     try {
       final picker = ImagePicker();
-      final photo = await picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+      final photo = await picker.pickImage(
+        source: ImageSource.gallery,
+        imageQuality: 80,
+      );
       if (photo != null) {
         ref.read(authProvider.notifier).updateProfile(photoUrl: photo.path);
         if (mounted) {
@@ -43,7 +47,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
   void _showEditProfileDialog(BuildContext context, UserModel? user) {
     final lang = ref.read(localeProvider);
     final nameController = TextEditingController(text: user?.name ?? '');
-    final locationController = TextEditingController(text: user?.location ?? '');
+    final locationController = TextEditingController(
+      text: user?.location ?? '',
+    );
 
     showDialog(
       context: context,
@@ -64,7 +70,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             TextField(
               controller: locationController,
               decoration: InputDecoration(
-                labelText: lang == AppLanguage.sw ? 'Eneo / Mji (Mfano: Dar es Salaam)' : 'Location / City',
+                labelText: lang == AppLanguage.sw
+                    ? 'Eneo / Mji (Mfano: Dar es Salaam)'
+                    : 'Location / City',
                 border: const OutlineInputBorder(),
               ),
             ),
@@ -78,10 +86,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
+              foregroundColor: AppColors.white,
             ),
             onPressed: () {
-              ref.read(authProvider.notifier).updateProfile(
+              ref
+                  .read(authProvider.notifier)
+                  .updateProfile(
                     name: nameController.text.trim(),
                     location: locationController.text.trim(),
                   );
@@ -89,7 +99,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    lang == AppLanguage.sw ? 'Taarifa zimebadilishwa!' : 'Profile updated successfully!',
+                    lang == AppLanguage.sw
+                        ? 'Taarifa zimebadilishwa!'
+                        : 'Profile updated successfully!',
                   ),
                 ),
               );
@@ -122,7 +134,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             const SizedBox(height: 16),
             ListTile(
               leading: const Text('🇹🇿', style: TextStyle(fontSize: 24)),
-              title: const Text('Kiswahili', style: TextStyle(fontWeight: FontWeight.bold)),
+              title: const Text(
+                'Kiswahili',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               subtitle: const Text('Lugha ya Taifa (Default)'),
               trailing: currentLang == AppLanguage.sw
                   ? const Icon(Icons.check_circle, color: AppColors.primary)
@@ -135,7 +150,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             const Divider(),
             ListTile(
               leading: const Text('🇬🇧', style: TextStyle(fontSize: 24)),
-              title: const Text('English', style: TextStyle(fontWeight: FontWeight.bold)),
+              title: const Text(
+                'English',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               subtitle: const Text('International language'),
               trailing: currentLang == AppLanguage.en
                   ? const Icon(Icons.check_circle, color: AppColors.primary)
@@ -170,12 +188,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColors.border),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF0F172A).withOpacity(0.03),
+                    color: AppColors.primaryDark.withOpacity(0.03),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -190,7 +208,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           width: 84,
                           height: 84,
                           color: AppColors.primaryLight,
-                          child: (user?.photoUrl != null && user!.photoUrl!.isNotEmpty)
+                          child:
+                              (user?.photoUrl != null &&
+                                  user!.photoUrl!.isNotEmpty)
                               ? AppNetworkImage(
                                   imageUrl: user.photoUrl!,
                                   width: 84,
@@ -198,7 +218,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   fit: BoxFit.cover,
                                   placeholderIcon: Icons.person,
                                 )
-                              : const Icon(Icons.person, size: 50, color: AppColors.primary),
+                              : const Icon(
+                                  Icons.person,
+                                  size: 50,
+                                  color: AppColors.primary,
+                                ),
                         ),
                       ),
                       Positioned(
@@ -212,7 +236,11 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                               color: AppColors.primary,
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.camera_alt, size: 16, color: Colors.white),
+                            child: const Icon(
+                              Icons.camera_alt,
+                              size: 16,
+                              color: AppColors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -220,7 +248,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    user?.name ?? (lang == AppLanguage.sw ? 'Mtumiaji wa Kodisha' : 'Kodisha User'),
+                    user?.name ??
+                        (lang == AppLanguage.sw
+                            ? 'Mtumiaji wa Kodisha'
+                            : 'Kodisha User'),
                     style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -237,7 +268,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                   const SizedBox(height: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
                       color: AppColors.primary.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(20),
@@ -264,41 +298,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         style: OutlinedButton.styleFrom(
                           foregroundColor: AppColors.primary,
                           side: const BorderSide(color: AppColors.primary),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      TextButton.icon(
-                        onPressed: () {
-                          final newRole = user?.role == UserRole.owner
-                              ? UserRole.renter
-                              : UserRole.owner;
-                          ref.read(authProvider.notifier).switchRole(newRole);
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                newRole == UserRole.owner
-                                    ? 'Akaunti yako sasa ni ya Mwenye Vifaa (Owner) 🏢'
-                                    : 'Akaunti yako sasa ni ya Mteja (Customer) 🛒',
-                              ),
-                            ),
-                          );
-                        },
-                        icon: Icon(
-                          user?.role == UserRole.owner
-                              ? Icons.shopping_bag_outlined
-                              : Icons.storefront_outlined,
-                          size: 16,
-                          color: AppColors.primary,
-                        ),
-                        label: Text(
-                          user?.role == UserRole.owner
-                              ? 'Hali ya Mteja'
-                              : 'Kuwa Mwenye Vifaa',
-                          style: const TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.primary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
                           ),
                         ),
                       ),
@@ -313,12 +314,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
             // Settings & Options List
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: AppColors.border),
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF0F172A).withOpacity(0.02),
+                    color: AppColors.primaryDark.withOpacity(0.02),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -326,19 +327,26 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
               child: Column(
                 children: [
-                  // FR25: Owner Dashboard & Listings
-                  ListTile(
-                    leading: const Icon(Icons.dashboard_outlined, color: AppColors.primary),
-                    title: Text(AppStrings.get(lang, 'owner_dashboard')),
-                    subtitle: Text(AppStrings.get(lang, 'owner_dashboard_sub')),
-                    trailing: const Icon(Icons.chevron_right),
-                    onTap: () => context.push('/owner/dashboard'),
-                  ),
-                  const Divider(height: 1),
+                  if (user?.role == UserRole.owner) ...[
+                    ListTile(
+                      leading: const Icon(
+                        Icons.dashboard_outlined,
+                        color: AppColors.primary,
+                      ),
+                      title: Text(AppStrings.get(lang, 'owner_dashboard')),
+                      subtitle: Text(AppStrings.get(lang, 'owner_dashboard_sub')),
+                      trailing: const Icon(Icons.chevron_right),
+                      onTap: () => context.push('/owner/home'),
+                    ),
+                    const Divider(height: 1),
+                  ],
 
                   // FR24: Booking History
                   ListTile(
-                    leading: const Icon(Icons.history, color: AppColors.primary),
+                    leading: const Icon(
+                      Icons.history,
+                      color: AppColors.primary,
+                    ),
                     title: Text(AppStrings.get(lang, 'booking_history')),
                     subtitle: Text(AppStrings.get(lang, 'booking_history_sub')),
                     trailing: const Icon(Icons.chevron_right),
@@ -348,7 +356,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                   // Payments History
                   ListTile(
-                    leading: const Icon(Icons.payment, color: AppColors.primary),
+                    leading: const Icon(
+                      Icons.payment,
+                      color: AppColors.primary,
+                    ),
                     title: Text(AppStrings.get(lang, 'payment_history')),
                     subtitle: Text(AppStrings.get(lang, 'payment_history_sub')),
                     trailing: const Icon(Icons.chevron_right),
@@ -358,7 +369,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                   // Notifications
                   ListTile(
-                    leading: const Icon(Icons.notifications_outlined, color: AppColors.primary),
+                    leading: const Icon(
+                      Icons.notifications_outlined,
+                      color: AppColors.primary,
+                    ),
                     title: Text(AppStrings.get(lang, 'notifications')),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => context.push('/notifications'),
@@ -367,9 +381,16 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                   // FR26: Language Switcher
                   ListTile(
-                    leading: const Icon(Icons.language, color: AppColors.primary),
+                    leading: const Icon(
+                      Icons.language,
+                      color: AppColors.primary,
+                    ),
                     title: Text(AppStrings.get(lang, 'language')),
-                    subtitle: Text(lang == AppLanguage.sw ? 'Kiswahili 🇹🇿' : 'English 🇬🇧'),
+                    subtitle: Text(
+                      lang == AppLanguage.sw
+                          ? 'Kiswahili 🇹🇿'
+                          : 'English 🇬🇧',
+                    ),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () => _showLanguageDialog(context),
                   ),
@@ -377,13 +398,18 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                   // Support
                   ListTile(
-                    leading: const Icon(Icons.help_outline, color: AppColors.primary),
+                    leading: const Icon(
+                      Icons.help_outline,
+                      color: AppColors.primary,
+                    ),
                     title: Text(AppStrings.get(lang, 'help_support')),
                     subtitle: const Text('WhatsApp / 0700 000 000'),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Huduma kwa wateja: 0700 000 000')),
+                        const SnackBar(
+                          content: Text('Huduma kwa wateja: 0700 000 000'),
+                        ),
                       );
                     },
                   ),
@@ -391,7 +417,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                   // Privacy Policy
                   ListTile(
-                    leading: const Icon(Icons.security, color: AppColors.primary),
+                    leading: const Icon(
+                      Icons.security,
+                      color: AppColors.primary,
+                    ),
                     title: Text(AppStrings.get(lang, 'privacy_policy')),
                     trailing: const Icon(Icons.chevron_right),
                     onTap: () {},
@@ -400,7 +429,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                   // About App
                   ListTile(
-                    leading: const Icon(Icons.info_outline, color: AppColors.primary),
+                    leading: const Icon(
+                      Icons.info_outline,
+                      color: AppColors.primary,
+                    ),
                     title: Text(AppStrings.get(lang, 'about_app')),
                     subtitle: const Text('Version 1.0.0 (Tanzania MVP)'),
                     trailing: const Icon(Icons.chevron_right),
@@ -427,10 +459,12 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   style: const TextStyle(color: AppColors.error),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
+                  backgroundColor: AppColors.white,
                   elevation: 0,
                   side: const BorderSide(color: AppColors.error),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                 ),
               ),
             ),

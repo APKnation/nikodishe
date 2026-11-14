@@ -16,7 +16,8 @@ final List<UserModel> mockUsers = [
     phone: '+255712345678',
     role: UserRole.owner,
     location: 'Dar es Salaam (Kinondoni)',
-    photoUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400',
+    photoUrl:
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400',
     whatsapp: '+255712345678',
     instagram: '@amina_rentals_tz',
     facebook: 'Amina Event & Construction Equipment',
@@ -29,7 +30,8 @@ final List<UserModel> mockUsers = [
     phone: '+255754321987',
     role: UserRole.renter,
     location: 'Arusha',
-    photoUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
+    photoUrl:
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400',
     whatsapp: '+255754321987',
     instagram: '@john_mwangi_arusha',
     createdAt: DateTime(2024, 2, 5),
@@ -40,7 +42,8 @@ final List<UserModel> mockUsers = [
     phone: '+255789654321',
     role: UserRole.renter,
     location: 'Mwanza',
-    photoUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400',
+    photoUrl:
+        'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400',
     whatsapp: '+255789654321',
     createdAt: DateTime(2024, 3, 20),
   ),
@@ -57,8 +60,7 @@ final List<ListingModel> mockListings = [
     ownerId: 'user_001',
     ownerName: 'Amina Salehe',
     title: 'Meza za Sherehe (Set ya 10)',
-    description:
-        'Meza 10 za plastiki zenye ubora wa juu, zinafaa kwa sherehe za harusi, birthday na mikutano. Zinakuja na vitambaa vya meza bila malipo ya ziada.',
+    description: 'Meza 10 za plastiki zenye ubora wa juu, zinafaa kwa sherehe za harusi, birthday na mikutano. Zinakuja na vitambaa vya meza bila malipo ya ziada.',
     category: ListingCategory.sherehe,
     type: ListingType.kukodisha,
     pricePerDay: 50000,
@@ -79,8 +81,7 @@ final List<ListingModel> mockListings = [
     ownerId: 'user_001',
     ownerName: 'Amina Salehe',
     title: 'Viti 100 vya Sherehe',
-    description:
-        'Viti 100 vya chuma, rangi nyeupe, bora kwa sherehe za nje na ndani. Vinasafishwa na kudisinfected kabla ya kukodishwa.',
+    description: 'Viti 100 vya chuma, rangi nyeupe, bora kwa sherehe za nje na ndani. Vinasafishwa na kudisinfected kabla ya kukodishwa.',
     category: ListingCategory.sherehe,
     type: ListingType.kukodisha,
     pricePerDay: 80000,
@@ -101,8 +102,7 @@ final List<ListingModel> mockListings = [
     ownerId: 'user_001',
     ownerName: 'Amina Salehe',
     title: 'Hema Kubwa ya Sherehe (10x20m)',
-    description:
-        'Hema ya msitari, ukubwa wa 10x20 mita, inaweza kuchukua watu 200. Inajumuisha nguzo, kamba na paa la maji. Delivery ya bure ndani ya Dar es Salaam.',
+    description: 'Hema ya msitari, ukubwa wa 10x20 mita, inaweza kuchukua watu 200. Inajumuisha nguzo, kamba na paa la maji. Delivery ya bure ndani ya Dar es Salaam.',
     category: ListingCategory.sherehe,
     type: ListingType.kukodisha,
     pricePerDay: 300000,
@@ -123,8 +123,7 @@ final List<ListingModel> mockListings = [
     ownerId: 'user_001',
     ownerName: 'Amina Salehe',
     title: 'Sound System ya Sherehe (5000W)',
-    description:
-        'Sound system yenye nguvu ya 5000W, inajumuisha speakers 4, subwoofer 2, mixer, na DJ equipment. Inafaa kwa sherehe kubwa za nje.',
+    description: 'Sound system yenye nguvu ya 5000W, inajumuisha speakers 4, subwoofer 2, mixer, na DJ equipment. Inafaa kwa sherehe kubwa za nje.',
     category: ListingCategory.sherehe,
     type: ListingType.kukodisha,
     pricePerDay: 450000,
@@ -147,8 +146,7 @@ final List<ListingModel> mockListings = [
     ownerId: 'user_001',
     ownerName: 'Amina Salehe',
     title: 'Scaffolding ya Ujenzi (Seti Kamili)',
-    description:
-        'Scaffolding ya chuma, inayoweza kufikia urefu wa mita 12. Inajumuisha vipande 50 vya msingi na bodi 20 za kupanda. Imethibitishwa kwa usalama.',
+    description: 'Scaffolding ya chuma, inayoweza kufikia urefu wa mita 12. Inajumuisha vipande 50 vya msingi na bodi 20 za kupanda. Imethibitishwa kwa usalama.',
     category: ListingCategory.ujenzi,
     type: ListingType.kukodisha,
     pricePerDay: 120000,
@@ -169,8 +167,7 @@ final List<ListingModel> mockListings = [
     ownerId: 'user_001',
     ownerName: 'Amina Salehe',
     title: 'Mixer ya Simiti (350L)',
-    description:
-        'Mixer ya simiti ya lita 350, ya umeme, inafanya kazi vizuri na ni rahisi kutumia. Inafaa kwa ujenzi wa nyumba, barabara na mradi mkubwa wa simiti.',
+    description: 'Mixer ya simiti ya lita 350, ya umeme, inafanya kazi vizuri na ni rahisi kutumia. Inafaa kwa ujenzi wa nyumba, barabara na mradi mkubwa wa simiti.',
     category: ListingCategory.ujenzi,
     type: ListingType.zote,
     pricePerDay: 85000,
@@ -191,8 +188,7 @@ final List<ListingModel> mockListings = [
     ownerId: 'user_001',
     ownerName: 'Amina Salehe',
     title: 'Jenereta ya 20KVA (Silent)',
-    description:
-        'Jenereta ya diesel ya 20KVA, silent type, inafaa kwa matumizi ya ofisi, sherehe na ujenzi. Fuel consumption ndogo. Inajumuisha mafuta ya siku 1.',
+    description: 'Jenereta ya diesel ya 20KVA, silent type, inafaa kwa matumizi ya ofisi, sherehe na ujenzi. Fuel consumption ndogo. Inajumuisha mafuta ya siku 1.',
     category: ListingCategory.ujenzi,
     type: ListingType.kukodisha,
     pricePerDay: 200000,
@@ -215,8 +211,7 @@ final List<ListingModel> mockListings = [
     ownerId: 'user_001',
     ownerName: 'Amina Salehe',
     title: 'Ukumbi wa Kariakoo (Watu 300)',
-    description:
-        'Ukumbi mkubwa uliopo katikati ya Kariakoo, Dar es Salaam. Una uwezo wa kuchukua watu 300. Unajumuisha jukwaa, mfumo wa sauti, hewa ya kiyoyozi na parking. Unafaa kwa harusi, biashara na mikutano.',
+    description: 'Ukumbi mkubwa uliopo katikati ya Kariakoo, Dar es Salaam. Una uwezo wa kuchukua watu 300. Unajumuisha jukwaa, mfumo wa sauti, hewa ya kiyoyozi na parking. Unafaa kwa harusi, biashara na mikutano.',
     category: ListingCategory.ukumbi,
     type: ListingType.kukodisha,
     pricePerDay: 800000,
@@ -237,8 +232,7 @@ final List<ListingModel> mockListings = [
     ownerId: 'user_001',
     ownerName: 'Amina Salehe',
     title: 'Venue ya Oyster Bay (Luxury)',
-    description:
-        'Venue ya kifahari iko katika eneo la Oyster Bay, karibu na pwani. Ina uwezo wa watu 150, bustani nzuri ya nje, dining area ya ndani, chef wa kibinafsi na huduma kamili ya event management.',
+    description: 'Venue ya kifahari iko katika eneo la Oyster Bay, karibu na pwani. Ina uwezo wa watu 150, bustani nzuri ya nje, dining area ya ndani, chef wa kibinafsi na huduma kamili ya event management.',
     category: ListingCategory.ukumbi,
     type: ListingType.kukodisha,
     pricePerDay: 1500000,
@@ -384,7 +378,8 @@ final List<ReviewModel> mockReviews = [
     renterName: 'John Mwangi',
     ownerId: 'user_001',
     rating: 4.8,
-    comment: 'Meza zilikuwa safi na ziliwasilishwa kwa wakati sahihi wa sherehe.',
+    comment:
+        'Meza zilikuwa safi na ziliwasilishwa kwa wakati sahihi wa sherehe.',
     createdAt: DateTime(2024, 11, 16),
   ),
 ];
@@ -418,7 +413,8 @@ final List<AppNotificationModel> mockNotifications = [
     id: 'notif_003',
     userId: 'user_001',
     title: 'Malipo Yamepokelewa! 💰',
-    body: 'Malipo ya TZS 150,000 kupitia M-Pesa (Ref: QD829JK109) yamekamilika.',
+    body:
+        'Malipo ya TZS 150,000 kupitia M-Pesa (Ref: QD829JK109) yamekamilika.',
     type: NotificationType.paymentReceived,
     createdAt: DateTime.now().subtract(const Duration(days: 1)),
     isRead: true,
@@ -435,4 +431,3 @@ final List<AppNotificationModel> mockNotifications = [
     relatedId: 'booking_001',
   ),
 ];
-

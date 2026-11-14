@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import '../data/models/user_model.dart';
 import '../features/auth/presentation/screens/otp_screen.dart';
 import '../features/auth/presentation/screens/phone_screen.dart';
@@ -13,6 +14,7 @@ import '../features/listings/presentation/screens/owner_contact_screen.dart';
 import '../features/notifications/presentation/screens/notifications_screen.dart';
 import '../features/payments/presentation/screens/payment_history_screen.dart';
 import '../features/payments/presentation/screens/payment_screen.dart';
+import '../features/home/presentation/screens/owner_home_screen.dart';
 import '../features/profile/presentation/screens/owner_dashboard_screen.dart';
 
 class AppRouter {
@@ -43,9 +45,10 @@ class AppRouter {
           return OtpScreen(phone: phone, role: role);
         },
       ),
+      GoRoute(path: '/home', builder: (context, state) => const HomeScreen()),
       GoRoute(
-        path: '/home',
-        builder: (context, state) => const HomeScreen(),
+        path: '/owner/home',
+        builder: (context, state) => const OwnerHomeScreen(),
       ),
       GoRoute(
         path: '/listings/:id',
@@ -71,7 +74,8 @@ class AppRouter {
       GoRoute(
         path: '/payments/pay',
         builder: (context, state) {
-          final bookingId = state.uri.queryParameters['bookingId'] ?? 'booking_001';
+          final bookingId =
+              state.uri.queryParameters['bookingId'] ?? 'booking_001';
           return PaymentScreen(bookingId: bookingId);
         },
       ),
@@ -106,10 +110,9 @@ class _SplashWrapperState extends State<_SplashWrapper> {
   @override
   void initState() {
     super.initState();
-    // NFR1: Snappy launch (1.5s) to guarantee app launches within 3 seconds
-    Future.delayed(const Duration(milliseconds: 1500), () {
+    Future.delayed(const Duration(milliseconds: 1200), () {
       if (mounted) {
-        context.go('/home');
+        context.go('/auth/phone');
       }
     });
   }

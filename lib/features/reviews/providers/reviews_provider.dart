@@ -1,47 +1,45 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/network/api_config.dart';
+
 import '../../../data/models/review_model.dart';
-import '../../../data/mock/mock_data.dart';
-import '../../../data/services/graphql_client.dart';
+import '../../../data/services/api_service.dart';
 import '../../listings/providers/listings_provider.dart';
 
 class ReviewsNotifier extends Notifier<List<ReviewModel>> {
+  final ApiService _apiService = ApiService();
+
   @override
-  List<ReviewModel> build() {
-    return List.from(mockReviews);
+  List<ReviewModel> build() => const [];
+
+  Future<void> loadForListing(String listingId) async {
+    try {
+      final reviews = await _apiService.fetchReviewsByListing(listingId);
+      final others = state.where((r) => r.listingId != listingId).toList();
+      state = [...reviews, ...others];
+    } catch (_) {}
   }
 
   Future<void> addReview(ReviewModel review) async {
     state = [review, ...state];
 
-    // Push review to GraphQL backend
     try {
-      const mutation = r'''
-        mutation CreateReview($bookingId: ID!, $rating: Int!, $comment: String!) {
-          createReview(bookingId: $bookingId, rating: $rating, comment: $comment) {
-            success
-            message
-          }
-        }
-      ''';
-      await GraphQLClient().execute(
-        query: mutation,
-        variables: {
-          'bookingId': review.bookingId,
-          'rating': review.rating.toInt(),
-          'comment': review.comment,
-        },
+      await _apiService.createReview(
+        bookingId: review.bookingId,
+        rating: review.rating.toInt(),
+        comment: review.comment,
       );
+      await loadForListing(review.listingId);
     } catch (_) {
       // If backend is unavailable, local review still shows
     }
 
     // Update the listing's local average rating
-    final listingReviews = state.where((r) => r.listingId == review.listingId).toList();
+    final listingReviews = state
+        .where((r) => r.listingId == review.listingId)
+        .toList();
     if (listingReviews.isNotEmpty) {
-      final avg = listingReviews.map((r) => r.rating).reduce((a, b) => a + b) / listingReviews.length;
+      final avg =
+          listingReviews.map((r) => r.rating).reduce((a, b) => a + b) /
+          listingReviews.length;
       final currentListings = ref.read(listingsProvider);
       final index = currentListings.indexWhere((l) => l.id == review.listingId);
       if (index != -1) {
@@ -55,17 +53,22 @@ class ReviewsNotifier extends Notifier<List<ReviewModel>> {
   }
 }
 
-final reviewsProvider =
-    NotifierProvider<ReviewsNotifier, List<ReviewModel>>(() => ReviewsNotifier());
+final reviewsProvider = NotifierProvider<ReviewsNotifier, List<ReviewModel>>(
+  () => ReviewsNotifier(),
+);
 
-final reviewsForListingProvider =
-    Provider.family<List<ReviewModel>, String>((ref, listingId) {
+final reviewsForListingProvider = Provider.family<List<ReviewModel>, String>((
+  ref,
+  listingId,
+) {
   final all = ref.watch(reviewsProvider);
   return all.where((r) => r.listingId == listingId).toList();
 });
 
-final reviewsForOwnerProvider =
-    Provider.family<List<ReviewModel>, String>((ref, ownerId) {
+final reviewsForOwnerProvider = Provider.family<List<ReviewModel>, String>((
+  ref,
+  ownerId,
+) {
   final all = ref.watch(reviewsProvider);
   return all.where((r) => r.ownerId == ownerId).toList();
 });

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../core/constants/app_colors.dart';
 import '../../../../data/models/booking_model.dart';
 import '../../../../data/models/review_model.dart';
@@ -9,10 +10,7 @@ import '../../providers/reviews_provider.dart';
 class AddReviewDialog extends ConsumerStatefulWidget {
   final BookingModel booking;
 
-  const AddReviewDialog({
-    super.key,
-    required this.booking,
-  });
+  const AddReviewDialog({super.key, required this.booking});
 
   @override
   ConsumerState<AddReviewDialog> createState() => _AddReviewDialogState();
@@ -80,7 +78,10 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
           const SizedBox(height: 4),
           Text(
             widget.booking.listingTitle,
-            style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+            style: const TextStyle(
+              fontSize: 13,
+              color: AppColors.textSecondary,
+            ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -106,7 +107,7 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
                   },
                   icon: Icon(
                     starIndex <= _rating ? Icons.star : Icons.star_border,
-                    color: Colors.amber,
+                    color: AppColors.amber,
                     size: 32,
                   ),
                 );
@@ -114,7 +115,10 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
             ),
             Text(
               '${_rating.toInt()} kati ya 5 Stars',
-              style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.amber),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: AppColors.amber,
+              ),
             ),
 
             const SizedBox(height: 16),
@@ -124,10 +128,11 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
               controller: _commentController,
               maxLines: 3,
               decoration: InputDecoration(
-                hintText: 'Andika jinsi kifaa kilivyofanya kazi, ubora wake n.k.',
+                hintText:
+                    'Andika jinsi kifaa kilivyofanya kazi, ubora wake n.k.',
                 hintStyle: const TextStyle(fontSize: 13),
                 filled: true,
-                fillColor: Colors.grey.shade100,
+                fillColor: AppColors.surfaceSubtle,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                   borderSide: BorderSide.none,
@@ -146,14 +151,19 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
           onPressed: _isSubmitting ? null : _submitReview,
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
-            foregroundColor: Colors.white,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            foregroundColor: AppColors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
           child: _isSubmitting
               ? const SizedBox(
                   width: 16,
                   height: 16,
-                  child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                  child: CircularProgressIndicator(
+                    color: AppColors.white,
+                    strokeWidth: 2,
+                  ),
                 )
               : const Text('Wasilisha'),
         ),
@@ -161,4 +171,3 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
     );
   }
 }
-

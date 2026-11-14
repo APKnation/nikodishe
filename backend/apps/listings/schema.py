@@ -25,6 +25,8 @@ class ListingImageType(DjangoObjectType):
 class ListingNode(DjangoObjectType):
     images = graphene.List(ListingImageType)
     features = graphene.List(graphene.String)
+    price_per_day = graphene.Float()
+    sale_price = graphene.Float()
 
     class Meta:
         model = Listing
@@ -40,6 +42,12 @@ class ListingNode(DjangoObjectType):
 
     def resolve_features(self, info):
         return self.features or []
+
+    def resolve_price_per_day(self, info):
+        return float(self.price_per_day) if self.price_per_day is not None else 0.0
+
+    def resolve_sale_price(self, info):
+        return float(self.sale_price) if self.sale_price is not None else None
 
 class Query(graphene.ObjectType):
     listings = graphene.List(
@@ -127,23 +135,20 @@ class CreateListing(graphene.Mutation):
     def mutate(self, info, title, description, category, price_per_day, location, **kwargs):
         user = info.context.user
         if user.is_anonymous:
-            owner_id = kwargs.get('owner_id')
-            if owner_id:
-                from apps.accounts.models import CustomUser
-                user = CustomUser.objects.filter(id=owner_id).first()
+            raise GraphQLError("Lazima uwe umeingia kwenye akaunti ya mwenye kifaa.")
 
-            if not user or user.is_anonymous:
-                from apps.accounts.models import CustomUser
-                user = CustomUser.objects.filter(role='OWNER').first() or CustomUser.objects.first()
-                if not user:
-                    user = CustomUser.objects.create_user(
-                        phone='0712345678',
-                        name='Mmiliki wa Kifaa',
-                        role='OWNER'
-                    )
+        # Allow super admin to create on behalf of an owner if owner_id provided
+        owner = user
+        owner_id = kwargs.get('owner_id')
+        if owner_id and (user.is_staff or user.is_superuser):
+            from apps.accounts.models import CustomUser
+            owner = CustomUser.objects.filter(id=owner_id, role='OWNER').first() or user
+
+        if getattr(owner, 'role', None) != 'OWNER' and not (user.is_staff or user.is_superuser):
+            raise GraphQLError("Ni wenye vifaa pekee wanaoruhusiwa kuweka vifaa.")
 
         listing = Listing.objects.create(
-            owner=user,
+            owner=owner,
             title=title.strip(),
             description=description.strip(),
             category=category.upper(),
@@ -167,7 +172,7 @@ class CreateListing(graphene.Mutation):
                         is_primary=(i == 0)
                     )
 
-        return CreateListing(listing=listing, success=True, message="Tangazo na picha zimewekwa kikamilifu.")
+        return CreateListing(listing=listing, success=True, message="Kifaa kimeongezwa kikamilifu.")
 
 class AddListingImage(graphene.Mutation):
     class Arguments:
