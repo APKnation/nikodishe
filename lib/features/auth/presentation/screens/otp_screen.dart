@@ -77,7 +77,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
       }
     } else if (authState.error == null) {
       // OTP verified but account not registered yet (customer flow)
-      context.go('/auth/register', extra: UserRole.renter);
+      context.go('/auth/register', extra: {'role': UserRole.renter, 'phone': widget.phone});
     }
   }
 

@@ -32,8 +32,16 @@ class AppRouter {
       GoRoute(
         path: '/auth/register',
         builder: (context, state) {
-          final extraRole = state.extra as UserRole? ?? UserRole.renter;
-          return RegisterScreen(initialRole: extraRole);
+          final extra = state.extra;
+          UserRole role = UserRole.renter;
+          String? phone;
+          if (extra is UserRole) {
+            role = extra;
+          } else if (extra is Map) {
+            role = (extra['role'] as UserRole?) ?? UserRole.renter;
+            phone = extra['phone'] as String?;
+          }
+          return RegisterScreen(initialRole: role, initialPhone: phone);
         },
       ),
       GoRoute(
