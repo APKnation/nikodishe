@@ -18,12 +18,16 @@ class OtpScreen extends ConsumerStatefulWidget {
   final String? redirectTo;
   final String? identifier;
 
+  /// Confirmation message returned by the backend when the OTP was requested.
+  final String? sentMessage;
+
   const OtpScreen({
     super.key,
     required this.phone,
     required this.role,
     this.redirectTo,
     this.identifier,
+    this.sentMessage,
   });
 
   @override
@@ -37,10 +41,12 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
 
   int _secondsLeft = 60;
   Timer? _timer;
+  String? _message;
 
   @override
   void initState() {
     super.initState();
+    _message = widget.sentMessage;
     _startCountdown();
   }
 
@@ -100,6 +106,11 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
   Future<void> _handleResend() async {
     if (_secondsLeft > 0) return;
     await ref.read(authProvider.notifier).sendOtp(widget.phone);
+    final message = ref.read(authProvider).otpMessage;
+    if (!mounted) return;
+    if (message != null && message.isNotEmpty) {
+      setState(() => _message = message);
+    }
     _startCountdown();
   }
 
@@ -265,39 +276,13 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                                 );
                               }),
                             ),
-                            const SizedBox(height: 20),
-                            Container(
-                              width: double.infinity,
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                              decoration: BoxDecoration(
-                                color: AppColors.amberTint,
-                                borderRadius: BorderRadius.circular(10),
+                            if (_message != null && _message!.isNotEmpty) ...[
+                              const SizedBox(height: 20),
+                              AuthNote(
+                                icon: Icons.mark_email_read_outlined,
+                                text: _message!,
                               ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Icon(
-                                    Icons.info_outline_rounded,
-                                    size: 18,
-                                    color: AppColors.amberDark,
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(
-                                      (widget.identifier != null && widget.identifier!.contains('@'))
-                                          ? 'Msimbo umetumwa kwenye simu ya akaunti. Kwa majaribio tumia: 123456'
-                                          : 'Kwa majaribio tumia msimbo: 123456',
-                                      style: const TextStyle(
-                                        fontSize: 12.5,
-                                        color: AppColors.primaryDark,
-                                        fontWeight: FontWeight.w600,
-                                        height: 1.35,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                            ],
                             if (authState.error != null) ...[
                               const SizedBox(height: 12),
                               Container(

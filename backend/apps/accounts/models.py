@@ -87,9 +87,8 @@ class OTPVerification(models.Model):
 
     @classmethod
     def generate_otp(cls, phone):
-        # In production, use random 6 digits e.g. f"{random.randint(100000, 999999)}"
-        # Here we provide test/demo OTP support (123456) or random
-        code = "123456"
+        # Cryptographically strong 6-digit code (never hardcoded).
+        code = f"{random.SystemRandom().randint(100000, 999999)}"
         expires = timezone.now() + timedelta(minutes=5)
         otp_record = cls.objects.create(
             phone=phone.strip(),

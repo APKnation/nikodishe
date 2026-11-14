@@ -64,11 +64,13 @@ class AppRouter {
           final role = extra?['role'] as UserRole? ?? UserRole.renter;
           final redirectTo = extra?['redirectTo'] as String?;
           final identifier = extra?['identifier'] as String?;
+          final sentMessage = extra?['sentMessage'] as String?;
           return OtpScreen(
             phone: phone,
             role: role,
             redirectTo: redirectTo,
             identifier: identifier,
+            sentMessage: sentMessage,
           );
         },
       ),

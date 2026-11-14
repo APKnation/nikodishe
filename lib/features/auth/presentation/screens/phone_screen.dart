@@ -43,6 +43,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
         'identifier': identifier,
         'role': UserRole.renter, // actual role resolved after verify
         'redirectTo': widget.redirectTo,
+        'sentMessage': auth.otpMessage,
       });
     }
   }
@@ -141,11 +142,13 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
                                     return null;
                                   },
                                 ),
-                                const SizedBox(height: 18),
-                                const AuthNote(
-                                  icon: Icons.shield_outlined,
-                                  text: 'Tutakutumia msimbo wa uthibitisho (OTP) kwa usalama wa akaunti yako.',
-                                ),
+                                if (authState.isLoading) ...[
+                                  const SizedBox(height: 16),
+                                  const AuthNote(
+                                    icon: Icons.outgoing_mail,
+                                    text: 'Tunakutumia msimbo wa uthibitisho...',
+                                  ),
+                                ],
                                 if (authState.error != null) ...[
                                   const SizedBox(height: 14),
                                   AuthErrorBox(message: authState.error!),

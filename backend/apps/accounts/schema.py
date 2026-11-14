@@ -1,5 +1,6 @@
 import graphene
 import base64
+from django.conf import settings
 from graphene_django import DjangoObjectType
 from graphql import GraphQLError
 from .models import CustomUser, OTPVerification
@@ -69,10 +70,15 @@ class SendOTP(graphene.Mutation):
                 # New customer registration flow allowed only for phone numbers
                 target_phone = clean_phone
 
-        OTPVerification.generate_otp(target_phone)
+        otp_record = OTPVerification.generate_otp(target_phone)
+        message = f"Msimbo wa uthibitisho umetumwa kwa {target_phone}."
+        # In development only, surface the generated code so testing is possible
+        # without an SMS gateway. Production never exposes the code.
+        if settings.DEBUG:
+            message = f"{message} (Demo code: {otp_record.otp_code})"
         return OTPResponseType(
             success=True,
-            message="Msimbo wa uthibitisho umetumwa.",
+            message=message,
             phone=target_phone
         )
 
@@ -104,7 +110,7 @@ class VerifyOTP(graphene.Mutation):
             elif not clean_phone.startswith('+'):
                 clean_phone = '+255' + clean_phone
 
-        # Check OTP in database (or demo code '123456')
+        # Check the OTP stored by the backend (never a hardcoded demo code).
         otp_records = OTPVerification.objects.filter(
             phone=clean_phone,
             otp_code=clean_code,
@@ -113,11 +119,11 @@ class VerifyOTP(graphene.Mutation):
 
         valid_otp = None
         for record in otp_records:
-            if record.is_valid() or clean_code == '123456':
+            if record.is_valid():
                 valid_otp = record
                 break
 
-        if not valid_otp and clean_code != '123456':
+        if not valid_otp:
             raise GraphQLError("Msimbo wa OTP si sahihi au umepitwa na wakati.")
 
         if valid_otp:
