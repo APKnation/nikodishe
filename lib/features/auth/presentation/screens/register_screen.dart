@@ -101,34 +101,72 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
             child: SafeArea(
               bottom: false,
               child: Stack(
+                fit: StackFit.expand,
                 children: [
-                  Center(
-                    child: LayoutBuilder(
-                      builder: (context, inner) {
-                        final logo = AppLogo.responsiveSize(
-                          inner.maxWidth,
-                          fraction: 0.62,
-                          minWidth: 170,
-                          maxWidth: 250,
-                        );
-                        return AppLogo(
-                          width: logo.width,
-                          height: logo.height,
-                          radius: compact ? 14 : 18,
-                        );
-                      },
+                  // Brand logo as a soft background watermark
+                  IgnorePointer(
+                    child: Opacity(
+                      opacity: 0.20,
+                      child: ColorFiltered(
+                        colorFilter: const ColorFilter.mode(
+                          AppColors.white,
+                          BlendMode.srcIn,
+                        ),
+                        child: Image.asset(
+                          AppLogo.transparentAsset,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.center,
+                        ),
+                      ),
                     ),
                   ),
-                  Positioned(
-                    top: 0,
-                    left: 4,
-                    child: IconButton(
-                      onPressed: () => context.go('/auth/phone'),
-                      icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
-                      style: IconButton.styleFrom(
-                        backgroundColor: AppColors.white.withOpacity(0.18),
-                        foregroundColor: AppColors.white,
-                      ),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: compact ? 12 : 16),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        IconButton(
+                          onPressed: () => context.go('/auth/phone'),
+                          icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
+                          style: IconButton.styleFrom(
+                            backgroundColor: AppColors.white.withOpacity(0.18),
+                            foregroundColor: AppColors.white,
+                          ),
+                        ),
+                        SizedBox(height: compact ? 6 : 10),
+                        Text(
+                          'Kamilisha usajili',
+                          style: TextStyle(
+                            fontSize: compact ? 23 : 27,
+                            fontWeight: FontWeight.w800,
+                            color: AppColors.white,
+                            letterSpacing: -0.5,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withOpacity(0.22),
+                                blurRadius: 10,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Taarifa chache tu ili uanze.',
+                          style: TextStyle(
+                            fontSize: compact ? 12 : 13,
+                            color: AppColors.white.withOpacity(0.95),
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withOpacity(0.18),
+                                blurRadius: 6,
+                                offset: const Offset(0, 1),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
