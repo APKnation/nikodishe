@@ -165,17 +165,21 @@ class RegisterUser(graphene.Mutation):
             raise GraphQLError("Mtumiaji mwenye namba hii tayari yupo. Tafadhali ingia.")
 
         # Owners are created only by super admin
+        def _txt(key, default=''):
+            val = kwargs.get(key)
+            return default if val is None else str(val)
+
         user = CustomUser.objects.create_user(
             phone=clean_phone,
             name=name.strip(),
             role='RENTER',
-            email=kwargs.get('email', ''),
-            location=kwargs.get('location', ''),
-            whatsapp_number=kwargs.get('whatsapp_number', clean_phone),
-            instagram_handle=kwargs.get('instagram_handle', ''),
-            facebook_url=kwargs.get('facebook_url', ''),
-            tiktok_handle=kwargs.get('tiktok_handle', ''),
-            nida_number=kwargs.get('nida_number', ''),
+            email=_txt('email', ''),
+            location=_txt('location', ''),
+            whatsapp_number=_txt('whatsapp_number', clean_phone) or clean_phone,
+            instagram_handle=_txt('instagram_handle', ''),
+            facebook_url=_txt('facebook_url', ''),
+            tiktok_handle=_txt('tiktok_handle', ''),
+            nida_number=_txt('nida_number', ''),
         )
         token = get_token(user)
         return RegisterUser(token=token, user=user, message="Akaunti ya mteja imefunguliwa kikamilifu.")
@@ -257,18 +261,22 @@ class CreateOwnerUser(graphene.Mutation):
             raise GraphQLError("Mtumiaji mwenye namba hii tayari yupo.")
 
         password = (kwargs.get('password') or 'Kodisha@123').strip() or 'Kodisha@123'
+        def _txt(key, default=''):
+            val = kwargs.get(key)
+            return default if val is None else str(val)
+
         user = CustomUser.objects.create_user(
             phone=clean_phone,
             name=name.strip(),
             role='OWNER',
             password=password,
-            email=kwargs.get('email', ''),
-            location=kwargs.get('location', ''),
-            whatsapp_number=kwargs.get('whatsapp_number', clean_phone),
-            instagram_handle=kwargs.get('instagram_handle', ''),
-            facebook_url=kwargs.get('facebook_url', ''),
-            tiktok_handle=kwargs.get('tiktok_handle', ''),
-            nida_number=kwargs.get('nida_number', ''),
+            email=_txt('email', ''),
+            location=_txt('location', ''),
+            whatsapp_number=_txt('whatsapp_number', clean_phone) or clean_phone,
+            instagram_handle=_txt('instagram_handle', ''),
+            facebook_url=_txt('facebook_url', ''),
+            tiktok_handle=_txt('tiktok_handle', ''),
+            nida_number=_txt('nida_number', ''),
             is_verified=True,
         )
         return CreateOwnerUser(
