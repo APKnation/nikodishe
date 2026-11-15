@@ -39,7 +39,7 @@ Jaza:
 ```env
 AI_PROVIDER=gemini
 GEMINI_API_KEY=api_key_yako_ya_gemini
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-3.5-flash-lite
 ```
 
 > Pata key bure (bila kadi ya benki) kwenye https://aistudio.google.com/apikey

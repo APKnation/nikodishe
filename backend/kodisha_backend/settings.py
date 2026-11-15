@@ -170,7 +170,7 @@ AI_TIMEOUT = int(os.environ.get('AI_TIMEOUT', '90'))
 
 # Google Gemini (free tier): https://aistudio.google.com/apikey
 GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
-GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.5-flash-lite')
 GEMINI_BASE_URL = os.environ.get(
     'GEMINI_BASE_URL', 'https://generativelanguage.googleapis.com/v1beta'
 )

@@ -218,6 +218,11 @@ def _gemini_chat(messages, temperature=0.3, max_tokens=900):
                 f'Model "{model}" haipatikani kwenye Gemini. '
                 'Angalia GEMINI_MODEL kwenye backend/.env.'
             ) from exc
+        if exc.code in (500, 502, 503, 504):
+            raise AIUnavailable(
+                'Huduma ya AI ina msongamano kwa sasa. Tafadhali jaribu tena '
+                'baada ya muda mfupi.'
+            ) from exc
         raise AIUnavailable(
             f'Huduma ya AI imerudisha hitilafu ({exc.code}). Jaribu tena baadaye.'
         ) from exc
