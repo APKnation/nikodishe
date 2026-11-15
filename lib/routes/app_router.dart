@@ -8,6 +8,8 @@ import '../features/auth/presentation/screens/register_screen.dart';
 import '../features/auth/presentation/screens/splash_screen.dart';
 import '../features/bookings/presentation/screens/booking_history_screen.dart';
 import '../features/bookings/presentation/screens/booking_screen.dart';
+import '../features/analytics/presentation/screens/ai_insights_screen.dart';
+import '../features/support/presentation/screens/support_chat_screen.dart';
 import '../features/home/presentation/screens/home_screen.dart';
 import '../features/listings/presentation/screens/listing_detail_screen.dart';
 import '../features/listings/presentation/screens/owner_contact_screen.dart';
@@ -123,6 +125,14 @@ class AppRouter {
       GoRoute(
         path: '/owner/dashboard',
         builder: (context, state) => const OwnerDashboardScreen(),
+      ),
+      GoRoute(
+        path: '/owner/insights',
+        builder: (context, state) => const AiInsightsScreen(),
+      ),
+      GoRoute(
+        path: '/support/chat',
+        builder: (context, state) => const SupportChatScreen(),
       ),
     ],
   );

@@ -16,6 +16,69 @@ Mfumo umeundwa kimfumo wa kisasa wa moduli (Modular Apps):
 | `apps.payments` | Muamala wa Malipo ya Simu (M-Pesa, Airtel Money, Tigo Pesa, HaloPesa) & Amana ya 40% (FR18-FR20) |
 | `apps.reviews` | Mfumo wa Tathmini ya Nyota (1-5★) na Maoni kwa Vifaa na Wamiliki (FR21-FR22) |
 | `apps.notifications` | Arifa za Mfumo, Maombi Mapya ya Booking, na Malipo (FR23) |
+| `apps.ai_assistant` | Kodisha AI (Ollama Cloud): majibu ya maswali ya wateja na uchambuzi wa data ya project/biashara |
+
+---
+
+## 🤖 Kodisha AI (Gemini bure / Ollama)
+
+Kipengele cha AI kinatumia **Google Gemini free tier** kwa default, lakini
+kinaweza kubadilishwa kwenda **Ollama** (Cloud au local) kwa `AI_PROVIDER`.
+API key inabaki upande wa server pekee (haiingii kwenye app wala git).
+
+### 1. Weka API key (Gemini — bure)
+
+```bash
+cd backend
+cp .env.example .env   # kama .env haipo
+nano .env
+```
+
+Jaza:
+
+```env
+AI_PROVIDER=gemini
+GEMINI_API_KEY=api_key_yako_ya_gemini
+GEMINI_MODEL=gemini-2.5-flash
+```
+
+> Pata key bure (bila kadi ya benki) kwenye https://aistudio.google.com/apikey
+
+### 2. Kutumia Ollama badala yake (hiari)
+
+```env
+AI_PROVIDER=ollama
+OLLAMA_API_KEY=api_key_yako_ya_ollama   # tupu kwa local Ollama
+OLLAMA_BASE_URL=https://ollama.com      # au http://127.0.0.1:11434
+OLLAMA_MODEL=gpt-oss:120b               # au qwen2.5:3b kwa local
+```
+
+### 2. Endpoints
+
+| Endpoint | Method | Maelezo |
+| :--- | :--- | :--- |
+| `/api/ai/chat/` | POST | Majibu ya maswali ya wateja. Inatumia data halisi ya vifaa, bookings na malipo. |
+| `/api/ai/analyze/` | POST | Uchambuzi wa project: staff anaona jukwaa lote, owner anaona biashara yake pekee. |
+
+Mfano wa chat:
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/ai/chat/ \
+  -H "Content-Type: application/json" \
+  -d '{"message":"Ninawezaje kukodisha tent kwa siku 2?","lang":"sw"}'
+```
+
+Mfano wa uchambuzi (owner/staff pekee — tumia token ya mtumiaji):
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/ai/analyze/ \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer <token>" \
+  -d '{"focus":"Kwa nini bookings zimepungua?"}'
+```
+
+**Muhimu:** Usiweke API key (`GEMINI_API_KEY` au `OLLAMA_API_KEY`) kwenye
+Flutter/app code — key inabaki kwenye `backend/.env` pekee.
 
 ---
 

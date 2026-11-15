@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/foundation.dart';
 
 class ApiConfig {
@@ -24,6 +22,12 @@ class ApiConfig {
 
   /// Image upload REST endpoint
   static String get imageUploadUrl => '$baseUrl/api/listings/upload-image/';
+
+  /// AI customer-support chat endpoint (Ollama-backed)
+  static String get aiChatUrl => '$baseUrl/api/ai/chat/';
+
+  /// AI project / business analysis endpoint
+  static String get aiAnalyzeUrl => '$baseUrl/api/ai/analyze/';
 
   /// Helper to convert relative media paths from backend to full URLs
   static String resolveMediaUrl(String path) {

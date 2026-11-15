@@ -33,6 +33,19 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
 
     return Scaffold(
       backgroundColor: AppColors.background,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => context.push('/support/chat'),
+        backgroundColor: AppColors.primary,
+        foregroundColor: AppColors.white,
+        elevation: 3,
+        icon: const Icon(Icons.auto_awesome, size: 20),
+        label: const Text(
+          'Uliza AI',
+          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
         title: Row(
           children: [
@@ -89,8 +102,7 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
         ],
       ),
       body: Column(
-        children: [
-          // Search & Filter Header
+        children: [          // Search & Filter Header
           Container(
             color: AppColors.white,
             padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
@@ -264,7 +276,7 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                     ),
                   )
                 : SingleChildScrollView(
-                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                    padding: const EdgeInsets.fromLTRB(16, 4, 16, 96),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

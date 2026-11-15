@@ -1120,6 +1120,101 @@ class ApiService {
   }
 
   // ===========================================================================
+  // AI ASSISTANT (Ollama Cloud)
+  // ===========================================================================
+
+  /// Tuma swali kwa Kodisha AI na upate jibu la msaada.
+  Future<String> aiChat({
+    required String message,
+    List<Map<String, String>> history = const [],
+    String lang = 'sw',
+  }) async {
+    final uri = Uri.parse(ApiConfig.aiChatUrl);
+    final headers = <String, String>{
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+    if (_client.authToken != null && _client.authToken!.isNotEmpty) {
+      headers['Authorization'] = 'Bearer ${_client.authToken}';
+    }
+
+    try {
+      final response = await http
+          .post(
+            uri,
+            headers: headers,
+            body: jsonEncode({
+              'message': message,
+              'history': history,
+              'lang': lang,
+            }),
+          )
+          .timeout(const Duration(seconds: 95));
+
+      final body = jsonDecode(utf8.decode(response.bodyBytes));
+      final map = body is Map<String, dynamic> ? body : <String, dynamic>{};
+
+      if (response.statusCode == 200 && map['success'] == true) {
+        return (map['reply'] as String? ?? '').trim();
+      }
+      throw ApiException(
+        map['error']?.toString() ??
+            'AI haikuweza kujibu sasa hivi. Tafadhali jaribu tena.',
+        statusCode: response.statusCode,
+      );
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException('Imeshindikana kuunganisha na Kodisha AI: $e');
+    }
+  }
+
+  /// Chambua data ya biashara/project kwa kutumia AI.
+  /// Inarudisha {"analysis": "...", "scope": "owner|platform"}.
+  Future<Map<String, dynamic>> aiAnalyze({String? focus}) async {
+    final uri = Uri.parse(ApiConfig.aiAnalyzeUrl);
+    final headers = <String, String>{
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+    if (_client.authToken != null && _client.authToken!.isNotEmpty) {
+      headers['Authorization'] = 'Bearer ${_client.authToken}';
+    }
+
+    try {
+      final response = await http
+          .post(
+            uri,
+            headers: headers,
+            body: jsonEncode({
+              if (focus != null && focus.trim().isNotEmpty) 'focus': focus.trim(),
+            }),
+          )
+          .timeout(const Duration(seconds: 100));
+
+      final body = jsonDecode(utf8.decode(response.bodyBytes));
+      final map = body is Map<String, dynamic> ? body : <String, dynamic>{};
+
+      if (response.statusCode == 200 && map['success'] == true) {
+        return {
+          'analysis': (map['analysis'] as String? ?? '').trim(),
+          'scope': map['scope'] as String? ?? 'owner',
+          'snapshot': map['snapshot'],
+        };
+      }
+      throw ApiException(
+        map['error']?.toString() ??
+            'Uchambuzi haukuweza kukamilika. Tafadhali jaribu tena.',
+        statusCode: response.statusCode,
+      );
+    } on ApiException {
+      rethrow;
+    } catch (e) {
+      throw ApiException('Imeshindikana kuunganisha na huduma ya uchambuzi: $e');
+    }
+  }
+
+  // ===========================================================================
   // MAPPERS & HELPERS
   // ===========================================================================
 

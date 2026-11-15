@@ -3,6 +3,29 @@ import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
+def _load_env_file(path):
+    """
+    Loader nyepesi wa backend/.env bila dependency ya ziada.
+    Environment variables zilizowekwa tayari (mf. kwenye shell) hazibadilishwi.
+    """
+    try:
+        with open(path, encoding='utf-8') as env_file:
+            for raw_line in env_file:
+                line = raw_line.strip()
+                if not line or line.startswith('#') or '=' not in line:
+                    continue
+                key, value = line.split('=', 1)
+                key = key.strip()
+                value = value.strip().strip('"').strip("'")
+                if key:
+                    os.environ.setdefault(key, value)
+    except FileNotFoundError:
+        pass
+
+
+_load_env_file(BASE_DIR / '.env')
+
 SECRET_KEY = os.environ.get(
     'DJANGO_SECRET_KEY',
     'django-insecure-kodisha-tanzania-secret-key-super-secure-change-in-prod-2025'
@@ -31,6 +54,7 @@ INSTALLED_APPS = [
     'apps.payments',
     'apps.reviews',
     'apps.notifications',
+    'apps.ai_assistant',
 ]
 
 MIDDLEWARE = [
@@ -138,4 +162,22 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CORS Settings
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+
+# ─── Kodisha AI ──────────────────────────────────────────────────────────────
+# AI_PROVIDER: "gemini" (bure, inahitaji GEMINI_API_KEY) au "ollama".
+AI_PROVIDER = os.environ.get('AI_PROVIDER', 'gemini').strip().lower()
+AI_TIMEOUT = int(os.environ.get('AI_TIMEOUT', '90'))
+
+# Google Gemini (free tier): https://aistudio.google.com/apikey
+GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY', '')
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-2.5-flash')
+GEMINI_BASE_URL = os.environ.get(
+    'GEMINI_BASE_URL', 'https://generativelanguage.googleapis.com/v1beta'
+)
+
+# Ollama Cloud / local Ollama (hiari)
+OLLAMA_BASE_URL = os.environ.get('OLLAMA_BASE_URL', 'https://ollama.com')
+OLLAMA_API_KEY = os.environ.get('OLLAMA_API_KEY', '')
+OLLAMA_MODEL = os.environ.get('OLLAMA_MODEL', 'gpt-oss:120b')
+OLLAMA_TIMEOUT = int(os.environ.get('OLLAMA_TIMEOUT', '90'))
 

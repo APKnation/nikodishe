@@ -396,22 +396,20 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                   const Divider(height: 1),
 
-                  // Support
+                  // Support (Kodisha AI)
                   ListTile(
                     leading: const Icon(
-                      Icons.help_outline,
+                      Icons.auto_awesome,
                       color: AppColors.primary,
                     ),
                     title: Text(AppStrings.get(lang, 'help_support')),
-                    subtitle: const Text('WhatsApp / 0700 000 000'),
+                    subtitle: Text(
+                      lang == AppLanguage.sw
+                          ? 'Uliza Kodisha AI • Majibu papo kwa papo'
+                          : 'Ask Kodisha AI • Instant answers',
+                    ),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Huduma kwa wateja: 0700 000 000'),
-                        ),
-                      );
-                    },
+                    onTap: () => context.push('/support/chat'),
                   ),
                   const Divider(height: 1),
 

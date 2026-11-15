@@ -14,6 +14,7 @@ urlpatterns = [
     path('api/health/', health_check, name='health_check'),
     path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=settings.DEBUG))),
     path('api/listings/', include('apps.listings.urls')),
+    path('api/ai/', include('apps.ai_assistant.urls')),
 ]
 
 if settings.DEBUG:

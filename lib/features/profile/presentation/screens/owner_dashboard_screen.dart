@@ -152,6 +152,75 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
               ),
             ),
 
+            const SizedBox(height: 20),
+            InkWell(
+              borderRadius: BorderRadius.circular(16),
+              onTap: () => context.push('/owner/insights'),
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      width: 44,
+                      height: 44,
+                      decoration: BoxDecoration(
+                        gradient: const LinearGradient(
+                          colors: [AppColors.primary, AppColors.secondary],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: const Icon(
+                        Icons.auto_awesome,
+                        color: AppColors.white,
+                        size: 22,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            lang == AppLanguage.sw
+                                ? 'Uchambuzi wa AI'
+                                : 'AI Insights',
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                            ),
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            lang == AppLanguage.sw
+                                ? 'Chambua bookings, mapato na vifaa vyako kwa AI'
+                                : 'Analyze your bookings, revenue and listings with AI',
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: AppColors.textSecondary,
+                              height: 1.35,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const Icon(
+                      Icons.chevron_right,
+                      color: AppColors.textTertiary,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
             const SizedBox(height: 24),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
