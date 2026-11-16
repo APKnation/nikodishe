@@ -153,8 +153,8 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                       onPressed: () => context.pop(),
                       icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
                       style: IconButton.styleFrom(
-                        backgroundColor: AppColors.white.withOpacity(0.18),
-                        foregroundColor: AppColors.white,
+                        backgroundColor: AppColors.onColor.withOpacity(0.18),
+                        foregroundColor: AppColors.onColor,
                       ),
                     ),
                     SizedBox(height: compact ? 6 : 10),
@@ -163,7 +163,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                       style: TextStyle(
                         fontSize: compact ? 23 : 27,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.white,
+                        color: AppColors.onColor,
                         letterSpacing: -0.5,
                       ),
                     ),
@@ -172,7 +172,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                       text: TextSpan(
                         style: TextStyle(
                           fontSize: compact ? 12 : 13,
-                          color: AppColors.white.withOpacity(0.92),
+                          color: AppColors.onColor.withOpacity(0.92),
                         ),
                         children: [
                           const TextSpan(text: 'Msimbo umetumwa kwa '),
@@ -182,7 +182,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                                 : widget.phone,
                             style: const TextStyle(
                               fontWeight: FontWeight.w700,
-                              color: AppColors.white,
+                              color: AppColors.onColor,
                             ),
                           ),
                         ],
@@ -250,12 +250,12 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                                       textAlign: TextAlign.center,
                                       maxLength: 1,
                                       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                                      style: const TextStyle(
+                                      style:  TextStyle(
                                         fontSize: 28,
                                         fontWeight: FontWeight.w700,
                                         color: AppColors.textPrimary,
                                       ),
-                                      decoration: const InputDecoration(
+                                      decoration:  InputDecoration(
                                         counterText: '',
                                         filled: false,
                                         isDense: true,
@@ -314,7 +314,7 @@ class _OtpScreenState extends ConsumerState<OtpScreen> {
                               child: _secondsLeft > 0
                                   ? Text(
                                       'Tuma tena baada ya ${_secondsLeft}s',
-                                      style: const TextStyle(
+                                      style:  TextStyle(
                                         color: AppColors.textSecondary,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 13,

@@ -130,7 +130,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.white,
+                foregroundColor: AppColors.onColor,
               ),
               onPressed: () {
                 Navigator.of(ctx).pop();
@@ -189,7 +189,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                       color: AppColors.primary.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Icon(
+                    child:  Icon(
                       Icons.handyman,
                       color: AppColors.primary,
                       size: 30,
@@ -202,7 +202,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                       children: [
                         Text(
                           listing.title,
-                          style: const TextStyle(
+                          style:  TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16,
                             color: AppColors.textPrimary,
@@ -211,7 +211,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                         const SizedBox(height: 4),
                         Text(
                           'Milikiwa na: ${listing.ownerName}',
-                          style: const TextStyle(
+                          style:  TextStyle(
                             fontSize: 12,
                             color: AppColors.textSecondary,
                           ),
@@ -219,7 +219,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                         const SizedBox(height: 4),
                         Text(
                           'TZS ${_formatPrice(listing.pricePerDay)} / siku',
-                          style: const TextStyle(
+                          style:  TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,
                             color: AppColors.primary,
@@ -235,7 +235,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
             const SizedBox(height: 24),
 
             // Date Pickers Section
-            const Text(
+             Text(
               'Chagua Tarehe za Kukodisha',
               style: TextStyle(
                 fontSize: 16,
@@ -262,7 +262,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Row(
+                           Row(
                             children: [
                               Icon(
                                 Icons.calendar_today,
@@ -282,7 +282,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                           const SizedBox(height: 6),
                           Text(
                             _formatDate(_startDate),
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: AppColors.textPrimary,
@@ -309,7 +309,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Row(
+                           Row(
                             children: [
                               Icon(
                                 Icons.event_available,
@@ -329,7 +329,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                           const SizedBox(height: 6),
                           Text(
                             _formatDate(_endDate),
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: AppColors.textPrimary,
@@ -363,7 +363,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                   Text(
                     'Muhtasari wa Gharama',
                     style: TextStyle(
                       fontSize: 15,
@@ -377,7 +377,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                     children: [
                       Text(
                         'TZS ${_formatPrice(listing.pricePerDay)} × $_totalDays siku',
-                        style: const TextStyle(
+                        style:  TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 14,
                         ),
@@ -392,7 +392,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  const Row(
+                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
@@ -416,7 +416,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                       Text(
                         'Jumla Kuu',
                         style: TextStyle(
                           fontSize: 16,
@@ -426,7 +426,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                       ),
                       Text(
                         'TZS ${_formatPrice(totalPrice)}',
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                           color: AppColors.primary,
@@ -447,7 +447,7 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                 color: AppColors.blueTintSoft,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Row(
+              child:  Row(
                 children: [
                   Icon(Icons.payment, color: AppColors.primary, size: 22),
                   SizedBox(width: 10),
@@ -481,13 +481,13 @@ class _BookingScreenState extends ConsumerState<BookingScreen> {
                       ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  foregroundColor: AppColors.white,
+                  foregroundColor: AppColors.onColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
                 ),
                 child: _isSubmitting
-                    ? const CircularProgressIndicator(color: AppColors.white)
+                    ? const CircularProgressIndicator(color: AppColors.onColor)
                     : const Text(
                         'Thibitisha Booking',
                         style: TextStyle(

@@ -13,7 +13,7 @@ class CurvedDivider extends StatelessWidget {
   const CurvedDivider({
     super.key,
     this.height = 34,
-    this.color = AppColors.white,
+    this.color = AppColors.onColor,
     this.curveDepth = 0.75,
   });
 

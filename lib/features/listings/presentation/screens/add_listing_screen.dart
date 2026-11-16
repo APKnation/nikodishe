@@ -186,7 +186,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
     final templates = _sampleTemplates[_selectedCategory] ?? [];
 
     return Container(
-      decoration: const BoxDecoration(
+      decoration:  BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
@@ -212,7 +212,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
+             Text(
               'Chagua Njia ya Kuweka Picha',
               style: TextStyle(
                 fontSize: 18,
@@ -221,7 +221,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
               ),
             ),
             const SizedBox(height: 4),
-            const Text(
+             Text(
               'Unaweza kubrowse picha kutoka kwenye simu yako au kupiga picha mpya.',
               style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
             ),
@@ -235,22 +235,22 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
-                side: const BorderSide(color: AppColors.primary, width: 1.5),
+                side:  BorderSide(color: AppColors.primary, width: 1.5),
               ),
               tileColor: AppColors.primaryLight.withOpacity(0.3),
               leading: Container(
                 padding: const EdgeInsets.all(8),
-                decoration: const BoxDecoration(
+                decoration:  BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.photo_library,
-                  color: AppColors.white,
+                  color: AppColors.onColor,
                   size: 22,
                 ),
               ),
-              title: const Text(
+              title:  Text(
                 'Chagua Kutoka Simuni (Browse Files)',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -258,11 +258,11 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                   color: AppColors.primary,
                 ),
               ),
-              subtitle: const Text(
+              subtitle:  Text(
                 'Fungua matunzio au mafaili ya picha kwenye simu yako',
                 style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
               ),
-              trailing: const Icon(
+              trailing:  Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
                 color: AppColors.primary,
@@ -283,7 +283,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
-                side: const BorderSide(color: AppColors.border),
+                side:  BorderSide(color: AppColors.border),
               ),
               tileColor: AppColors.blueTintSoft,
               leading: Container(
@@ -294,11 +294,11 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                 ),
                 child: const Icon(
                   Icons.camera_alt,
-                  color: AppColors.white,
+                  color: AppColors.onColor,
                   size: 22,
                 ),
               ),
-              title: const Text(
+              title:  Text(
                 'Piga Picha kwa Kamera (Take Photo)',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
@@ -306,11 +306,11 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                   color: AppColors.textPrimary,
                 ),
               ),
-              subtitle: const Text(
+              subtitle:  Text(
                 'Tumia kamera kupiga picha ya kifaa chako sasa hivi',
                 style: TextStyle(fontSize: 12, color: AppColors.textSecondary),
               ),
-              trailing: const Icon(
+              trailing:  Icon(
                 Icons.arrow_forward_ios,
                 size: 16,
                 color: AppColors.textSecondary,
@@ -328,7 +328,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
             // Kitufe cha 3: SAMPULI ZA HARAKA
             Row(
               children: [
-                const Icon(
+                 Icon(
                   Icons.auto_awesome,
                   size: 18,
                   color: AppColors.primary,
@@ -396,7 +396,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                             child: const Center(
                               child: Icon(
                                 Icons.check_circle,
-                                color: AppColors.white,
+                                color: AppColors.onColor,
                                 size: 24,
                               ),
                             ),
@@ -419,7 +419,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                             child: Text(
                               template['title']!,
                               style: const TextStyle(
-                                color: AppColors.white,
+                                color: AppColors.onColor,
                                 fontSize: 9.5,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -439,7 +439,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
             const SizedBox(height: 20),
 
             // Kitufe cha 4: WEKA LINK YA PICHA (URL)
-            const Row(
+             Row(
               children: [
                 Icon(Icons.link, size: 18, color: AppColors.primary),
                 SizedBox(width: 8),
@@ -454,12 +454,12 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
               controller: urlInputController,
               decoration: InputDecoration(
                 hintText: 'https://...',
-                prefixIcon: const Icon(
+                prefixIcon:  Icon(
                   Icons.image_search,
                   color: AppColors.primary,
                 ),
                 suffixIcon: IconButton(
-                  icon: const Icon(Icons.add_circle, color: AppColors.primary),
+                  icon:  Icon(Icons.add_circle, color: AppColors.primary),
                   onPressed: () {
                     final text = urlInputController.text.trim();
                     if (text.isNotEmpty) {
@@ -595,18 +595,18 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                     children: [
                       Container(
                         padding: const EdgeInsets.all(12),
-                        decoration: const BoxDecoration(
+                        decoration:  BoxDecoration(
                           color: AppColors.primaryLight,
                           shape: BoxShape.circle,
                         ),
-                        child: const Icon(
+                        child:  Icon(
                           Icons.add_a_photo_outlined,
                           size: 30,
                           color: AppColors.primary,
                         ),
                       ),
                       const SizedBox(height: 12),
-                      const Text(
+                       Text(
                         'Weka picha halisi ya kifaa chako',
                         style: TextStyle(
                           fontSize: 15,
@@ -615,7 +615,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                         ),
                       ),
                       const SizedBox(height: 4),
-                      const Text(
+                       Text(
                         'Picha ya wazi inasaidia wateja kuamini na kukodi haraka.',
                         style: TextStyle(
                           fontSize: 12,
@@ -634,7 +634,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                               child: ElevatedButton.icon(
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: AppColors.primary,
-                                  foregroundColor: AppColors.white,
+                                  foregroundColor: AppColors.onColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -659,7 +659,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                               child: OutlinedButton.icon(
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: AppColors.primary,
-                                  side: const BorderSide(
+                                  side:  BorderSide(
                                     color: AppColors.primary,
                                     width: 1.5,
                                   ),
@@ -683,12 +683,12 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                       ),
                       const SizedBox(height: 8),
                       TextButton.icon(
-                        icon: const Icon(
+                        icon:  Icon(
                           Icons.auto_awesome,
                           size: 16,
                           color: AppColors.textSecondary,
                         ),
-                        label: const Text(
+                        label:  Text(
                           'Au fungua machaguo zaidi na sampuli',
                           style: TextStyle(
                             fontSize: 12,
@@ -725,7 +725,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                                     width: 1.5,
                                   ),
                                 ),
-                                child: const Column(
+                                child:  Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Icon(
@@ -797,7 +797,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                                     child: const Text(
                                       'Jalada Kuu',
                                       style: TextStyle(
-                                        color: AppColors.white,
+                                        color: AppColors.onColor,
                                         fontSize: 10,
                                         fontWeight: FontWeight.bold,
                                       ),
@@ -823,7 +823,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                                     ),
                                     child: const Icon(
                                       Icons.close,
-                                      color: AppColors.white,
+                                      color: AppColors.onColor,
                                       size: 16,
                                     ),
                                   ),
@@ -870,7 +870,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
               _buildSectionLabel('Jina la Kifaa *'),
               TextFormField(
                 controller: _titleController,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   hintText:
                       'Mfano: Scaffolding za Ujenzi, Viti 50 vya Plastiki',
                   prefixIcon: Icon(
@@ -889,7 +889,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
               _buildSectionLabel('Category ya Kifaa *'),
               DropdownButtonFormField<ListingCategory>(
                 value: _selectedCategory,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   prefixIcon: Icon(
                     Icons.category_outlined,
                     color: AppColors.primary,
@@ -920,7 +920,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
               _buildSectionLabel('Aina ya Ofa *'),
               DropdownButtonFormField<ListingType>(
                 value: _selectedType,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   prefixIcon: Icon(
                     Icons.sell_outlined,
                     color: AppColors.primary,
@@ -952,7 +952,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
               TextFormField(
                 controller: _priceController,
                 keyboardType: TextInputType.number,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   hintText: 'Mfano: 25,000',
                   prefixText: 'TZS ',
                   prefixStyle: TextStyle(
@@ -975,7 +975,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
               _buildSectionLabel('Eneo / Location ya Kifaa *'),
               TextFormField(
                 controller: _locationController,
-                decoration: const InputDecoration(
+                decoration:  InputDecoration(
                   hintText: 'Mfano: Mwenge, Dar es Salaam',
                   prefixIcon: Icon(
                     Icons.location_on_outlined,
@@ -1015,7 +1015,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
                           width: 20,
                           height: 20,
                           child: CircularProgressIndicator(
-                            color: AppColors.white,
+                            color: AppColors.onColor,
                             strokeWidth: 2,
                           ),
                         )
@@ -1041,7 +1041,7 @@ class _AddListingScreenState extends ConsumerState<AddListingScreen> {
       padding: const EdgeInsets.only(bottom: 6),
       child: Text(
         text,
-        style: const TextStyle(
+        style:  TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w700,
           color: AppColors.textPrimary,

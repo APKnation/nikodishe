@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_colors.dart';
-import '../../../../data/models/payment_model.dart';
-import '../../../../data/models/user_model.dart';
-import '../../../auth/providers/auth_provider.dart';
 import '../../providers/payments_provider.dart';
 
 class PaymentHistoryScreen extends ConsumerWidget {
@@ -23,8 +20,6 @@ class PaymentHistoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(currentUserProvider);
-    final isOwner = user?.role == UserRole.owner;
     final allPayments = ref.watch(paymentsProvider);
 
     return Scaffold(
@@ -81,7 +76,7 @@ class PaymentHistoryScreen extends ConsumerWidget {
                           Expanded(
                             child: Text(
                               payment.listingTitle,
-                              style: const TextStyle(
+                              style:  TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.textPrimary,
@@ -111,7 +106,7 @@ class PaymentHistoryScreen extends ConsumerWidget {
                       const SizedBox(height: 8),
                       Row(
                         children: [
-                          const Icon(
+                           Icon(
                             Icons.payment,
                             size: 14,
                             color: AppColors.primary,
@@ -119,7 +114,7 @@ class PaymentHistoryScreen extends ConsumerWidget {
                           const SizedBox(width: 6),
                           Text(
                             payment.methodLabel,
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 13,
                               color: AppColors.textSecondary,
                             ),
@@ -136,7 +131,7 @@ class PaymentHistoryScreen extends ConsumerWidget {
                             ),
                             child: Text(
                               payment.typeLabel,
-                              style: const TextStyle(
+                              style:  TextStyle(
                                 fontSize: 11,
                                 color: AppColors.textSecondary,
                               ),
@@ -153,14 +148,14 @@ class PaymentHistoryScreen extends ConsumerWidget {
                             children: [
                               Text(
                                 'Kumb: ${payment.referenceCode}',
-                                style: const TextStyle(
+                                style:  TextStyle(
                                   fontSize: 11,
                                   color: AppColors.textSecondary,
                                 ),
                               ),
                               Text(
                                 _formatDate(payment.createdAt),
-                                style: const TextStyle(
+                                style:  TextStyle(
                                   fontSize: 11,
                                   color: AppColors.textSecondary,
                                 ),
@@ -169,7 +164,7 @@ class PaymentHistoryScreen extends ConsumerWidget {
                           ),
                           Text(
                             'TZS ${_formatPrice(payment.amount)}',
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: AppColors.primary,

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/localization/locale_provider.dart';
+import '../../../../core/widgets/ai_bounce_icon.dart';
 import '../../../../data/services/api_service.dart';
 
 class _ChatMessage {
@@ -140,19 +141,7 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
         titleSpacing: 0,
         title: Row(
           children: [
-            Container(
-              width: 38,
-              height: 38,
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [AppColors.primary, AppColors.secondary],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(Icons.auto_awesome, color: AppColors.white, size: 20),
-            ),
+            const AiBounceIcon(size: 36, bounceHeight: 3),
             const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +149,7 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
                 Text(isSw ? 'Kodisha AI' : 'Kodisha AI'),
                 Text(
                   isSw ? 'Msaidizi wa wateja • Papo kwa papo' : 'Customer assistant • Instant',
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w500,
                     color: AppColors.textTertiary,
@@ -200,8 +189,8 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
                     label: Text(suggestion),
                     onPressed: _sending ? null : () => _send(suggestion),
                     backgroundColor: AppColors.white,
-                    side: const BorderSide(color: AppColors.border),
-                    labelStyle: const TextStyle(
+                    side:  BorderSide(color: AppColors.border),
+                    labelStyle:  TextStyle(
                       fontSize: 12,
                       color: AppColors.textSecondary,
                     ),
@@ -214,7 +203,7 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
             ),
           Container(
             padding: const EdgeInsets.fromLTRB(12, 8, 12, 10),
-            decoration: const BoxDecoration(
+            decoration:  BoxDecoration(
               color: AppColors.white,
               border: Border(top: BorderSide(color: AppColors.border)),
             ),
@@ -262,7 +251,7 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
                             height: 46,
                             child: Icon(
                               Icons.send_rounded,
-                              color: _sending ? AppColors.textTertiary : AppColors.white,
+                              color: _sending ? AppColors.textTertiary : AppColors.onColor,
                               size: 21,
                             ),
                           ),
@@ -275,7 +264,7 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
                     isSw
                         ? 'Majibu yanasaidiwa na AI. Kwa dharura piga 0700 000 000.'
                         : 'Answers are AI-assisted. For emergencies call 0700 000 000.',
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 10,
                       color: AppColors.textTertiary,
                     ),
@@ -303,7 +292,7 @@ class _MessageBubble extends StatelessWidget {
         : message.isError
             ? AppColors.amberTint
             : AppColors.white;
-    final fg = isUser ? AppColors.white : AppColors.textPrimary;
+    final fg = isUser ? AppColors.onColor : AppColors.textPrimary;
 
     return Align(
       alignment: isUser ? Alignment.centerRight : Alignment.centerLeft,
@@ -383,7 +372,7 @@ class _TypingBubble extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(
+             SizedBox(
               width: 14,
               height: 14,
               child: CircularProgressIndicator(
@@ -394,7 +383,7 @@ class _TypingBubble extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               isSw ? 'Kodisha AI inaandika...' : 'Kodisha AI is typing...',
-              style: const TextStyle(
+              style:  TextStyle(
                 fontSize: 12,
                 color: AppColors.textSecondary,
               ),

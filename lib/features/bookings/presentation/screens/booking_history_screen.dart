@@ -158,7 +158,7 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
                                 Expanded(
                                   child: Text(
                                     booking.listingTitle,
-                                    style: const TextStyle(
+                                    style:  TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 15,
                                       color: AppColors.textPrimary,
@@ -188,7 +188,7 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                const Icon(
+                                 Icon(
                                   Icons.date_range,
                                   size: 14,
                                   color: AppColors.primary,
@@ -196,7 +196,7 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
                                 const SizedBox(width: 4),
                                 Text(
                                   '${_formatDate(booking.startDate)} - ${_formatDate(booking.endDate)} (${booking.totalDays} ${lang == AppLanguage.sw ? 'siku' : 'days'})',
-                                  style: const TextStyle(
+                                  style:  TextStyle(
                                     fontSize: 12,
                                     color: AppColors.textSecondary,
                                   ),
@@ -209,7 +209,7 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
                               children: [
                                 Text(
                                   'TZS ${_formatPrice(booking.totalPrice)}',
-                                  style: const TextStyle(
+                                  style:  TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
                                     color: AppColors.primary,
@@ -238,7 +238,7 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
                                         ),
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: AppColors.primary,
-                                          foregroundColor: AppColors.white,
+                                          foregroundColor: AppColors.onColor,
                                           padding: const EdgeInsets.symmetric(
                                             horizontal: 12,
                                             vertical: 6,
@@ -253,6 +253,18 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
                                     const SizedBox(width: 8),
                                     OutlinedButton(
                                       onPressed: () {
+                                        if (booking.listingId.trim().isEmpty) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                'Kifaa hiki hakipatikani kwa sasa.',
+                                              ),
+                                            ),
+                                          );
+                                          return;
+                                        }
                                         context.push(
                                           '/listings/${booking.listingId}',
                                         );
@@ -302,7 +314,7 @@ class _BookingHistoryScreenState extends ConsumerState<BookingHistoryScreen> {
       backgroundColor: AppColors.white,
       selectedColor: AppColors.primary,
       labelStyle: TextStyle(
-        color: isSelected ? AppColors.white : AppColors.textPrimary,
+        color: isSelected ? AppColors.onColor : AppColors.textPrimary,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         fontSize: 12,
       ),

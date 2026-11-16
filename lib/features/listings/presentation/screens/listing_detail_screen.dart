@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -39,18 +40,54 @@ class ListingDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final listing = ref.watch(listingByIdProvider(listingId));
+    final listingAsync = ref.watch(listingDetailProvider(listingId));
+
+    if (listingAsync.isLoading && !listingAsync.hasValue) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Inapakia kifaa...')),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    final listing = listingAsync.asData?.value;
 
     if (listing == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Kifaa Hakipatikani')),
-        body: const Center(
-          child: Text('Kifaa hiki hakipatikani au kimeondolewa.'),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                 Icon(
+                  Icons.inventory_2_outlined,
+                  size: 64,
+                  color: AppColors.textTertiary,
+                ),
+                const SizedBox(height: 16),
+                const Text(
+                  'Kifaa hiki hakipatikani au kimeondolewa.',
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: 16),
+                OutlinedButton.icon(
+                  onPressed: () =>
+                      ref.invalidate(listingDetailProvider(listingId)),
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Jaribu tena'),
+                ),
+              ],
+            ),
+          ),
         ),
       );
     }
 
     final catColor = _getCategoryColor(listing.category);
+    final isFavorite = ref
+        .watch(favoriteListingsProvider)
+        .contains(listing.id);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -61,9 +98,9 @@ class ListingDetailScreen extends ConsumerWidget {
             expandedHeight: 280,
             pinned: true,
             leading: CircleAvatar(
-              backgroundColor: AppColors.white.withOpacity(0.9),
+              backgroundColor: AppColors.onColor.withOpacity(0.9),
               child: IconButton(
-                icon: const Icon(
+                icon:  Icon(
                   Icons.arrow_back,
                   color: AppColors.textPrimary,
                 ),
@@ -72,10 +109,13 @@ class ListingDetailScreen extends ConsumerWidget {
             ),
             actions: [
               CircleAvatar(
-                backgroundColor: AppColors.white.withOpacity(0.9),
+                backgroundColor: AppColors.onColor.withOpacity(0.9),
                 child: IconButton(
-                  icon: const Icon(Icons.share, color: AppColors.textPrimary),
-                  onPressed: () {
+                  icon:  Icon(Icons.share, color: AppColors.textPrimary),
+                  onPressed: () async {
+                    final link = 'https://kodisha.co.tz/listings/${listing.id}';
+                    await Clipboard.setData(ClipboardData(text: link));
+                    if (!context.mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
                         content: Text('Kiunganishi kimenakiliwa!'),
@@ -86,16 +126,31 @@ class ListingDetailScreen extends ConsumerWidget {
               ),
               const SizedBox(width: 8),
               CircleAvatar(
-                backgroundColor: AppColors.white.withOpacity(0.9),
+                backgroundColor: AppColors.onColor.withOpacity(0.9),
                 child: IconButton(
-                  icon: const Icon(
-                    Icons.favorite_border,
-                    color: AppColors.textPrimary,
+                  icon: Icon(
+                    isFavorite ? Icons.favorite : Icons.favorite_border,
+                    color: isFavorite
+                        ? AppColors.error
+                        : AppColors.textPrimary,
                   ),
                   onPressed: () {
+                    final favorites = ref.read(favoriteListingsProvider);
+                    final isSaved = favorites.contains(listing.id);
+                    final next = {...favorites};
+                    if (isSaved) {
+                      next.remove(listing.id);
+                    } else {
+                      next.add(listing.id);
+                    }
+                    ref.read(favoriteListingsProvider.notifier).state = next;
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Imehifadhiwa kwenye vipendwa!'),
+                      SnackBar(
+                        content: Text(
+                          isSaved
+                              ? 'Imeondolewa kwenye vipendwa!'
+                              : 'Imehifadhiwa kwenye vipendwa!',
+                        ),
                       ),
                     );
                   },
@@ -150,7 +205,7 @@ class ListingDetailScreen extends ConsumerWidget {
                                 color: AppColors.primaryDark.withOpacity(0.65),
                                 borderRadius: BorderRadius.circular(12),
                                 border: Border.all(
-                                  color: AppColors.white.withOpacity(0.3),
+                                  color: AppColors.onColor.withOpacity(0.3),
                                 ),
                               ),
                               child: const Row(
@@ -158,14 +213,14 @@ class ListingDetailScreen extends ConsumerWidget {
                                 children: [
                                   Icon(
                                     Icons.zoom_in,
-                                    color: AppColors.white,
+                                    color: AppColors.onColor,
                                     size: 16,
                                   ),
                                   SizedBox(width: 4),
                                   Text(
                                     'Bonyeza Kukuza Picha',
                                     style: TextStyle(
-                                      color: AppColors.white,
+                                      color: AppColors.onColor,
                                       fontSize: 11,
                                       fontWeight: FontWeight.bold,
                                     ),
@@ -200,7 +255,7 @@ class ListingDetailScreen extends ConsumerWidget {
                                 child: Text(
                                   listing.categoryLabel,
                                   style: const TextStyle(
-                                    color: AppColors.white,
+                                    color: AppColors.onColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -227,7 +282,7 @@ class ListingDetailScreen extends ConsumerWidget {
                       Expanded(
                         child: Text(
                           listing.title,
-                          style: const TextStyle(
+                          style:  TextStyle(
                             fontSize: 22,
                             fontWeight: FontWeight.bold,
                             color: AppColors.textPrimary,
@@ -269,7 +324,7 @@ class ListingDetailScreen extends ConsumerWidget {
                   // Location & Rating
                   Row(
                     children: [
-                      const Icon(
+                       Icon(
                         Icons.location_on,
                         size: 16,
                         color: AppColors.primary,
@@ -277,7 +332,7 @@ class ListingDetailScreen extends ConsumerWidget {
                       const SizedBox(width: 4),
                       Text(
                         listing.location,
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 14,
                           color: AppColors.textSecondary,
                         ),
@@ -294,7 +349,7 @@ class ListingDetailScreen extends ConsumerWidget {
                       ),
                       Text(
                         ' (${listing.reviewCount} maoni)',
-                        style: const TextStyle(
+                        style:  TextStyle(
                           color: AppColors.textSecondary,
                           fontSize: 13,
                         ),
@@ -317,7 +372,7 @@ class ListingDetailScreen extends ConsumerWidget {
                         CircleAvatar(
                           radius: 24,
                           backgroundColor: AppColors.primary.withOpacity(0.15),
-                          child: const Icon(
+                          child:  Icon(
                             Icons.person,
                             color: AppColors.primary,
                           ),
@@ -329,13 +384,13 @@ class ListingDetailScreen extends ConsumerWidget {
                             children: [
                               Text(
                                 listing.ownerName,
-                                style: const TextStyle(
+                                style:  TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15,
                                   color: AppColors.textPrimary,
                                 ),
                               ),
-                              const Text(
+                               Text(
                                 'Mwenye Kifaa (Owner)',
                                 style: TextStyle(
                                   fontSize: 12,
@@ -353,7 +408,7 @@ class ListingDetailScreen extends ConsumerWidget {
                           label: const Text('Wasiliana'),
                           style: OutlinedButton.styleFrom(
                             foregroundColor: AppColors.primary,
-                            side: const BorderSide(color: AppColors.primary),
+                            side:  BorderSide(color: AppColors.primary),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -366,7 +421,7 @@ class ListingDetailScreen extends ConsumerWidget {
                   const SizedBox(height: 24),
 
                   // Description
-                  const Text(
+                   Text(
                     'Maelezo ya Kifaa',
                     style: TextStyle(
                       fontSize: 16,
@@ -377,7 +432,7 @@ class ListingDetailScreen extends ConsumerWidget {
                   const SizedBox(height: 8),
                   Text(
                     listing.description,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 14,
                       height: 1.6,
                       color: AppColors.textSecondary,
@@ -425,7 +480,7 @@ class ListingDetailScreen extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text(
+                       Text(
                         'Maoni & Ukadiriaji (Reviews)',
                         style: TextStyle(
                           fontSize: 16,
@@ -462,7 +517,7 @@ class ListingDetailScreen extends ConsumerWidget {
                             color: AppColors.white,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: const Center(
+                          child:  Center(
                             child: Text(
                               'Hakuna maoni bado kwa kifaa hiki.',
                               style: TextStyle(
@@ -522,7 +577,7 @@ class ListingDetailScreen extends ConsumerWidget {
                                 const SizedBox(height: 6),
                                 Text(
                                   rev.comment,
-                                  style: const TextStyle(
+                                  style:  TextStyle(
                                     fontSize: 13,
                                     color: AppColors.textSecondary,
                                     height: 1.4,
@@ -564,7 +619,7 @@ class ListingDetailScreen extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                   Text(
                     'Bei ya Kukodisha',
                     style: TextStyle(
                       fontSize: 11,
@@ -575,12 +630,12 @@ class ListingDetailScreen extends ConsumerWidget {
                     text: TextSpan(
                       text:
                           'TZS ${(listing.pricePerDay.toInt()).toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')}',
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary,
                       ),
-                      children: const [
+                      children:  [
                         TextSpan(
                           text: ' / siku',
                           style: TextStyle(
@@ -611,7 +666,7 @@ class ListingDetailScreen extends ConsumerWidget {
                     : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  foregroundColor: AppColors.white,
+                  foregroundColor: AppColors.onColor,
                   padding: const EdgeInsets.symmetric(
                     horizontal: 24,
                     vertical: 14,

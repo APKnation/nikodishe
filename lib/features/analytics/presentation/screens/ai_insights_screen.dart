@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/localization/locale_provider.dart';
+import '../../../../core/widgets/ai_bounce_icon.dart';
 import '../../../../data/services/api_service.dart';
 import '../../../auth/providers/auth_provider.dart';
 
@@ -73,7 +74,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   colors: [AppColors.primary, AppColors.secondary],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -93,17 +94,21 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                   Row(
                     children: [
                       Container(
-                        width: 40,
-                        height: 40,
+                        width: 44,
+                        height: 44,
+                        padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
-                          color: AppColors.white.withOpacity(0.18),
-                          shape: BoxShape.circle,
+                          color: AppColors.onColor,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.12),
+                              blurRadius: 6,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
-                        child: const Icon(
-                          Icons.insights,
-                          color: AppColors.white,
-                          size: 22,
-                        ),
+                        child: const AiBounceIcon(size: 36, bounceHeight: 3),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
@@ -112,7 +117,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                               ? 'Chambua data ya biashara yako kwa AI'
                               : 'Analyze your business data with AI',
                           style: const TextStyle(
-                            color: AppColors.white,
+                            color: AppColors.onColor,
                             fontSize: 16,
                             fontWeight: FontWeight.w800,
                             height: 1.3,
@@ -129,7 +134,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                         : 'AI reads your listings, bookings, payments and reviews, '
                             'then returns a summary with recommendations.',
                     style: TextStyle(
-                      color: AppColors.white.withOpacity(0.9),
+                      color: AppColors.onColor.withOpacity(0.9),
                       fontSize: 12.5,
                       height: 1.45,
                     ),
@@ -142,7 +147,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: AppColors.white.withOpacity(0.16),
+                        color: AppColors.onColor.withOpacity(0.16),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -150,7 +155,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                             ? 'Uchambuzi wa vifaa na mapato yako pekee'
                             : 'Analysis of your listings & revenue only',
                         style: const TextStyle(
-                          color: AppColors.white,
+                          color: AppColors.onColor,
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
                         ),
@@ -163,7 +168,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
             const SizedBox(height: 20),
             Text(
               isSw ? 'Unataka kulenga nini? (hiari)' : 'What should we focus on? (optional)',
-              style: const TextStyle(
+              style:  TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
                 color: AppColors.textPrimary,
@@ -177,7 +182,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                 hintText: isSw
                     ? 'Mf. "Kwa nini bookings zimepungua?" au "Mapato yangu yanaongezeka vipi?"'
                     : 'e.g. "Why are bookings dropping?" or "How can I grow revenue?"',
-                hintStyle: const TextStyle(
+                hintStyle:  TextStyle(
                   fontSize: 12,
                   color: AppColors.textTertiary,
                 ),
@@ -186,11 +191,11 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                 contentPadding: const EdgeInsets.all(14),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
-                  borderSide: const BorderSide(color: AppColors.border),
+                  borderSide:  BorderSide(color: AppColors.border),
                 ),
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(14),
-                  borderSide: const BorderSide(color: AppColors.border),
+                  borderSide:  BorderSide(color: AppColors.border),
                 ),
               ),
             ),
@@ -205,7 +210,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                         height: 18,
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
-                          color: AppColors.white,
+                          color: AppColors.onColor,
                         ),
                       )
                     : const Icon(Icons.auto_awesome),
@@ -234,7 +239,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                     Expanded(
                       child: Text(
                         _error!,
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontSize: 13,
                           color: AppColors.textPrimary,
                           height: 1.4,
@@ -265,7 +270,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                   children: [
                     Row(
                       children: [
-                        const Icon(
+                         Icon(
                           Icons.auto_awesome,
                           color: AppColors.primary,
                           size: 20,
@@ -274,7 +279,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                         Expanded(
                           child: Text(
                             isSw ? 'Ripoti ya Kodisha AI' : 'Kodisha AI Report',
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w800,
                               color: AppColors.textPrimary,
@@ -295,7 +300,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                               _scope == 'platform'
                                   ? (isSw ? 'Jukwaa lote' : 'Platform')
                                   : (isSw ? 'Biashara yako' : 'Your business'),
-                              style: const TextStyle(
+                              style:  TextStyle(
                                 fontSize: 10,
                                 fontWeight: FontWeight.w700,
                                 color: AppColors.primary,
@@ -307,7 +312,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                     const Divider(height: 24),
                     SelectableText(
                       _analysis!,
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 13.5,
                         height: 1.6,
                         color: AppColors.textPrimary,
@@ -322,7 +327,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(
+                           Icon(
                             Icons.verified_outlined,
                             size: 15,
                             color: AppColors.primary,
@@ -333,7 +338,7 @@ class _AiInsightsScreenState extends ConsumerState<AiInsightsScreen> {
                               isSw
                                   ? 'Imetokana na data halisi ya mfumo. Hakikisha maamuzi makubwa na data ya sasa.'
                                   : 'Based on real system data. Verify major decisions against live data.',
-                              style: const TextStyle(
+                              style:  TextStyle(
                                 fontSize: 10.5,
                                 color: AppColors.textSecondary,
                               ),

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/localization/locale_provider.dart';
+import '../../../../core/widgets/ai_bounce_icon.dart';
 import '../../../../core/widgets/app_logo.dart';
 import '../../../../data/models/listing_model.dart';
 import '../../../auth/providers/auth_provider.dart';
@@ -28,22 +30,26 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = ref.watch(localeProvider);
     final searchState = ref.watch(searchStateProvider);
     final listings = ref.watch(filteredListingsProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
-      floatingActionButton: FloatingActionButton.extended(
+      floatingActionButton: FloatingActionButton(
         onPressed: () => context.push('/support/chat'),
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.white,
-        elevation: 3,
-        icon: const Icon(Icons.auto_awesome, size: 20),
-        label: const Text(
-          'Uliza AI',
-          style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13),
+        tooltip: AppStrings.get(lang, 'ai_tooltip'),
+        backgroundColor: Colors.transparent,
+        foregroundColor: AppColors.textPrimary,
+        elevation: 0,
+        focusElevation: 0,
+        hoverElevation: 0,
+        highlightElevation: 0,
+        shape: const CircleBorder(),
+        child: Padding(
+          padding: const EdgeInsets.all(6),
+          child: AiBounceIcon(size: 44, bounceHeight: 4),
         ),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       appBar: AppBar(
@@ -58,6 +64,17 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
           ],
         ),
         actions: [
+          IconButton(
+            tooltip: AppStrings.get(lang, 'language'),
+            icon: const Icon(Icons.translate_rounded),
+            onPressed: () =>
+                ref.read(localeProvider.notifier).toggleLanguage(),
+          ),
+          IconButton(
+            tooltip: AppStrings.get(lang, 'settings'),
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => context.push('/settings'),
+          ),
           Consumer(
             builder: (context, ref, _) {
               final unreadCount = ref.watch(unreadNotificationsCountProvider);
@@ -87,7 +104,7 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                         child: Text(
                           '$unreadCount',
                           style: const TextStyle(
-                            color: AppColors.white,
+                            color: AppColors.onColor,
                             fontSize: 10,
                             fontWeight: FontWeight.bold,
                           ),
@@ -115,12 +132,12 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                     ref.read(searchStateProvider.notifier).setQuery(val);
                   },
                   decoration: InputDecoration(
-                    hintText: 'Tafuta vifaa vya ujenzi, sherehe, ukumbi...',
-                    hintStyle: const TextStyle(
+                    hintText: AppStrings.get(lang, 'search_hint'),
+                    hintStyle:  TextStyle(
                       fontSize: 13,
                       color: AppColors.textSecondary,
                     ),
-                    prefixIcon: const Icon(
+                    prefixIcon:  Icon(
                       Icons.search,
                       color: AppColors.primary,
                     ),
@@ -155,7 +172,7 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                   child: Row(
                     children: [
                       _buildFilterChip(
-                        label: 'Zote',
+                        label: AppStrings.get(lang, 'cat_all'),
                         isSelected: searchState.selectedCategory == null,
                         onSelected: () {
                           ref
@@ -165,7 +182,7 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                       ),
                       const SizedBox(width: 8),
                       _buildFilterChip(
-                        label: '🎉 Sherehe',
+                        label: AppStrings.get(lang, 'cat_party'),
                         isSelected:
                             searchState.selectedCategory ==
                             ListingCategory.sherehe,
@@ -182,7 +199,7 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                       ),
                       const SizedBox(width: 8),
                       _buildFilterChip(
-                        label: '🏗️ Ujenzi',
+                        label: AppStrings.get(lang, 'cat_construction'),
                         isSelected:
                             searchState.selectedCategory ==
                             ListingCategory.ujenzi,
@@ -199,7 +216,7 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                       ),
                       const SizedBox(width: 8),
                       _buildFilterChip(
-                        label: '🏛️ Ukumbi',
+                        label: AppStrings.get(lang, 'cat_venue'),
                         isSelected:
                             searchState.selectedCategory ==
                             ListingCategory.ukumbi,
@@ -228,8 +245,8 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Vifaa Vinavyopatikana (${listings.length})',
-                  style: const TextStyle(
+                  '${AppStrings.get(lang, 'available_items')} (${listings.length})',
+                  style:  TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textPrimary,
@@ -254,8 +271,8 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                             color: AppColors.textTertiary,
                           ),
                           const SizedBox(height: 16),
-                          const Text(
-                            'Hakuna kifaa kilichopatikana',
+                           Text(
+                            AppStrings.get(lang, 'no_items_title'),
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -263,8 +280,8 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          const Text(
-                            'Jaribu kutafuta kwa jina lingine au kubadilisha category.',
+                           Text(
+                            AppStrings.get(lang, 'no_items_sub'),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 13,
@@ -322,7 +339,7 @@ class _ExploreTabState extends ConsumerState<ExploreTab> {
       backgroundColor: AppColors.white,
       selectedColor: AppColors.primary,
       labelStyle: TextStyle(
-        color: isSelected ? AppColors.white : AppColors.textPrimary,
+        color: isSelected ? AppColors.onColor : AppColors.textPrimary,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         fontSize: 13,
       ),

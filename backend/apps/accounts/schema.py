@@ -1,6 +1,9 @@
 import graphene
 import base64
+import uuid
 from django.conf import settings
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from graphene_django import DjangoObjectType
 from graphql import GraphQLError
 from .models import CustomUser, OTPVerification
@@ -21,6 +24,11 @@ class UserType(DjangoObjectType):
             'facebook_url', 'tiktok_handle', 'nida_number',
             'is_verified', 'rating', 'review_count', 'created_at'
         )
+
+    def resolve_profile_photo(self, info):
+        if self.profile_photo:
+            return info.context.build_absolute_uri(self.profile_photo.url)
+        return None
 
 class OTPResponseType(graphene.ObjectType):
     success = graphene.Boolean()
@@ -215,6 +223,57 @@ class UpdateProfile(graphene.Mutation):
         user.save()
         return UpdateProfile(user=user, message="Wasifu umesasishwa kikamilifu.")
 
+class UploadProfilePhoto(graphene.Mutation):
+    """Hifadhi picha ya wasifu kwenye backend (base64 kutoka kwenye simu)."""
+
+    class Arguments:
+        image_base64 = graphene.String(required=True)
+
+    success = graphene.Boolean()
+    message = graphene.String()
+    user = graphene.Field(UserType)
+
+    def mutate(self, info, image_base64):
+        user = info.context.user
+        if user.is_anonymous:
+            raise GraphQLError("Lazima uwe umeingia ili kuhifadhi picha ya wasifu.")
+
+        raw = (image_base64 or '').strip()
+        if not raw:
+            raise GraphQLError("Picha haijatumwa.")
+
+        # Ruhusu data URI (data:image/png;base64,....) au base64 pekee
+        if raw.startswith('data:'):
+            _, _, raw = raw.partition(',')
+        try:
+            content = base64.b64decode(raw)
+        except Exception:
+            raise GraphQLError("Muundo wa picha si sahihi.")
+
+        if len(content) > 5 * 1024 * 1024:
+            raise GraphQLError("Picha ni kubwa mno. Kikomo ni 5MB.")
+
+        # Tambua aina ya picha kutoka kwenye bytes (PNG/JPEG/WEBP)
+        ext = '.jpg'
+        if content.startswith(b'\x89PNG\r\n\x1a\n'):
+            ext = '.png'
+        elif content[:4] == b'RIFF' and content[8:12] == b'WEBP':
+            ext = '.webp'
+        elif not content.startswith(b'\xff\xd8'):
+            raise GraphQLError("Faili uliloweka si picha sahihi (JPG, PNG au WEBP).")
+
+        filename = f"profiles/{uuid.uuid4().hex}{ext}"
+        saved_path = default_storage.save(filename, ContentFile(content))
+        user.profile_photo = saved_path
+        user.save(update_fields=['profile_photo'])
+
+        return UploadProfilePhoto(
+            success=True,
+            message="Picha ya wasifu imehifadhiwa kikamilifu.",
+            user=user,
+        )
+
+
 class LoginUser(graphene.Mutation):
     class Arguments:
         phone = graphene.String(required=True)
@@ -312,6 +371,7 @@ class Mutation(graphene.ObjectType):
     verify_otp = VerifyOTP.Field()
     register_user = RegisterUser.Field()
     update_profile = UpdateProfile.Field()
+    upload_profile_photo = UploadProfilePhoto.Field()
     login_user = LoginUser.Field()
     create_owner_user = CreateOwnerUser.Field()
 

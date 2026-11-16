@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:http/http.dart' as http;
 
@@ -294,6 +295,49 @@ class ApiService {
       },
     );
     final res = data['updateProfile'] as Map<String, dynamic>;
+    return _mapUser(res['user'] as Map<String, dynamic>);
+  }
+
+  /// Hifadhi picha ya wasifu kwenye backend kwa kutuma base64.
+  /// Inatumia bytes ili ifanye kazi kwenye Android, iOS na Web.
+  Future<UserModel> uploadProfilePhoto(Uint8List bytes) async {
+    if (bytes.isEmpty) {
+      throw Exception('Faili la picha ni tupu.');
+    }
+    if (bytes.length > 5 * 1024 * 1024) {
+      throw Exception('Picha ni kubwa mno. Kikomo ni 5MB.');
+    }
+
+    const mutation = r'''
+      mutation UploadProfilePhoto($imageBase64: String!) {
+        uploadProfilePhoto(imageBase64: $imageBase64) {
+          success
+          message
+          user {
+            id
+            phone
+            name
+            role
+            location
+            profilePhoto
+            whatsappNumber
+            instagramHandle
+            facebookUrl
+            tiktokHandle
+            createdAt
+          }
+        }
+      }
+    ''';
+
+    final data = await _client.execute(
+      query: mutation,
+      variables: {'imageBase64': base64Encode(bytes)},
+    );
+    final res = data['uploadProfilePhoto'] as Map<String, dynamic>? ?? {};
+    if (res['success'] != true) {
+      throw Exception(res['message'] ?? 'Imeshindwa kuhifadhi picha ya wasifu.');
+    }
     return _mapUser(res['user'] as Map<String, dynamic>);
   }
 

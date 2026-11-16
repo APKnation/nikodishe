@@ -44,12 +44,12 @@ class BackendStatusBanner extends ConsumerWidget {
           child: const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.wifi_off, color: AppColors.white, size: 15),
+              Icon(Icons.wifi_off, color: AppColors.onColor, size: 15),
               SizedBox(width: 6),
               Text(
                 'Mtandao wa seva haupati — data ya ndani inaonekana',
                 style: TextStyle(
-                  color: AppColors.white,
+                  color: AppColors.onColor,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                 ),

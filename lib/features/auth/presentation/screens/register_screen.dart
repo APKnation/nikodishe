@@ -124,7 +124,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         onPressed: () => context.go('/auth/phone'),
                         icon: const Icon(Icons.arrow_back_ios_new_rounded, size: 18),
                         style: IconButton.styleFrom(
-                          backgroundColor: AppColors.white.withOpacity(0.9),
+                          backgroundColor: AppColors.onColor.withOpacity(0.9),
                           foregroundColor: AppColors.blue,
                         ),
                       ),
@@ -160,7 +160,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 6),
-                                const Text(
+                                 Text(
                                   'Unda akaunti yako kwa taarifa chache tu.',
                                   style: TextStyle(
                                     fontSize: 14,
@@ -244,7 +244,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   onPressed: _handleRegister,
                                 ),
                                 const SizedBox(height: 14),
-                                const Center(
+                                 Center(
                                   child: Text(
                                     'Unaweza kuongeza NIDA baadaye kwenye wasifu.',
                                     textAlign: TextAlign.center,

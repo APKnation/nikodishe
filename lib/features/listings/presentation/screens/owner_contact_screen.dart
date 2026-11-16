@@ -62,7 +62,7 @@ class OwnerContactScreen extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(
+                 Icon(
                   Icons.open_in_new,
                   color: AppColors.primary,
                   size: 24,
@@ -80,7 +80,7 @@ class OwnerContactScreen extends ConsumerWidget {
             const SizedBox(height: 12),
             Text(
               'Unakaribia kufungua $platform kwa anwani/namba: $value.',
-              style: const TextStyle(
+              style:  TextStyle(
                 fontSize: 14,
                 color: AppColors.textSecondary,
                 height: 1.4,
@@ -100,7 +100,7 @@ class OwnerContactScreen extends ConsumerWidget {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primary,
-                      foregroundColor: AppColors.white,
+                      foregroundColor: AppColors.onColor,
                     ),
                     onPressed: () {
                       Navigator.of(ctx).pop();
@@ -161,7 +161,7 @@ class OwnerContactScreen extends ConsumerWidget {
                       CircleAvatar(
                         radius: 44,
                         backgroundColor: AppColors.primary.withOpacity(0.15),
-                        child: const Icon(
+                        child:  Icon(
                           Icons.person,
                           size: 54,
                           color: AppColors.primary,
@@ -176,7 +176,7 @@ class OwnerContactScreen extends ConsumerWidget {
                         child: const Icon(
                           Icons.check,
                           size: 14,
-                          color: AppColors.white,
+                          color: AppColors.onColor,
                         ),
                       ),
                     ],
@@ -184,7 +184,7 @@ class OwnerContactScreen extends ConsumerWidget {
                   const SizedBox(height: 12),
                   Text(
                     owner.name,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 19,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
@@ -194,13 +194,13 @@ class OwnerContactScreen extends ConsumerWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Icon(
+                       Icon(
                         Icons.verified,
                         size: 16,
                         color: AppColors.primary,
                       ),
                       const SizedBox(width: 4),
-                      const Text(
+                       Text(
                         'Mwenye Vifaa Aliyethibitishwa',
                         style: TextStyle(
                           fontSize: 12,
@@ -215,7 +215,7 @@ class OwnerContactScreen extends ConsumerWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                         Icon(
                           Icons.location_on_outlined,
                           size: 14,
                           color: AppColors.textSecondary,
@@ -223,7 +223,7 @@ class OwnerContactScreen extends ConsumerWidget {
                         const SizedBox(width: 2),
                         Text(
                           owner.location!,
-                          style: const TextStyle(
+                          style:  TextStyle(
                             fontSize: 12,
                             color: AppColors.textSecondary,
                           ),
@@ -254,7 +254,7 @@ class OwnerContactScreen extends ConsumerWidget {
                         color: AppColors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      child: const Icon(
+                      child:  Icon(
                         Icons.handyman,
                         color: AppColors.primary,
                         size: 24,
@@ -265,7 +265,7 @@ class OwnerContactScreen extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                           Text(
                             'Kuhusu Kifaa:',
                             style: TextStyle(
                               fontSize: 11,
@@ -274,7 +274,7 @@ class OwnerContactScreen extends ConsumerWidget {
                           ),
                           Text(
                             listing.title,
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 14,
                               color: AppColors.textPrimary,
@@ -290,7 +290,7 @@ class OwnerContactScreen extends ConsumerWidget {
             const SizedBox(height: 24),
 
             // Direct Contact Methods Header
-            const Text(
+             Text(
               'Mawasiliano ya Moja kwa Moja',
               style: TextStyle(
                 fontSize: 16,
@@ -351,7 +351,7 @@ class OwnerContactScreen extends ConsumerWidget {
             const SizedBox(height: 24),
 
             // Social Media Accounts Section
-            const Text(
+             Text(
               'Akaunti za Mitandao ya Kijamii',
               style: TextStyle(
                 fontSize: 16,
@@ -388,9 +388,9 @@ class OwnerContactScreen extends ConsumerWidget {
                       ),
                       subtitle: Text(
                         owner.instagram!,
-                        style: const TextStyle(color: AppColors.primary),
+                        style:  TextStyle(color: AppColors.primary),
                       ),
-                      trailing: const Icon(
+                      trailing:  Icon(
                         Icons.open_in_new,
                         size: 18,
                         color: AppColors.textSecondary,
@@ -409,7 +409,7 @@ class OwnerContactScreen extends ConsumerWidget {
                     ListTile(
                       leading: CircleAvatar(
                         backgroundColor: AppColors.primary.withOpacity(0.12),
-                        child: const Icon(
+                        child:  Icon(
                           Icons.facebook,
                           color: AppColors.primary,
                         ),
@@ -423,9 +423,9 @@ class OwnerContactScreen extends ConsumerWidget {
                       ),
                       subtitle: Text(
                         owner.facebook!,
-                        style: const TextStyle(color: AppColors.textSecondary),
+                        style:  TextStyle(color: AppColors.textSecondary),
                       ),
-                      trailing: const Icon(
+                      trailing:  Icon(
                         Icons.open_in_new,
                         size: 18,
                         color: AppColors.textSecondary,
@@ -458,9 +458,9 @@ class OwnerContactScreen extends ConsumerWidget {
                       ),
                       subtitle: Text(
                         owner.tiktok!,
-                        style: const TextStyle(color: AppColors.textSecondary),
+                        style:  TextStyle(color: AppColors.textSecondary),
                       ),
-                      trailing: const Icon(
+                      trailing:  Icon(
                         Icons.open_in_new,
                         size: 18,
                         color: AppColors.textSecondary,
@@ -543,7 +543,7 @@ class OwnerContactScreen extends ConsumerWidget {
           CircleAvatar(
             backgroundColor: iconBgColor,
             radius: 22,
-            child: Icon(icon, color: AppColors.white, size: 22),
+            child: Icon(icon, color: AppColors.onColor, size: 22),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -560,7 +560,7 @@ class OwnerContactScreen extends ConsumerWidget {
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
-                  style: const TextStyle(
+                  style:  TextStyle(
                     fontSize: 13,
                     color: AppColors.textSecondary,
                   ),
@@ -569,7 +569,7 @@ class OwnerContactScreen extends ConsumerWidget {
             ),
           ),
           IconButton(
-            icon: const Icon(
+            icon:  Icon(
               Icons.copy,
               size: 18,
               color: AppColors.textSecondary,
@@ -581,7 +581,7 @@ class OwnerContactScreen extends ConsumerWidget {
             onPressed: onTap,
             style: ElevatedButton.styleFrom(
               backgroundColor: iconBgColor,
-              foregroundColor: AppColors.white,
+              foregroundColor: AppColors.onColor,
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),

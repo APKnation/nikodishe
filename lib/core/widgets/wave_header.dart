@@ -13,7 +13,7 @@ class WaveHeader extends StatelessWidget {
     super.key,
     required this.child,
     this.height = 250,
-    this.colors = const [AppColors.primary, AppColors.primaryDark],
+    this.colors = const [AppColors.blue, AppColors.primaryDark],
   });
 
   @override

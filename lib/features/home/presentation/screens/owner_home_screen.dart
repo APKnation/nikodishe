@@ -49,7 +49,7 @@ class _OwnerHomeScreenState extends ConsumerState<OwnerHomeScreen> {
           onDestinationSelected: (idx) => setState(() => _selectedIndex = idx),
           backgroundColor: AppColors.white,
           indicatorColor: AppColors.primary.withOpacity(0.15),
-          destinations: const [
+          destinations:  [
             NavigationDestination(
               icon: Icon(Icons.dashboard_outlined),
               selectedIcon: Icon(Icons.dashboard, color: AppColors.primary),

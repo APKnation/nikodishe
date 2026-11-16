@@ -109,7 +109,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 6),
-                                const Text(
+                                 Text(
                                   'Ingia kwa usalama kwa barua pepe au namba ya simu yako.',
                                   style: TextStyle(
                                     fontSize: 14,
@@ -163,7 +163,7 @@ class _PhoneScreenState extends ConsumerState<PhoneScreen> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    const Icon(
+                                     Icon(
                                       Icons.verified_user_outlined,
                                       size: 15,
                                       color: AppColors.textTertiary,

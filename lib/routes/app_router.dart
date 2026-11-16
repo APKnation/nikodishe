@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../data/models/user_model.dart';
@@ -18,6 +17,7 @@ import '../features/payments/presentation/screens/payment_history_screen.dart';
 import '../features/payments/presentation/screens/payment_screen.dart';
 import '../features/home/presentation/screens/owner_home_screen.dart';
 import '../features/profile/presentation/screens/owner_dashboard_screen.dart';
+import '../features/settings/presentation/screens/settings_screen.dart';
 
 class AppRouter {
   static final router = GoRouter(
@@ -25,7 +25,7 @@ class AppRouter {
     routes: [
       GoRoute(
         path: '/splash',
-        builder: (context, state) => const _SplashWrapper(),
+        builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
         path: '/auth/phone',
@@ -134,31 +134,10 @@ class AppRouter {
         path: '/support/chat',
         builder: (context, state) => const SupportChatScreen(),
       ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const SettingsScreen(),
+      ),
     ],
   );
-}
-
-class _SplashWrapper extends StatefulWidget {
-  const _SplashWrapper();
-
-  @override
-  State<_SplashWrapper> createState() => _SplashWrapperState();
-}
-
-class _SplashWrapperState extends State<_SplashWrapper> {
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(const Duration(milliseconds: 1200), () {
-      if (mounted) {
-        // Browse-first: guests can view all listings without login
-        context.go('/home');
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const SplashScreen();
-  }
 }

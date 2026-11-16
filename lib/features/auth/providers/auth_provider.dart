@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/models/user_model.dart';
@@ -142,6 +145,31 @@ class AuthNotifier extends Notifier<AuthState> {
       state = state.copyWith(isLoading: false, user: user, isOtpSent: false);
     } catch (e) {
       state = state.copyWith(isLoading: false, error: e.toString());
+    }
+  }
+
+  /// Update the current user's profile photo (backend + local fallback).
+  /// Inatumia bytes ili ifanye kazi kwenye mobile na web.
+  Future<bool> uploadProfilePhoto(Uint8List bytes) async {
+    final current = state.user;
+    if (current == null) return false;
+
+    // Onyesha picha mara moja (data URI inafanya kazi mobile na web)
+    final dataUri = 'data:image/jpeg;base64,${base64Encode(bytes)}';
+    state = state.copyWith(
+      isLoading: true,
+      clearError: true,
+      user: current.copyWith(photoUrl: dataUri),
+    );
+
+    try {
+      final updated = await _apiService.uploadProfilePhoto(bytes);
+      state = state.copyWith(isLoading: false, user: updated);
+      return true;
+    } catch (e) {
+      // Picha inabaki kwa mtazamo wa kikao hiki hata kama seva haipatikani
+      state = state.copyWith(isLoading: false, error: e.toString());
+      return false;
     }
   }
 

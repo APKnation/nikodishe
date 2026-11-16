@@ -28,7 +28,7 @@ class AppButton extends StatelessWidget {
             width: 20,
             child: CircularProgressIndicator(
               strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.onColor),
             ),
           )
         : Text(
@@ -46,7 +46,7 @@ class AppButton extends StatelessWidget {
           onPressed: isLoading ? null : onPressed,
           style: OutlinedButton.styleFrom(
             padding: buttonPadding,
-            side: const BorderSide(color: AppColors.primary, width: 1.5),
+            side:  BorderSide(color: AppColors.primary, width: 1.5),
             foregroundColor: AppColors.primary,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -64,7 +64,7 @@ class AppButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           padding: buttonPadding,
           backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.white,
+          foregroundColor: AppColors.onColor,
           disabledBackgroundColor: AppColors.primary.withOpacity(0.6),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),

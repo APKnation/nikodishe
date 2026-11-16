@@ -160,6 +160,9 @@ final searchStateProvider = StateNotifierProvider<SearchNotifier, SearchState>(
   (ref) => SearchNotifier(),
 );
 
+/// Vifaa alivyovipenda mtumiaji kwenye kikao hiki.
+final favoriteListingsProvider = StateProvider<Set<String>>((ref) => <String>{});
+
 final filteredListingsProvider = Provider<List<ListingModel>>((ref) {
   final listings = ref.watch(listingsProvider);
   final search = ref.watch(searchStateProvider);
@@ -203,9 +206,29 @@ final filteredListingsProvider = Provider<List<ListingModel>>((ref) {
 
 final listingByIdProvider = Provider.family<ListingModel?, String>((ref, id) {
   final listings = ref.watch(listingsProvider);
-  try {
-    return listings.firstWhere((l) => l.id == id);
-  } catch (_) {
-    return null;
+  for (final listing in listings) {
+    if (listing.id == id) return listing;
   }
+  // Fallback kwa data ya mfano (bookings za mock zina listingId za mock).
+  for (final listing in mockListings) {
+    if (listing.id == id) return listing;
+  }
+  return null;
 });
+
+/// Hupata kifaa kutoka kwenye state, mock data, au backend.
+/// Hii inahakikisha "Angalia Kifaa" inafanya kazi hata kama
+/// orodha ya vifaa bado haijapakiwa kwenye kifaa.
+final listingDetailProvider = FutureProvider.autoDispose
+    .family<ListingModel?, String>((ref, id) async {
+      if (id.trim().isEmpty) return null;
+
+      final local = ref.watch(listingByIdProvider(id));
+      if (local != null) return local;
+
+      try {
+        return await ApiService().fetchListingById(id);
+      } catch (_) {
+        return null;
+      }
+    });

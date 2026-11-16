@@ -125,7 +125,7 @@ class ListingCard extends StatelessWidget {
                       child: Text(
                         listing.categoryLabel,
                         style: const TextStyle(
-                          color: AppColors.white,
+                          color: AppColors.onColor,
                           fontSize: 10,
                           fontWeight: FontWeight.w700,
                         ),
@@ -158,7 +158,7 @@ class ListingCard extends StatelessWidget {
                           Text(
                             listing.rating.toStringAsFixed(1),
                             style: const TextStyle(
-                              color: AppColors.white,
+                              color: AppColors.onColor,
                               fontSize: 11,
                               fontWeight: FontWeight.bold,
                             ),
@@ -183,7 +183,7 @@ class ListingCard extends StatelessWidget {
                           color: AppColors.blueDark.withOpacity(0.72),
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(
-                            color: AppColors.white.withOpacity(0.3),
+                            color: AppColors.onColor.withOpacity(0.3),
                           ),
                         ),
                         child: const Row(
@@ -191,14 +191,14 @@ class ListingCard extends StatelessWidget {
                           children: [
                             Icon(
                               Icons.fullscreen,
-                              color: AppColors.white,
+                              color: AppColors.onColor,
                               size: 14,
                             ),
                             SizedBox(width: 4),
                             Text(
                               'Picha',
                               style: TextStyle(
-                                color: AppColors.white,
+                                color: AppColors.onColor,
                                 fontSize: 10,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -223,7 +223,7 @@ class ListingCard extends StatelessWidget {
                     listing.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.w700,
                       color: AppColors.textPrimary,
@@ -233,7 +233,7 @@ class ListingCard extends StatelessWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(
+                       Icon(
                         Icons.location_on_outlined,
                         size: 13,
                         color: AppColors.textSecondary,
@@ -244,7 +244,7 @@ class ListingCard extends StatelessWidget {
                           listing.location,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style:  TextStyle(
                             fontSize: 11.5,
                             color: AppColors.textSecondary,
                             height: 1.2,
@@ -258,7 +258,7 @@ class ListingCard extends StatelessWidget {
                     '${listing.categoryLabel} • ${listing.typeLabel}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 10.5,
                       color: AppColors.textTertiary,
                       fontWeight: FontWeight.w500,
@@ -288,7 +288,7 @@ class ListingCard extends StatelessWidget {
                                 'TZS ${_formatPrice(listing.pricePerDay)}',
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style:  TextStyle(
                                   fontSize: 13,
                                   fontWeight: FontWeight.w800,
                                   color: AppColors.primary,
@@ -296,7 +296,7 @@ class ListingCard extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 1),
-                              const Text(
+                               Text(
                                 'kwa siku',
                                 style: TextStyle(
                                   fontSize: 10,

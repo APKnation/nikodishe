@@ -39,16 +39,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               Container(
                 width: 64,
                 height: 64,
-                decoration: const BoxDecoration(
+                decoration:  BoxDecoration(
                   color: AppColors.blueTintSoft,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.lock_outline_rounded, color: AppColors.primary, size: 30),
+                child:  Icon(Icons.lock_outline_rounded, color: AppColors.primary, size: 30),
               ),
               const SizedBox(height: 14),
-              Text(title, textAlign: TextAlign.center, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
+              Text(title, textAlign: TextAlign.center, style:  TextStyle(fontSize: 18, fontWeight: FontWeight.w800, color: AppColors.textPrimary)),
               const SizedBox(height: 8),
-              Text(subtitle, textAlign: TextAlign.center, style: const TextStyle(fontSize: 13.5, color: AppColors.textSecondary, height: 1.45)),
+              Text(subtitle, textAlign: TextAlign.center, style:  TextStyle(fontSize: 13.5, color: AppColors.textSecondary, height: 1.45)),
               const SizedBox(height: 18),
               SizedBox(
                 width: double.infinity,
@@ -125,12 +125,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           destinations: [
             NavigationDestination(
               icon: const Icon(Icons.explore_outlined),
-              selectedIcon: const Icon(Icons.explore, color: AppColors.primary),
+              selectedIcon:  Icon(Icons.explore, color: AppColors.primary),
               label: AppStrings.get(lang, 'nav_explore'),
             ),
             NavigationDestination(
               icon: const Icon(Icons.calendar_today_outlined),
-              selectedIcon: const Icon(
+              selectedIcon:  Icon(
                 Icons.calendar_today,
                 color: AppColors.primary,
               ),
@@ -138,7 +138,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             NavigationDestination(
               icon: const Icon(Icons.person_outline),
-              selectedIcon: const Icon(Icons.person, color: AppColors.primary),
+              selectedIcon:  Icon(Icons.person, color: AppColors.primary),
               label: AppStrings.get(lang, 'nav_profile'),
             ),
           ],

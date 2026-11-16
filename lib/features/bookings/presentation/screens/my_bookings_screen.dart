@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../../core/localization/locale_provider.dart';
 import '../../../../core/widgets/app_network_image.dart';
 import '../../../../data/models/booking_model.dart';
 import '../../../auth/providers/auth_provider.dart';
@@ -69,6 +70,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final lang = ref.watch(localeProvider);
     final user = ref.watch(currentUserProvider);
     final allBookings = ref.watch(myBookingsProvider);
     final filteredBookings = _selectedStatus == null
@@ -85,11 +87,11 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('Bookings Zangu'),
+        title: Text(AppStrings.get(lang, 'my_bookings')),
         centerTitle: true,
         actions: [
           IconButton(
-            tooltip: 'Onyesha upya',
+            tooltip: AppStrings.get(lang, 'refresh'),
             onPressed: () => ref.read(bookingsProvider.notifier).loadFromApi(),
             icon: const Icon(Icons.refresh_rounded),
           ),
@@ -111,6 +113,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
               confirmed: confirmedCount,
               completed: completedCount,
               totalSpent: totalSpent,
+              lang: lang,
             ),
             const SizedBox(height: 14),
 
@@ -125,15 +128,27 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: [
-                    _buildTab(null, 'Zote (${allBookings.length})'),
+                    _buildTab(null, '${AppStrings.get(lang, 'all_items')} (${allBookings.length})'),
                     const SizedBox(width: 8),
-                    _buildTab(BookingStatus.pending, 'Inasubiri ($pendingCount)'),
+                    _buildTab(
+                      BookingStatus.pending,
+                      '${AppStrings.get(lang, 'status_pending')} ($pendingCount)',
+                    ),
                     const SizedBox(width: 8),
-                    _buildTab(BookingStatus.confirmed, 'Imethibitishwa ($confirmedCount)'),
+                    _buildTab(
+                      BookingStatus.confirmed,
+                      '${AppStrings.get(lang, 'status_confirmed')} ($confirmedCount)',
+                    ),
                     const SizedBox(width: 8),
-                    _buildTab(BookingStatus.completed, 'Imekamilika ($completedCount)'),
+                    _buildTab(
+                      BookingStatus.completed,
+                      '${AppStrings.get(lang, 'status_completed')} ($completedCount)',
+                    ),
                     const SizedBox(width: 8),
-                    _buildTab(BookingStatus.cancelled, 'Imefutwa'),
+                    _buildTab(
+                      BookingStatus.cancelled,
+                      AppStrings.get(lang, 'status_cancelled'),
+                    ),
                   ],
                 ),
               ),
@@ -141,9 +156,11 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
             const SizedBox(height: 14),
 
             if (filteredBookings.isEmpty)
-              _buildEmptyState(context)
+              _buildEmptyState(context, lang)
             else
-              ...filteredBookings.map((booking) => _buildBookingCard(context, booking)),
+              ...filteredBookings.map(
+                (booking) => _buildBookingCard(context, booking, lang),
+              ),
           ],
         ),
       ),
@@ -161,11 +178,12 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
     required int confirmed,
     required int completed,
     required double totalSpent,
+    required AppLanguage lang,
   }) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           colors: [AppColors.primary, AppColors.blueSoft],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -188,14 +206,14 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
                 child: Container(
                   width: 52,
                   height: 52,
-                  color: AppColors.white.withOpacity(0.2),
+                  color: AppColors.onColor.withOpacity(0.2),
                   child: (photoUrl != null && photoUrl.isNotEmpty)
                       ? AppNetworkImage(
                           imageUrl: photoUrl,
                           fit: BoxFit.cover,
                           placeholderIcon: Icons.person,
                         )
-                      : const Icon(Icons.person, color: AppColors.white, size: 28),
+                      : const Icon(Icons.person, color: AppColors.onColor, size: 28),
                 ),
               ),
               const SizedBox(width: 12),
@@ -203,28 +221,34 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Taarifa za Mteja',
-                      style: TextStyle(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.w600),
+                    Text(
+                      AppStrings.get(lang, 'customer_info'),
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       userName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: AppColors.white, fontSize: 18, fontWeight: FontWeight.w800),
+                      style: const TextStyle(color: AppColors.onColor, fontSize: 18, fontWeight: FontWeight.w800),
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      phone.isNotEmpty ? phone : 'Namba haipo',
-                      style: TextStyle(color: AppColors.white.withOpacity(0.9), fontSize: 12.5),
+                      phone.isNotEmpty
+                          ? phone
+                          : AppStrings.get(lang, 'no_phone'),
+                      style: TextStyle(color: AppColors.onColor.withOpacity(0.9), fontSize: 12.5),
                     ),
                     if (location != null && location.trim().isNotEmpty)
                       Text(
                         location,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(color: AppColors.white.withOpacity(0.85), fontSize: 12),
+                        style: TextStyle(color: AppColors.onColor.withOpacity(0.85), fontSize: 12),
                       ),
                   ],
                 ),
@@ -232,13 +256,13 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColors.white.withOpacity(0.18),
+                  color: AppColors.onColor.withOpacity(0.18),
                   borderRadius: BorderRadius.circular(999),
-                  border: Border.all(color: AppColors.white.withOpacity(0.25)),
+                  border: Border.all(color: AppColors.onColor.withOpacity(0.25)),
                 ),
-                child: const Text(
-                  'Akaunti yangu',
-                  style: TextStyle(color: AppColors.white, fontSize: 11, fontWeight: FontWeight.w700),
+                child: Text(
+                  AppStrings.get(lang, 'my_account'),
+                  style: TextStyle(color: AppColors.onColor, fontSize: 11, fontWeight: FontWeight.w700),
                 ),
               ),
             ],
@@ -246,13 +270,19 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
           const SizedBox(height: 14),
           Row(
             children: [
-              _headerStat('Jumla', '$totalBookings'),
+              _headerStat(AppStrings.get(lang, 'total'), '$totalBookings'),
               _headerDivider(),
-              _headerStat('Inasubiri', '$pending'),
+              _headerStat(AppStrings.get(lang, 'status_pending'), '$pending'),
               _headerDivider(),
-              _headerStat('Imethibit.', '$confirmed'),
+              _headerStat(
+                AppStrings.get(lang, 'status_confirmed'),
+                '$confirmed',
+              ),
               _headerDivider(),
-              _headerStat('Imekamilika', '$completed'),
+              _headerStat(
+                AppStrings.get(lang, 'status_completed'),
+                '$completed',
+              ),
             ],
           ),
           const SizedBox(height: 10),
@@ -260,22 +290,22 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             decoration: BoxDecoration(
-              color: AppColors.white.withOpacity(0.14),
+              color: AppColors.onColor.withOpacity(0.14),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               children: [
-                const Icon(Icons.payments_outlined, color: AppColors.white, size: 18),
+                const Icon(Icons.payments_outlined, color: AppColors.onColor, size: 18),
                 const SizedBox(width: 8),
-                const Expanded(
+                Expanded(
                   child: Text(
-                    'Jumla ya gharama (bila zilizofutwa)',
-                    style: TextStyle(color: Colors.white70, fontSize: 12),
+                    AppStrings.get(lang, 'total_cost_excl'),
+                    style: const TextStyle(color: Colors.white70, fontSize: 12),
                   ),
                 ),
                 Text(
                   'TZS ${_formatPrice(totalSpent)}',
-                  style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.w800, fontSize: 13.5),
+                  style: const TextStyle(color: AppColors.onColor, fontWeight: FontWeight.w800, fontSize: 13.5),
                 ),
               ],
             ),
@@ -289,17 +319,17 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
     return Expanded(
       child: Column(
         children: [
-          Text(value, style: const TextStyle(color: AppColors.white, fontSize: 16, fontWeight: FontWeight.w800)),
+          Text(value, style: const TextStyle(color: AppColors.onColor, fontSize: 16, fontWeight: FontWeight.w800)),
           const SizedBox(height: 2),
-          Text(label, style: TextStyle(color: AppColors.white.withOpacity(0.85), fontSize: 11)),
+          Text(label, style: TextStyle(color: AppColors.onColor.withOpacity(0.85), fontSize: 11)),
         ],
       ),
     );
   }
 
-  Widget _headerDivider() => Container(width: 1, height: 26, color: AppColors.white.withOpacity(0.25));
+  Widget _headerDivider() => Container(width: 1, height: 26, color: AppColors.onColor.withOpacity(0.25));
 
-  Widget _buildEmptyState(BuildContext context) {
+  Widget _buildEmptyState(BuildContext context, AppLanguage lang) {
     return Container(
       padding: const EdgeInsets.all(28),
       decoration: BoxDecoration(
@@ -311,14 +341,14 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
         children: [
           Icon(Icons.calendar_today_outlined, size: 56, color: AppColors.textTertiary),
           const SizedBox(height: 14),
-          const Text(
-            'Hakuna historia ya booking hapa',
+           Text(
+            AppStrings.get(lang, 'empty_bookings_title'),
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
           ),
           const SizedBox(height: 6),
-          const Text(
-            'Ukichagua kifaa na kukodi, taarifa na historia yako itaonekana hapa.',
+           Text(
+            AppStrings.get(lang, 'empty_bookings_sub'),
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 13, color: AppColors.textSecondary, height: 1.4),
           ),
@@ -326,18 +356,22 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
-              foregroundColor: AppColors.white,
+              foregroundColor: AppColors.onColor,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
             ),
             onPressed: () => context.go('/home'),
-            child: const Text('Tazama Vifaa'),
+            child: Text(AppStrings.get(lang, 'browse_items')),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildBookingCard(BuildContext context, BookingModel booking) {
+  Widget _buildBookingCard(
+    BuildContext context,
+    BookingModel booking,
+    AppLanguage lang,
+  ) {
     final statusColor = _getStatusColor(booking.status);
 
     return Container(
@@ -365,7 +399,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
                 Expanded(
                   child: Text(
                     booking.listingTitle,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                    style:  TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
                   ),
                 ),
                 Container(
@@ -381,7 +415,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
                       Icon(_getStatusIcon(booking.status), size: 13, color: statusColor),
                       const SizedBox(width: 4),
                       Text(
-                        booking.statusLabel,
+                        _statusLabel(lang, booking.status),
                         style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold, color: statusColor),
                       ),
                     ],
@@ -390,13 +424,29 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
               ],
             ),
             const SizedBox(height: 10),
-            _infoRow(Icons.confirmation_number_outlined, 'Booking ID', '#${booking.id}'),
+            _infoRow(
+              Icons.confirmation_number_outlined,
+              'Booking ID',
+              '#${booking.id}',
+            ),
             const SizedBox(height: 6),
-            _infoRow(Icons.person_outline, 'Mmiliki', booking.ownerName),
+            _infoRow(
+              Icons.person_outline,
+              AppStrings.get(lang, 'owner_label'),
+              booking.ownerName,
+            ),
             const SizedBox(height: 6),
-            _infoRow(Icons.date_range, 'Tarehe', '${_formatDate(booking.startDate)} - ${_formatDate(booking.endDate)}'),
+            _infoRow(
+              Icons.date_range,
+              AppStrings.get(lang, 'date_label'),
+              '${_formatDate(booking.startDate)} - ${_formatDate(booking.endDate)}',
+            ),
             const SizedBox(height: 6),
-            _infoRow(Icons.timelapse_outlined, 'Muda', '${booking.totalDays} siku'),
+            _infoRow(
+              Icons.timelapse_outlined,
+              AppStrings.get(lang, 'duration_label'),
+              '${booking.totalDays} ${AppStrings.get(lang, 'days')}',
+            ),
 
             const Divider(height: 20),
             Row(
@@ -405,15 +455,21 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text('Jumla ya malipo', style: TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                     Text(
+                      AppStrings.get(lang, 'total_payment'),
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: AppColors.textSecondary,
+                      ),
+                    ),
                     const SizedBox(height: 2),
                     Text(
                       'TZS ${_formatPrice(booking.totalPrice)}',
-                      style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: AppColors.primary),
+                      style:  TextStyle(fontSize: 17, fontWeight: FontWeight.w800, color: AppColors.primary),
                     ),
                   ],
                 ),
-                _buildAction(context, booking),
+                _buildAction(context, booking, lang),
               ],
             ),
           ],
@@ -427,43 +483,49 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
       children: [
         Icon(icon, size: 15, color: AppColors.textSecondary),
         const SizedBox(width: 6),
-        Text('$label: ', style: const TextStyle(fontSize: 12.5, color: AppColors.textSecondary)),
+        Text('$label: ', style:  TextStyle(fontSize: 12.5, color: AppColors.textSecondary)),
         Expanded(
           child: Text(
             value,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 12.5, color: AppColors.textPrimary, fontWeight: FontWeight.w600),
+            style:  TextStyle(fontSize: 12.5, color: AppColors.textPrimary, fontWeight: FontWeight.w600),
           ),
         ),
       ],
     );
   }
 
-  Widget _buildAction(BuildContext context, BookingModel booking) {
+  Widget _buildAction(
+    BuildContext context,
+    BookingModel booking,
+    AppLanguage lang,
+  ) {
     if (booking.status == BookingStatus.pending) {
       return OutlinedButton(
         onPressed: () async {
           await ref.read(bookingsProvider.notifier).updateStatus(booking.id, BookingStatus.cancelled);
           if (!mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Booking imefutwa.')));
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(AppStrings.get(lang, 'booking_cancelled_snack'))),
+          );
         },
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.error,
           side: const BorderSide(color: AppColors.error),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
-        child: const Text('Ghairi'),
+        child: Text(AppStrings.get(lang, 'cancel')),
       );
     }
     if (booking.status == BookingStatus.confirmed) {
       return ElevatedButton.icon(
         onPressed: () => context.push('/payments/pay?bookingId=${booking.id}'),
         icon: const Icon(Icons.payment, size: 16),
-        label: const Text('Lipa Sasa'),
+        label: Text(AppStrings.get(lang, 'pay_now')),
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
-          foregroundColor: AppColors.white,
+          foregroundColor: AppColors.onColor,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
       );
@@ -474,10 +536,10 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
           showDialog(context: context, builder: (_) => AddReviewDialog(booking: booking));
         },
         icon: const Icon(Icons.star_rate_rounded, size: 16, color: AppColors.amber),
-        label: const Text('Toa Review'),
+        label: Text(AppStrings.get(lang, 'add_review')),
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.primary,
-          side: const BorderSide(color: AppColors.primary),
+          side:  BorderSide(color: AppColors.primary),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
       );
@@ -489,8 +551,28 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: AppColors.border),
       ),
-      child: const Text('Hakuna hatua', style: TextStyle(fontSize: 12, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+      child: Text(
+        AppStrings.get(lang, 'no_action'),
+        style: TextStyle(
+          fontSize: 12,
+          color: AppColors.textSecondary,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
     );
+  }
+
+  String _statusLabel(AppLanguage lang, BookingStatus status) {
+    switch (status) {
+      case BookingStatus.pending:
+        return AppStrings.get(lang, 'status_pending');
+      case BookingStatus.confirmed:
+        return AppStrings.get(lang, 'status_confirmed');
+      case BookingStatus.completed:
+        return AppStrings.get(lang, 'status_completed');
+      case BookingStatus.cancelled:
+        return AppStrings.get(lang, 'status_cancelled');
+    }
   }
 
   Widget _buildTab(BookingStatus? status, String label) {
@@ -502,7 +584,7 @@ class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen> {
       selectedColor: AppColors.primary,
       backgroundColor: AppColors.surface,
       labelStyle: TextStyle(
-        color: isSelected ? AppColors.white : AppColors.textPrimary,
+        color: isSelected ? AppColors.onColor : AppColors.textPrimary,
         fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
         fontSize: 12,
       ),

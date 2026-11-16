@@ -69,7 +69,7 @@ class NotificationsScreen extends ConsumerWidget {
               onPressed: () {
                 ref.read(notificationsProvider.notifier).markAllAsRead();
               },
-              child: const Text(
+              child:  Text(
                 'Zote zimesomwa',
                 style: TextStyle(
                   color: AppColors.primary,
@@ -181,7 +181,7 @@ class NotificationsScreen extends ConsumerWidget {
                                       Container(
                                         width: 8,
                                         height: 8,
-                                        decoration: const BoxDecoration(
+                                        decoration:  BoxDecoration(
                                           color: AppColors.primary,
                                           shape: BoxShape.circle,
                                         ),
@@ -191,7 +191,7 @@ class NotificationsScreen extends ConsumerWidget {
                                 const SizedBox(height: 4),
                                 Text(
                                   notif.body,
-                                  style: const TextStyle(
+                                  style:  TextStyle(
                                     fontSize: 13,
                                     color: AppColors.textSecondary,
                                     height: 1.35,

@@ -5,6 +5,8 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/localization/locale_provider.dart';
+import '../../../../core/utils/image_utils.dart';
+import '../../../../core/widgets/ai_bounce_icon.dart';
 import '../../../../core/widgets/app_network_image.dart';
 import '../../../../data/models/user_model.dart';
 import '../../../auth/providers/auth_provider.dart';
@@ -17,30 +19,96 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  bool _savingPhoto = false;
+
   Future<void> _pickProfilePhoto() async {
+    if (_savingPhoto) return;
+
+    final source = await showModalBottomSheet<ImageSource>(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (ctx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(bottom: 8),
+                child: Text(
+                  'Badilisha Picha ya Wasifu',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+              ),
+              ListTile(
+                leading:  Icon(
+                  Icons.photo_library_outlined,
+                  color: AppColors.primary,
+                ),
+                title: const Text('Chagua kutoka kwenye Gallery'),
+                onTap: () => Navigator.of(ctx).pop(ImageSource.gallery),
+              ),
+              ListTile(
+                leading:  Icon(
+                  Icons.camera_alt_outlined,
+                  color: AppColors.primary,
+                ),
+                title: const Text('Piga picha kwa Kamera'),
+                onTap: () => Navigator.of(ctx).pop(ImageSource.camera),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+
+    if (source == null) return;
+
     try {
       final picker = ImagePicker();
       final photo = await picker.pickImage(
-        source: ImageSource.gallery,
-        imageQuality: 80,
+        source: source,
+        imageQuality: 70,
+        maxWidth: 512,
+        maxHeight: 512,
       );
-      if (photo != null) {
-        ref.read(authProvider.notifier).updateProfile(photoUrl: photo.path);
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Picha ya wasifu imebadilishwa kikamilifu!'),
-              backgroundColor: AppColors.success,
-            ),
-          );
-        }
+      if (photo == null) return;
+
+      setState(() => _savingPhoto = true);
+
+      final bytes = await photo.readAsBytes();
+      if (bytes.isEmpty) {
+        throw Exception('Picha iliyochaguliwa haina maudhui.');
       }
+      final prepared = await prepareProfileImage(bytes);
+
+      final savedOnServer = await ref
+          .read(authProvider.notifier)
+          .uploadProfilePhoto(prepared);
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            savedOnServer
+                ? 'Picha ya wasifu imehifadhiwa kikamilifu!'
+                : 'Picha imewekwa kwenye kikao hiki. Seva haipatikani, jaribu tena ukiwa mtandaoni.',
+          ),
+          backgroundColor: savedOnServer
+              ? AppColors.success
+              : AppColors.amber,
+        ),
+      );
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Imeshindwa kufungua picha: $e')),
         );
       }
+    } finally {
+      if (mounted) setState(() => _savingPhoto = false);
     }
   }
 
@@ -86,7 +154,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primary,
-              foregroundColor: AppColors.white,
+              foregroundColor: AppColors.onColor,
             ),
             onPressed: () {
               ref
@@ -140,7 +208,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
               subtitle: const Text('Lugha ya Taifa (Default)'),
               trailing: currentLang == AppLanguage.sw
-                  ? const Icon(Icons.check_circle, color: AppColors.primary)
+                  ?  Icon(Icons.check_circle, color: AppColors.primary)
                   : null,
               onTap: () {
                 ref.read(localeProvider.notifier).setLanguage(AppLanguage.sw);
@@ -156,7 +224,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ),
               subtitle: const Text('International language'),
               trailing: currentLang == AppLanguage.en
-                  ? const Icon(Icons.check_circle, color: AppColors.primary)
+                  ?  Icon(Icons.check_circle, color: AppColors.primary)
                   : null,
               onTap: () {
                 ref.read(localeProvider.notifier).setLanguage(AppLanguage.en);
@@ -166,6 +234,50 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  void _showPrivacyDialog() {
+    final lang = ref.read(localeProvider);
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Text(AppStrings.get(lang, 'privacy_policy')),
+        content: SingleChildScrollView(
+          child: Text(
+            lang == AppLanguage.sw
+                ? 'Kodisha inalinda taarifa zako binafsi. Namba yako ya simu '
+                      'hutumika kwa uthibitisho na mawasiliano kuhusu booking tu. '
+                      'Hatushiriki taarifa zako na watu wengine bila idhini yako. '
+                      'Unaweza kuomba kufutwa kwa akaunti yako wakati wowote.'
+                : 'Kodisha protects your personal information. Your phone number '
+                      'is used only for verification and booking communication. '
+                      'We do not share your data without your consent. You may '
+                      'request account deletion at any time.',
+            style: const TextStyle(height: 1.5),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text(lang == AppLanguage.sw ? 'Sawa' : 'OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAboutDialog() {
+    final lang = ref.read(localeProvider);
+    showAboutDialog(
+      context: context,
+      applicationName: 'Kodisha',
+      applicationVersion: '1.0.0',
+      applicationIcon:  Icon(Icons.home_work, color: AppColors.primary),
+      applicationLegalese: lang == AppLanguage.sw
+          ? 'Kukodisha vifaa vya sherehe, ujenzi na ukumbi kwa urahisi Tanzania.'
+          : 'Rent event, construction and venue equipment easily in Tanzania.',
     );
   }
 
@@ -218,7 +330,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                                   fit: BoxFit.cover,
                                   placeholderIcon: Icons.person,
                                 )
-                              : const Icon(
+                              :  Icon(
                                   Icons.person,
                                   size: 50,
                                   color: AppColors.primary,
@@ -232,18 +344,36 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           onTap: _pickProfilePhoto,
                           child: Container(
                             padding: const EdgeInsets.all(6),
-                            decoration: const BoxDecoration(
+                            decoration:  BoxDecoration(
                               color: AppColors.primary,
                               shape: BoxShape.circle,
                             ),
                             child: const Icon(
                               Icons.camera_alt,
                               size: 16,
-                              color: AppColors.white,
+                              color: AppColors.onColor,
                             ),
                           ),
                         ),
                       ),
+                      if (_savingPhoto)
+                        Positioned.fill(
+                          child: ClipOval(
+                            child: Container(
+                              color: Colors.black.withOpacity(0.35),
+                              child: const Center(
+                                child: SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.5,
+                                    color: AppColors.onColor,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                   const SizedBox(height: 12),
@@ -252,7 +382,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         (lang == AppLanguage.sw
                             ? 'Mtumiaji wa Kodisha'
                             : 'Kodisha User'),
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
@@ -261,7 +391,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   const SizedBox(height: 4),
                   Text(
                     user?.phone ?? '+255 700 000 000',
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 13,
                       color: AppColors.textSecondary,
                     ),
@@ -280,7 +410,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                       user?.role == UserRole.owner
                           ? AppStrings.get(lang, 'role_owner')
                           : AppStrings.get(lang, 'role_renter'),
-                      style: const TextStyle(
+                      style:  TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary,
@@ -297,7 +427,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         label: Text(AppStrings.get(lang, 'edit_profile')),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: AppColors.primary,
-                          side: const BorderSide(color: AppColors.primary),
+                          side:  BorderSide(color: AppColors.primary),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10),
                           ),
@@ -329,7 +459,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                 children: [
                   if (user?.role == UserRole.owner) ...[
                     ListTile(
-                      leading: const Icon(
+                      leading:  Icon(
                         Icons.dashboard_outlined,
                         color: AppColors.primary,
                       ),
@@ -343,7 +473,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                   // FR24: Booking History
                   ListTile(
-                    leading: const Icon(
+                    leading:  Icon(
                       Icons.history,
                       color: AppColors.primary,
                     ),
@@ -356,7 +486,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                   // Payments History
                   ListTile(
-                    leading: const Icon(
+                    leading:  Icon(
                       Icons.payment,
                       color: AppColors.primary,
                     ),
@@ -369,7 +499,7 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                   // Notifications
                   ListTile(
-                    leading: const Icon(
+                    leading:  Icon(
                       Icons.notifications_outlined,
                       color: AppColors.primary,
                     ),
@@ -379,9 +509,22 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                   ),
                   const Divider(height: 1),
 
+                  // Mipangilio: lugha & muonekano
+                  ListTile(
+                    leading:  Icon(
+                      Icons.tune_rounded,
+                      color: AppColors.primary,
+                    ),
+                    title: Text(AppStrings.get(lang, 'settings')),
+                    subtitle: Text(AppStrings.get(lang, 'settings_sub')),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.push('/settings'),
+                  ),
+                  const Divider(height: 1),
+
                   // FR26: Language Switcher
                   ListTile(
-                    leading: const Icon(
+                    leading:  Icon(
                       Icons.language,
                       color: AppColors.primary,
                     ),
@@ -398,9 +541,10 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                   // Support (Kodisha AI)
                   ListTile(
-                    leading: const Icon(
-                      Icons.auto_awesome,
-                      color: AppColors.primary,
+                    leading: const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: AiBounceIcon(size: 24, bounceHeight: 2),
                     ),
                     title: Text(AppStrings.get(lang, 'help_support')),
                     subtitle: Text(
@@ -415,26 +559,26 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
 
                   // Privacy Policy
                   ListTile(
-                    leading: const Icon(
+                    leading:  Icon(
                       Icons.security,
                       color: AppColors.primary,
                     ),
                     title: Text(AppStrings.get(lang, 'privacy_policy')),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () {},
+                    onTap: _showPrivacyDialog,
                   ),
                   const Divider(height: 1),
 
                   // About App
                   ListTile(
-                    leading: const Icon(
+                    leading:  Icon(
                       Icons.info_outline,
                       color: AppColors.primary,
                     ),
                     title: Text(AppStrings.get(lang, 'about_app')),
                     subtitle: const Text('Version 1.0.0 (Tanzania MVP)'),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () {},
+                    onTap: _showAboutDialog,
                   ),
                 ],
               ),

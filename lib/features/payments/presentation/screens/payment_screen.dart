@@ -46,18 +46,6 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     );
   }
 
-  Color _getMethodColor(PaymentMethod method) {
-    switch (method) {
-      case PaymentMethod.mpesa:
-        return AppColors.primary; // Vodacom Red
-      case PaymentMethod.airtelMoney:
-        return AppColors.amberDark; // Airtel Red
-      case PaymentMethod.tigoPesa:
-        return AppColors.blueDark; // Tigo
-      case PaymentMethod.haloPesa:
-        return AppColors.amber; // Halotel Orange
-    }
-  }
 
   Future<void> _handlePayment(BookingModel booking, double amountToPay) async {
     setState(() => _isProcessing = true);
@@ -156,7 +144,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             ElevatedButton(
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primary,
-                foregroundColor: AppColors.white,
+                foregroundColor: AppColors.onColor,
               ),
               onPressed: () {
                 Navigator.of(ctx).pop();
@@ -210,7 +198,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                 children: [
                   Text(
                     booking.listingTitle,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
                       color: AppColors.textPrimary,
@@ -219,7 +207,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   const SizedBox(height: 6),
                   Text(
                     'Jumla ya Booking: TZS ${_formatPrice(booking.totalPrice)} (${booking.totalDays} siku)',
-                    style: const TextStyle(
+                    style:  TextStyle(
                       color: AppColors.textSecondary,
                       fontSize: 13,
                     ),
@@ -283,7 +271,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                           const SizedBox(height: 6),
                           Text(
                             'TZS ${_formatPrice(depositAmount)}',
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: AppColors.primary,
@@ -340,7 +328,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                           const SizedBox(height: 6),
                           Text(
                             'TZS ${_formatPrice(booking.totalPrice)}',
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
                               color: AppColors.primary,
@@ -401,7 +389,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
               decoration: InputDecoration(
                 filled: true,
                 fillColor: AppColors.white,
-                prefixIcon: const Icon(Icons.dialpad, color: AppColors.primary),
+                prefixIcon:  Icon(Icons.dialpad, color: AppColors.primary),
                 hintText: '+255 7XX XXX XXX',
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -422,7 +410,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     : () => _handlePayment(booking, amountToPay),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,
-                  foregroundColor: AppColors.white,
+                  foregroundColor: AppColors.onColor,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -435,7 +423,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                             width: 20,
                             height: 20,
                             child: CircularProgressIndicator(
-                              color: AppColors.white,
+                              color: AppColors.onColor,
                               strokeWidth: 2,
                             ),
                           ),
@@ -499,7 +487,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   ),
                   Text(
                     subtitle,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 12,
                       color: AppColors.textSecondary,
                     ),

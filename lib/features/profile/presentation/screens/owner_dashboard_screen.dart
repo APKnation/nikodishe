@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/localization/locale_provider.dart';
+import '../../../../core/widgets/ai_bounce_icon.dart';
 import '../../../../data/models/booking_model.dart';
 import '../../../auth/providers/auth_provider.dart';
 import '../../../bookings/providers/bookings_provider.dart';
@@ -95,14 +96,14 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                 children: [
                   Text(
                     'Karibu, ${user.name}',
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w800,
                       color: AppColors.textPrimary,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
+                   Text(
                     'Hii ni dashibodi yako binafsi ya kusimamia vifaa vyako. Vifaa vyako vinaonekana kwenye dashibodi ya pamoja ya wateja.',
                     style: TextStyle(fontSize: 13, color: AppColors.textSecondary, height: 1.4),
                   ),
@@ -113,7 +114,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   colors: [AppColors.primary, AppColors.secondary],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -132,12 +133,12 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                 children: [
                   Text(
                     AppStrings.get(lang, 'total_earnings'),
-                    style: TextStyle(color: AppColors.white.withOpacity(0.85), fontSize: 13),
+                    style: TextStyle(color: AppColors.onColor.withOpacity(0.85), fontSize: 13),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     'TZS ${_formatPrice(totalEarnings)}',
-                    style: const TextStyle(color: AppColors.white, fontSize: 26, fontWeight: FontWeight.bold),
+                    style: const TextStyle(color: AppColors.onColor, fontSize: 26, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 18),
                   Row(
@@ -170,17 +171,27 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                       width: 44,
                       height: 44,
                       decoration: BoxDecoration(
-                        gradient: const LinearGradient(
+                        gradient: LinearGradient(
                           colors: [AppColors.primary, AppColors.secondary],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(
-                        Icons.auto_awesome,
-                        color: AppColors.white,
-                        size: 22,
+                      child: Center(
+                        child: Container(
+                          width: 36,
+                          height: 36,
+                          padding: const EdgeInsets.all(2),
+                          decoration: BoxDecoration(
+                            color: AppColors.onColor,
+                            borderRadius: BorderRadius.circular(9),
+                          ),
+                          child: const AiBounceIcon(
+                            size: 32,
+                            bounceHeight: 3,
+                          ),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -192,7 +203,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                             lang == AppLanguage.sw
                                 ? 'Uchambuzi wa AI'
                                 : 'AI Insights',
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.bold,
                               color: AppColors.textPrimary,
@@ -203,7 +214,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                             lang == AppLanguage.sw
                                 ? 'Chambua bookings, mapato na vifaa vyako kwa AI'
                                 : 'Analyze your bookings, revenue and listings with AI',
-                            style: const TextStyle(
+                            style:  TextStyle(
                               fontSize: 12,
                               color: AppColors.textSecondary,
                               height: 1.35,
@@ -212,7 +223,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                         ],
                       ),
                     ),
-                    const Icon(
+                     Icon(
                       Icons.chevron_right,
                       color: AppColors.textTertiary,
                     ),
@@ -227,10 +238,10 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
               children: [
                 Text(
                   AppStrings.get(lang, 'my_listings'),
-                  style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                  style:  TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
                 ),
                 Text('${myListings.length} ${lang == AppLanguage.sw ? 'vifaa' : 'items'}',
-                    style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                    style:  TextStyle(fontSize: 13, color: AppColors.textSecondary)),
               ],
             ),
             const SizedBox(height: 12),
@@ -250,7 +261,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 6),
-                    const Text(
+                     Text(
                       'Bonyeza "Weka Kifaa" kwenye menyu ya chini ili kuongeza kifaa chako cha kwanza.',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
@@ -285,18 +296,18 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                                 color: AppColors.primary.withOpacity(0.12),
                                 borderRadius: BorderRadius.circular(12),
                               ),
-                              child: const Icon(Icons.handyman, color: AppColors.primary, size: 24),
+                              child:  Icon(Icons.handyman, color: AppColors.primary, size: 24),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(item.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.textPrimary)),
+                                  Text(item.title, style:  TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.textPrimary)),
                                   const SizedBox(height: 2),
                                   Text(
                                     'TZS ${_formatPrice(item.pricePerDay)} / siku • ${item.categoryLabel}',
-                                    style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                                    style:  TextStyle(fontSize: 12, color: AppColors.textSecondary),
                                   ),
                                 ],
                               ),
@@ -322,7 +333,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                               children: [
                                 const Icon(Icons.star, color: AppColors.amber, size: 16),
                                 const SizedBox(width: 4),
-                                Text('${item.rating.toStringAsFixed(1)} (${item.reviewCount})', style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                                Text('${item.rating.toStringAsFixed(1)} (${item.reviewCount})', style:  TextStyle(fontSize: 12, color: AppColors.textSecondary)),
                               ],
                             ),
                             Row(
@@ -355,13 +366,13 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                 Text(
                   'Maombi ya Booking',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
                 ),
                 Text(
                   '${ownerBookings.length} ${lang == AppLanguage.sw ? 'maombi' : 'requests'}',
-                  style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                  style:  TextStyle(fontSize: 13, color: AppColors.textSecondary),
                 ),
               ],
             ),
@@ -375,7 +386,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: AppColors.border),
                 ),
-                child: const Text(
+                child:  Text(
                   'Bado hakuna maombi ya booking kwa vifaa vyako.',
                   textAlign: TextAlign.center,
                   style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
@@ -415,14 +426,14 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                                 children: [
                                   Text(
                                     b.listingTitle,
-                                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textPrimary),
+                                    style:  TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: AppColors.textPrimary),
                                   ),
                                   const SizedBox(height: 4),
-                                  Text('Mteja: ${b.renterName}', style: const TextStyle(fontSize: 12.5, color: AppColors.textSecondary)),
+                                  Text('Mteja: ${b.renterName}', style:  TextStyle(fontSize: 12.5, color: AppColors.textSecondary)),
                                   const SizedBox(height: 2),
                                   Text(
                                     'Tarehe: ${b.startDate.day}/${b.startDate.month}/${b.startDate.year} - ${b.endDate.day}/${b.endDate.month}/${b.endDate.year} (${b.totalDays} siku)',
-                                    style: const TextStyle(fontSize: 12, color: AppColors.textSecondary),
+                                    style:  TextStyle(fontSize: 12, color: AppColors.textSecondary),
                                   ),
                                 ],
                               ),
@@ -447,7 +458,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                           children: [
                             Text(
                               'TZS ${_formatPrice(b.totalPrice)}',
-                              style: const TextStyle(fontWeight: FontWeight.w800, color: AppColors.primary),
+                              style:  TextStyle(fontWeight: FontWeight.w800, color: AppColors.primary),
                             ),
                             Row(
                               children: [
@@ -463,7 +474,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColors.primary,
-                                      foregroundColor: AppColors.white,
+                                      foregroundColor: AppColors.onColor,
                                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                     ),
@@ -500,7 +511,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                                     },
                                     style: OutlinedButton.styleFrom(
                                       foregroundColor: AppColors.primary,
-                                      side: const BorderSide(color: AppColors.primary),
+                                      side:  BorderSide(color: AppColors.primary),
                                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                     ),
@@ -518,7 +529,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
 
             const SizedBox(height: 24),
             Text(AppStrings.get(lang, 'recent_payments'),
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                style:  TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
             const SizedBox(height: 12),
             if (ownerPayments.isEmpty)
               Container(
@@ -528,7 +539,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                 child: Center(
                   child: Text(
                     lang == AppLanguage.sw ? 'Bado hujapokea malipo' : 'No payments received yet',
-                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                    style:  TextStyle(color: AppColors.textSecondary, fontSize: 13),
                   ),
                 ),
               )
@@ -552,7 +563,7 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
                             Text(pay.listingTitle, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
                             const SizedBox(height: 2),
                             Text('Kutoka: ${pay.renterName} • ${pay.methodLabel}',
-                                style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+                                style:  TextStyle(fontSize: 11, color: AppColors.textSecondary)),
                           ],
                         ),
                         Text(
@@ -574,10 +585,10 @@ class _OwnerDashboardScreenState extends ConsumerState<OwnerDashboardScreen> {
   Widget _buildMetricTile({required String title, required String value, required IconData icon}) {
     return Column(
       children: [
-        Icon(icon, color: AppColors.white.withOpacity(0.85), size: 20),
+        Icon(icon, color: AppColors.onColor.withOpacity(0.85), size: 20),
         const SizedBox(height: 4),
-        Text(value, style: const TextStyle(color: AppColors.white, fontWeight: FontWeight.bold, fontSize: 15)),
-        Text(title, style: TextStyle(color: AppColors.white.withOpacity(0.85), fontSize: 10)),
+        Text(value, style: const TextStyle(color: AppColors.onColor, fontWeight: FontWeight.bold, fontSize: 15)),
+        Text(title, style: TextStyle(color: AppColors.onColor.withOpacity(0.85), fontSize: 10)),
       ],
     );
   }

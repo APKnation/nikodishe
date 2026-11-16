@@ -43,15 +43,15 @@ class AppTextField extends StatelessWidget {
       textInputAction: textInputAction,
       onChanged: onChanged,
       validator: validator,
-      style: const TextStyle(fontSize: 15, color: AppColors.textPrimary),
+      style:  TextStyle(fontSize: 15, color: AppColors.textPrimary),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(
+        hintStyle:  TextStyle(
           color: AppColors.textSecondary,
           fontSize: 15,
         ),
         prefixText: prefixText,
-        prefixStyle: const TextStyle(
+        prefixStyle:  TextStyle(
           color: AppColors.textPrimary,
           fontSize: 15,
         ),
@@ -65,15 +65,15 @@ class AppTextField extends StatelessWidget {
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide:  BorderSide(color: AppColors.border),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide:  BorderSide(color: AppColors.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide:  BorderSide(color: AppColors.primary, width: 1.5),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

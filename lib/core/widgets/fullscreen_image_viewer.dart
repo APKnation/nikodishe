@@ -86,7 +86,7 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
                   Text(
                     'Picha haipatikani kwa sasa',
                     style: TextStyle(
-                      color: AppColors.white.withOpacity(0.85),
+                      color: AppColors.onColor.withOpacity(0.85),
                       fontSize: 16,
                     ),
                   ),
@@ -133,13 +133,13 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
                         color: AppColors.primaryDark.withOpacity(0.6),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: AppColors.white.withOpacity(0.3),
+                          color: AppColors.onColor.withOpacity(0.3),
                         ),
                       ),
                       child: Text(
                         '${_currentIndex + 1} / ${validImages.length}',
                         style: const TextStyle(
-                          color: AppColors.white,
+                          color: AppColors.onColor,
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
                         ),
@@ -154,7 +154,7 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
                     child: IconButton(
                       icon: const Icon(
                         Icons.close,
-                        color: AppColors.white,
+                        color: AppColors.onColor,
                         size: 22,
                       ),
                       onPressed: () => Navigator.of(context).pop(),
@@ -192,7 +192,7 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
                     Text(
                       widget.title,
                       style: const TextStyle(
-                        color: AppColors.white,
+                        color: AppColors.onColor,
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                         letterSpacing: -0.2,
@@ -203,7 +203,7 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
                       Text(
                         widget.subtitle!,
                         style: TextStyle(
-                          color: AppColors.white.withOpacity(0.85),
+                          color: AppColors.onColor.withOpacity(0.85),
                           fontSize: 14,
                         ),
                       ),
@@ -213,14 +213,14 @@ class _FullscreenImageViewerState extends State<FullscreenImageViewer> {
                       children: [
                         Icon(
                           Icons.zoom_in,
-                          color: AppColors.white.withOpacity(0.7),
+                          color: AppColors.onColor.withOpacity(0.7),
                           size: 16,
                         ),
                         const SizedBox(width: 6),
                         Text(
                           'Bana au vuta picha kwa vidole viwili ili kuikuza (Pinch to zoom)',
                           style: TextStyle(
-                            color: AppColors.white.withOpacity(0.7),
+                            color: AppColors.onColor.withOpacity(0.7),
                             fontSize: 11,
                           ),
                         ),

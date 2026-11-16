@@ -6,50 +6,67 @@ import 'package:flutter/material.dart';
 /// • Blue: brand, structure, primary actions, trust
 /// • White: surfaces, canvas, clarity, breathing space
 /// • Amber: accent, highlights, emphasis, attention cues
-/// All UI colors are derived from these three hues (including states/tints).
+///
+/// Rangi za surfaces/text zinabadilika kulingana na Light/Dark mode.
+/// [AppColors.setDark] huitwa na [MyApp] kila theme inapobadilika.
 /// ─────────────────────────────────────────────────────────────────────────────
 class AppColors {
-  // ─── Core palette ───────────────────────────────────────────────────────────
-  static const Color blue = Color(0xFF1D4ED8); // Primary brand blue
-  static const Color blueDark = Color(0xFF1E3A8A); // Deep structural blue
-  static const Color blueSoft = Color(0xFF2563EB); // Interactive/hover blue
-  static const Color blueTint = Color(0xFFDBEAFE); // Light blue tint
-  static const Color blueTintSoft = Color(
-    0xFFEFF6FF,
-  ); // Very soft blue background
+  AppColors._();
 
-  static const Color white = Color(0xFFFFFFFF);
-  static const Color canvas = Color(0xFFF7FAFF); // White with subtle blue cast
-  static const Color surfaceSubtle = Color(
-    0xFFF1F5FF,
-  ); // Subtle input/pill surface
+  static bool _dark = false;
+  static bool get isDark => _dark;
+  static void setDark(bool value) => _dark = value;
 
-  static const Color amber = Color(0xFFF59E0B); // Third color accent
-  static const Color amberDark = Color(0xFFD97706); // Strong amber emphasis
-  static const Color amberTint = Color(0xFFFEF3C7); // Soft amber highlight
+  /// Rangi nyeupe ya maandishi/icon juu ya rangi ya brand — haibadiliki.
+  static const Color onColor = Color(0xFFFFFFFF);
 
-  // ─── Semantic aliases (used across app) ─────────────────────────────────────
-  static const Color background = canvas; // 70% dominant neutral
-  static const Color surface = white; // Cards/surfaces
-  static const Color border = Color(0xFFD6E4FF); // Soft blue border (tint)
+  // ─── Core brand palette (hazibadiliki) ─────────────────────────────────────
+  static const Color blue = Color(0xFF1D4ED8);
+  static const Color blueDark = Color(0xFF1E3A8A);
+  static const Color blueSoft = Color(0xFF2563EB);
+  static const Color amber = Color(0xFFF59E0B);
+  static const Color amberDark = Color(0xFFD97706);
 
-  static const Color textPrimary = blueDark; // High-contrast headings
-  static const Color textSecondary = Color(
-    0xFF3357A6,
-  ); // Readable body (blue tone)
-  static const Color textTertiary = Color(0xFF6B8CC6); // Hints/captions
-  static const Color brandDark = blueDark;
+  static const Color primaryDark = Color(0xFF1E40AF);
+  static const Color secondary = amber;
+  static Color get primary =>
+      _dark ? const Color(0xFF3B82F6) : const Color(0xFF1D4ED8);
 
-  static const Color primary = blue; // Primary CTA
-  static const Color secondary = amber; // Accent/secondary emphasis
-  static const Color primaryLight = blueTint; // Selected/badge tint
-  static const Color primaryDark = Color(0xFF1E40AF); // Pressed state
+  // ─── Dynamic surfaces ──────────────────────────────────────────────────────
+  static Color get white =>
+      _dark ? const Color(0xFF131C2E) : const Color(0xFFFFFFFF);
+  static Color get canvas =>
+      _dark ? const Color(0xFF0B1220) : const Color(0xFFF7FAFF);
+  static Color get background => canvas;
+  static Color get surface => white;
+  static Color get surfaceSubtle =>
+      _dark ? const Color(0xFF1A2438) : const Color(0xFFF1F5FF);
+  static Color get border =>
+      _dark ? const Color(0xFF27354F) : const Color(0xFFD6E4FF);
 
-  // ─── Feedback states (derived from 3-color palette) ─────────────────────────
+  // ─── Dynamic tints ─────────────────────────────────────────────────────────
+  static Color get blueTint =>
+      _dark ? const Color(0xFF1C2B4A) : const Color(0xFFDBEAFE);
+  static Color get blueTintSoft =>
+      _dark ? const Color(0xFF16223A) : const Color(0xFFEFF6FF);
+  static Color get primaryLight => blueTint;
+  static Color get amberTint =>
+      _dark ? const Color(0xFF3A2E12) : const Color(0xFFFEF3C7);
+
+  // ─── Dynamic typography ────────────────────────────────────────────────────
+  static Color get textPrimary =>
+      _dark ? const Color(0xFFEAF1FF) : const Color(0xFF1E3A8A);
+  static Color get textSecondary =>
+      _dark ? const Color(0xFFAFC3E6) : const Color(0xFF3357A6);
+  static Color get textTertiary =>
+      _dark ? const Color(0xFF7F95B8) : const Color(0xFF6B8CC6);
+  static Color get brandDark => textPrimary;
+
+  // ─── Feedback states (derived from 3-color palette) ────────────────────────
   static const Color error = amberDark; // Attention/error emphasis
-  static const Color errorLight = amberTint; // Soft attention background
+  static Color get errorLight => amberTint; // Soft attention background
   static const Color success = blue; // Positive/trust confirmation
-  static const Color successLight = blueTint; // Positive background
+  static Color get successLight => blueTint; // Positive background
   static const Color warning = amber; // Warning/highlight
-  static const Color warningLight = amberTint; // Warning background
+  static Color get warningLight => amberTint; // Warning background
 }

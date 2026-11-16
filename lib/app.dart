@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'core/constants/app_colors.dart';
 import 'core/theme/app_theme.dart';
+import 'core/theme/theme_provider.dart';
 import 'routes/app_router.dart';
 
 class MyApp extends ConsumerWidget {
@@ -9,11 +11,16 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final themeMode = ref.watch(themeModeProvider);
+    final isDark = themeMode == ThemeMode.dark;
+    AppColors.setDark(isDark);
+
     return MaterialApp.router(
       title: 'Kodisha',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      // darkTheme: AppTheme.darkTheme, // tutaongeza baadaye
+      theme: AppTheme.build(
+        brightness: isDark ? Brightness.dark : Brightness.light,
+      ),
       routerConfig: AppRouter.router,
     );
   }

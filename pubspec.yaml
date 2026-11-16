@@ -48,6 +48,9 @@ dependencies:
   # Image Picking from Device (Gallery & Camera)
   image_picker: ^1.1.2
 
+  # Local persistence (theme & language preferences)
+  shared_preferences: ^2.3.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -76,6 +79,7 @@ flutter:
     - assets/images/kukodisha_transparent.png
     - assets/images/login_design.png
     - assets/images/register_design.png
+    - assets/images/ai.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -69,7 +69,7 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Column(
         children: [
-          const Icon(Icons.rate_review, color: AppColors.primary, size: 36),
+           Icon(Icons.rate_review, color: AppColors.primary, size: 36),
           const SizedBox(height: 8),
           const Text(
             'Toa Maoni & Ukadiriaji',
@@ -78,7 +78,7 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
           const SizedBox(height: 4),
           Text(
             widget.booking.listingTitle,
-            style: const TextStyle(
+            style:  TextStyle(
               fontSize: 13,
               color: AppColors.textSecondary,
             ),
@@ -151,7 +151,7 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
           onPressed: _isSubmitting ? null : _submitReview,
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
-            foregroundColor: AppColors.white,
+            foregroundColor: AppColors.onColor,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
@@ -161,7 +161,7 @@ class _AddReviewDialogState extends ConsumerState<AddReviewDialog> {
                   width: 16,
                   height: 16,
                   child: CircularProgressIndicator(
-                    color: AppColors.white,
+                    color: AppColors.onColor,
                     strokeWidth: 2,
                   ),
                 )

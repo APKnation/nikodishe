@@ -33,7 +33,7 @@ class AuthField extends StatelessWidget {
     this.suffixIcon,
   });
 
-  static const TextStyle _textStyle = TextStyle(
+  static  TextStyle _textStyle = TextStyle(
     fontSize: 17,
     fontWeight: FontWeight.w500,
     color: AppColors.textPrimary,
@@ -46,7 +46,7 @@ class AuthField extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style:  TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w600,
             color: AppColors.textPrimary,
@@ -65,7 +65,7 @@ class AuthField extends StatelessWidget {
           style: _textStyle,
           decoration: InputDecoration(
             hintText: hint,
-            hintStyle: const TextStyle(
+            hintStyle:  TextStyle(
               fontSize: 15,
               color: AppColors.textTertiary,
               fontWeight: FontWeight.w400,
@@ -79,10 +79,10 @@ class AuthField extends StatelessWidget {
             filled: false,
             isDense: true,
             contentPadding: const EdgeInsets.symmetric(vertical: 20),
-            border: const UnderlineInputBorder(
+            border:  UnderlineInputBorder(
               borderSide: BorderSide(color: AppColors.border),
             ),
-            enabledBorder: const UnderlineInputBorder(
+            enabledBorder:  UnderlineInputBorder(
               borderSide: BorderSide(color: AppColors.border),
             ),
             focusedBorder: const UnderlineInputBorder(
@@ -150,7 +150,7 @@ class AuthPrimaryButton extends StatelessWidget {
                 height: 22,
                 child: CircularProgressIndicator(
                   strokeWidth: 2.5,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.white),
+                  valueColor: AlwaysStoppedAnimation<Color>(AppColors.onColor),
                 ),
               )
             : Row(
@@ -161,11 +161,11 @@ class AuthPrimaryButton extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w700,
-                      color: AppColors.white,
+                      color: AppColors.onColor,
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Icon(icon, size: 20, color: AppColors.white),
+                  Icon(icon, size: 20, color: AppColors.onColor),
                 ],
               ),
       ),
@@ -203,7 +203,7 @@ class AuthNote extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(
+              style:  TextStyle(
                 fontSize: 12.5,
                 color: AppColors.textSecondary,
                 height: 1.4,
@@ -240,7 +240,7 @@ class AuthSectionTitle extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 12),
-        const Expanded(child: Divider(color: AppColors.border)),
+         Expanded(child: Divider(color: AppColors.border)),
       ],
     );
   }
